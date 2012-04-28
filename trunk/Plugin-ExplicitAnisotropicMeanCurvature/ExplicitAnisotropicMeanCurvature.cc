@@ -43,11 +43,6 @@
 
 
 #include "ExplicitAnisotropicMeanCurvature.hh"
-
-
-#include <ObjectTypes/PolyMesh/PolyMesh.hh>
-#include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
-
 #include "OpenFlipper/BasePlugin/PluginFunctions.hh"
 
 ExplicitAnisotropicMeanCurvature::ExplicitAnisotropicMeanCurvature() :
@@ -141,56 +136,27 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
       // Add a property to the mesh to store original vertex positions
       mesh->add_property( origPositions, "SmootherPlugin_Original_Positions" );
 
-      for ( int i = 0 ; i < _iterations ; ++i ) {
+      for ( int i = 0 ; i < _iterations ; ++i )
+      {
 
-          // Copy original positions to backup ( in Vertex property )
-          TriMesh::VertexIter v_it, v_end=mesh->vertices_end();
-          for (v_it=mesh->vertices_begin(); v_it!=v_end; ++v_it) {
-            mesh->property( origPositions, v_it ) = mesh->point(v_it);
-            // See if at least one vertex has been selected
-            selectionExists |= mesh->status(v_it).selected();
+          for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
+          // do something with *e_it, e_it->, or e_it.handle()
+          {
+
           }
 
-          // Do one smoothing step (For each point of the mesh ... )
-          for (v_it=mesh->vertices_begin(); v_it!=v_end; ++v_it) {
-
-            if(selectionExists && mesh->status(v_it).selected() == false) {
-              continue;
-            }
-
-            TriMesh::Point point = TriMesh::Point(0.0,0.0,0.0);
-
-            // Flag, to skip boundary vertices
-            bool skip = false;
-
-            // ( .. for each Outoing halfedge .. )
-            TriMesh::VertexOHalfedgeIter voh_it(*mesh,v_it);
-            for ( ; voh_it; ++voh_it ) {
-                // .. add the (original) position of the Neighbour ( end of the outgoing halfedge )
-                point += mesh->property( origPositions, mesh->to_vertex_handle(voh_it) );
-
-                // Check if the current Halfedge is a boundary halfedge
-                // If it is, abort and keep the current vertex position
-                if ( mesh->is_boundary( voh_it.handle() ) ) {
-                  skip = true;
-                  break;
-                }
-
-            }
-
-            // Devide by the valence of the current vertex
-            point /= mesh->valence( v_it );
-
-            if ( ! skip ) {
-                // Set new position for the mesh if its not on the boundary
-                mesh->point(v_it) = point;
-            }
+          for (TriMesh::FaceIter f_it=mesh->faces_begin(); f_it!=mesh->faces_end(); ++f_it)
+          {
           }
+
+          //last step update all vertices, so the geometry has not changed in the previous calculation
+          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+          {
+          }
+
 
       }// Iterations end
 
-      // Remove the property
-      mesh->remove_property( origPositions );
 
       mesh->update_normals();
 
@@ -278,6 +244,33 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
   emit scriptInfo("simpleLaplace(" + QString::number(_iterations) + ")");
   
   emit updateView();
+}
+
+
+double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal)
+{
+
+    double dihedral = _mesh->calc_dihedral_angle_fast(_eh);
+
+    TriMesh::HalfedgeHandle  hh1, hh2;
+    TriMesh::FaceHandle    fh1, fh2;
+
+    hh1 = _mesh->halfedge_handle(_eh, 0);
+    hh2 = _mesh->halfedge_handle(_eh, 1);
+
+    fh1 = _mesh->face_handle(hh1);
+    fh2 = _mesh->face_handle(hh2);
+
+    TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
+    TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
+
+    normal = n1+n2;
+    normal /= normal.norm();//or normal.normalize();
+
+    double edgeLength = _mesh->calc_edge_length(_eh);
+
+    return 2*edgeLength*cos(dihedral/2.0);
+
 }
 
 

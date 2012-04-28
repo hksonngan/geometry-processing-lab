@@ -52,6 +52,8 @@
 #include <OpenFlipper/BasePlugin/ScriptInterface.hh>
 #include <OpenFlipper/BasePlugin/BackupInterface.hh>
 #include <OpenFlipper/common/Types.hh>
+#include <ObjectTypes/PolyMesh/PolyMesh.hh>
+#include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
 
 class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface, LoggingInterface, ScriptInterface, BackupInterface
 {
@@ -95,6 +97,12 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
 
     /// SpinBox for Number of iterations
     QSpinBox* iterationsSpinbox_;
+
+    double edgeMeanCurvature(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
+    double edgeMeanCurvature(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh, TriMesh::Normal & normal);
+
+    //TriMesh::Normal edgeNormal(TriMesh * _mesh, TriMesh::EdgeHandle _eh);
+    //TriMesh::Normal edgeNormal(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh);
 
    private slots:
     void smooth();
