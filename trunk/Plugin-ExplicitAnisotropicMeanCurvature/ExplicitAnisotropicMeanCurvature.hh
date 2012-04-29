@@ -101,7 +101,7 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
     double edgeMeanCurvature(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
     double edgeMeanCurvature(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh, TriMesh::Normal & normal);
 
-    double anisotropicWeight(double curvature, double lambda, double r = 10);
+    double anisotropicWeight(double curvature, double lambda, double r);
 
     TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar);
 

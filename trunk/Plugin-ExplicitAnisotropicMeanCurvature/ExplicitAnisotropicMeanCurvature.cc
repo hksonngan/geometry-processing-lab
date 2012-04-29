@@ -124,7 +124,9 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it) {
 
     bool selectionExists = false;
-    double step = 1;
+    double step = 0.05;
+    double lambda = 0.005;
+    double r = 20;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
@@ -158,7 +160,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               TriMesh::Normal edgeNormal;
               TriMesh::Normal smoothDirection;
               double meanCurvature = edgeMeanCurvature(mesh, e_it.handle(), edgeNormal);
-              smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, 0.5))*edgeNormal;
+              smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, lambda, r))*edgeNormal;
               mesh->property(smoothVector, v0) -= smoothDirection;
               mesh->property(smoothVector, v1) -= smoothDirection;
 
@@ -298,8 +300,9 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
 
 }
 
-double anisotropicWeight(double curvature, double lambda, double r = 10)
+double ExplicitAnisotropicMeanCurvature::anisotropicWeight(double curvature, double lambda, double r)
 {
+
     if (fabs(curvature) <= lambda) return 1;
     else
     {
@@ -307,7 +310,7 @@ double anisotropicWeight(double curvature, double lambda, double r = 10)
     }
 }
 
-TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar)
+TriMesh::Scalar ExplicitAnisotropicMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar)
 {
     // calaculate face area
     TriMesh::Point  p1, p2, p3;
