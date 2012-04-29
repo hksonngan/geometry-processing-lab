@@ -101,8 +101,9 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
     double edgeMeanCurvature(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
     double edgeMeanCurvature(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh, TriMesh::Normal & normal);
 
-    //TriMesh::Normal edgeNormal(TriMesh * _mesh, TriMesh::EdgeHandle _eh);
-    //TriMesh::Normal edgeNormal(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh);
+    double anisotropicWeight(double curvature, double lambda, double r = 10);
+
+    TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar);
 
    private slots:
     void smooth();
@@ -113,7 +114,7 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
     
     // Scriptable functions
    public slots:
-       
+
     void smooth(int _iterations);
        
     QString version() { return QString("1.0"); };

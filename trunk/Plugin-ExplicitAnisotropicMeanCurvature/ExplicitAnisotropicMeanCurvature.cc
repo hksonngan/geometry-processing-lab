@@ -124,6 +124,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it) {
 
     bool selectionExists = false;
+    double step = 1;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
@@ -131,10 +132,12 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
       TriMesh* mesh = PluginFunctions::triMesh(*o_it);
 
       // Property for the active mesh to store original point positions
-      OpenMesh::VPropHandleT< TriMesh::Point > origPositions;
+      OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
+      OpenMesh::VPropHandleT< double > areaStar;
 
-      // Add a property to the mesh to store original vertex positions
-      mesh->add_property( origPositions, "SmootherPlugin_Original_Positions" );
+      // Add a property to the mesh to store mean curvature and area
+      mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
+      mesh->add_property( areaStar, "areaStar" );
 
       for ( int i = 0 ; i < _iterations ; ++i )
       {
@@ -143,15 +146,37 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
           // do something with *e_it, e_it->, or e_it.handle()
           {
 
+              TriMesh::HalfedgeHandle  hh;
+              TriMesh::VertexHandle    v0, v1;
+
+              hh = mesh->halfedge_handle(e_it.handle(), 0);
+              v0 = mesh->to_vertex_handle(hh);
+              hh = mesh->halfedge_handle(e_it.handle(), 1);
+              v1 = mesh->to_vertex_handle(hh);
+
+
+              TriMesh::Normal edgeNormal;
+              TriMesh::Normal smoothDirection;
+              double meanCurvature = edgeMeanCurvature(mesh, e_it.handle(), edgeNormal);
+              smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, 0.5))*edgeNormal;
+              mesh->property(smoothVector, v0) -= smoothDirection;
+              mesh->property(smoothVector, v1) -= smoothDirection;
+
           }
 
           for (TriMesh::FaceIter f_it=mesh->faces_begin(); f_it!=mesh->faces_end(); ++f_it)
           {
+              TriMesh::Scalar area = faceArea(mesh, f_it.handle(), areaStar);
+
           }
 
           //last step update all vertices, so the geometry has not changed in the previous calculation
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
+              TriMesh::Scalar coefficient = 3*step/(2*mesh->property(areaStar, v_it.handle()));
+              TriMesh::Normal updateVector = coefficient*mesh->property(smoothVector, v_it.handle());
+              mesh->set_point(v_it, mesh->point(v_it) + updateVector);
+
           }
 
 
@@ -271,6 +296,48 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
 
     return 2*edgeLength*cos(dihedral/2.0);
 
+}
+
+double anisotropicWeight(double curvature, double lambda, double r = 10)
+{
+    if (fabs(curvature) <= lambda) return 1;
+    else
+    {
+        return (lambda*lambda)/(r*pow(lambda-fabs(curvature), 2) + lambda*lambda);
+    }
+}
+
+TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar)
+{
+    // calaculate face area
+    TriMesh::Point  p1, p2, p3;
+    TriMesh::VertexHandle v1, v2, v3;
+    TriMesh::Scalar area;
+
+#define heh halfedge_handle
+#define nheh next_halfedge_handle
+#define tvh to_vertex_handle
+#define fvh from_vertex_handle
+    v1 = _mesh->tvh(_mesh->heh(fh));
+    v2 = _mesh->fvh(_mesh->heh(fh));
+    v3 = _mesh->tvh(_mesh->nheh(_mesh->heh(fh)));
+#undef heh
+#undef nheh
+#undef tvh
+#undef fvh
+
+    p1 = _mesh->point(v1);
+    p2 = _mesh->point(v2);
+    p3 = _mesh->point(v3);
+
+    area = ((p2 - p1) % (p3 - p1)).norm();
+    area /= 2.0;
+
+    _mesh->property(areaStar, v1) += area;
+    _mesh->property(areaStar, v2) += area;
+    _mesh->property(areaStar, v3) += area;
+
+    return area;
 }
 
 
