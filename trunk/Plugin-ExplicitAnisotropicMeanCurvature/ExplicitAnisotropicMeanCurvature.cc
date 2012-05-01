@@ -124,8 +124,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it) {
 
     bool selectionExists = false;
-    double step = 0.001;
-    double lambda = 0.1;
+    double step = 0.0001;
+    double lambda = 0.2;
     double r = 10;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
@@ -296,8 +296,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal)
 {
 
-    double dihedral = _mesh->calc_dihedral_angle_fast(_eh);
-    //double dihedral;
+
+    double dihedral;
 
     TriMesh::HalfedgeHandle  hh1, hh2;
     TriMesh::FaceHandle    fh1, fh2;
@@ -312,13 +312,16 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
     TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
 
     normal = n1+n2;
-    normal /= normal.norm();//or normal.normalize();
+    //normal /= normal.norm();//or normal.normalize();
+    normal.normalize();
 
     double edgeLength = _mesh->calc_edge_length(_eh);
 
     #define PI 3.14159265
 
     //dihedral = PI - acos(n1|n2);
+    //dihedral = acos(n1|n2);
+    dihedral = _mesh->calc_dihedral_angle_fast(_eh);
 
     //printf("dihedral %f \n", dihedral*180/PI);
 
