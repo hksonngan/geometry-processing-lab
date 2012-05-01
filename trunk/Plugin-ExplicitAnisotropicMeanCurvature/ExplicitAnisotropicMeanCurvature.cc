@@ -126,7 +126,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     bool selectionExists = false;
     double step = 0.0001;
     double lambda = 0.3;
-    double r = 0.01;
+    double r = 10;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
