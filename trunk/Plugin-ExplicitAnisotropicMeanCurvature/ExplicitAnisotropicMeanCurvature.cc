@@ -159,69 +159,42 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               mesh->property(areaStar,v_it) = 0;
           }
 
-          for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
-          // do something with *e_it, e_it->, or e_it.handle()
-          {
-
-              TriMesh::HalfedgeHandle  hh;
-              TriMesh::VertexHandle    v0, v1;
-
-              hh = mesh->halfedge_handle(e_it.handle(), 0);
-              v0 = mesh->to_vertex_handle(hh);
-              hh = mesh->halfedge_handle(e_it.handle(), 1);
-              v1 = mesh->to_vertex_handle(hh);
-
-
-              TriMesh::Normal edgeNormal;
-              TriMesh::Normal smoothDirection;
-
-              edgeNormal.vectorize(0.0);
-
-              //printf("normal before %f %f %f \n", edgeNormal[0], edgeNormal[1], edgeNormal[2]);
-              double meanCurvature = edgeMeanCurvature(mesh, e_it.handle(), edgeNormal);
-             //printf("normal after %f %f %f \n", edgeNormal[0], edgeNormal[1], edgeNormal[2]);
-
-              if ((edgeNormal|mesh->normal(v0)) <0)
-              {
-                  edgeNormal = -edgeNormal;
-                  printf("edge normal flipped \n");
-              }
-
-              smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, lambda, r))*edgeNormal;
-              //smoothDirection = (meanCurvature)*edgeNormal;
-
-              mesh->property(smoothVector, v0) -= smoothDirection;
-              mesh->property(smoothVector, v1) -= smoothDirection;
-
-          }
-
-          for (TriMesh::FaceIter f_it=mesh->faces_begin(); f_it!=mesh->faces_end(); ++f_it)
-          {
-              TriMesh::Scalar area = faceArea(mesh, f_it.handle(), areaStar);
 
 
 
-
-          }
 
           //last step update all vertices, so the geometry has not changed in the previous calculation
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-              TriMesh::Scalar coefficient = (3*step)/(2*mesh->property(areaStar, v_it.handle()));
-              TriMesh::Normal updateVector = coefficient*mesh->property(smoothVector, v_it.handle());
-              mesh->set_point(v_it, mesh->point(v_it) + updateVector);
 
-              //printf("update vector norm: %f \n", updateVector.norm());//0.01
+              //mesh->set_point(v_it, mesh->point(v_it) + updateVector);
+              //TriMesh::Normal updateVector;
+              //updateVector.vectorize(0);
 
-              TriMesh::Color color;
-              color[0] = 255;
-
-              if (updateVector.norm() < 0.01)
+              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
               {
-                  mesh->set_color(v_it, color);
-                  printf("update vector too small for a vertex \n");
+
+                  TriMesh::Normal edgeNormal;
+                  TriMesh::Scalar meanCurvature = edgeMeanCurvature(mesh, ve_it.handle(), edgeNormal);
+
+                  mesh->property(smoothVector, v_it) += 0.5*meanCurvature*anisotropicWeight(meanCurvature, lambda, r)*edgeNormal;
+
+
+
               }
 
+              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
+              {
+
+                  mesh->property(areaStar, v_it) += faceArea(mesh, vf_it.handle());
+              }
+
+
+          }
+
+          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+          {
+              mesh->set_point(v_it, mesh->point(v_it) - (3*step/mesh->property(areaStar, v_it)*mesh->property(smoothVector, v_it)));
           }
 
           mesh->update_normals();
@@ -379,7 +352,7 @@ double ExplicitAnisotropicMeanCurvature::anisotropicWeight(double curvature, dou
     return weight;
 }
 
-TriMesh::Scalar ExplicitAnisotropicMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar)
+TriMesh::Scalar ExplicitAnisotropicMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh)
 {
     // calaculate face area
     TriMesh::Point  p1, p2, p3;
@@ -404,10 +377,6 @@ TriMesh::Scalar ExplicitAnisotropicMeanCurvature::faceArea(TriMesh *_mesh, TriMe
 
     area = ((p2 - p1) % (p3 - p1)).norm();
     area /= 2.0;
-
-    _mesh->property(areaStar, v1) += area;
-    _mesh->property(areaStar, v2) += area;
-    _mesh->property(areaStar, v3) += area;
 
     return area;
 }
