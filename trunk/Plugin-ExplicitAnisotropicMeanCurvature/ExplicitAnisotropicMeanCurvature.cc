@@ -321,7 +321,7 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
 
     //dihedral = PI - acos(n1|n2);
     //dihedral = acos(n1|n2);
-    dihedral = _mesh->calc_dihedral_angle_fast(_eh);
+    dihedral = _mesh->calc_dihedral_angle(_eh);
 
     //printf("dihedral %f \n", dihedral*180/PI);
 
