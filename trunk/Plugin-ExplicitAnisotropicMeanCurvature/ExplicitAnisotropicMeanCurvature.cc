@@ -124,9 +124,9 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it) {
 
     bool selectionExists = false;
-    double step = 0.05;
-    double lambda = 0.005;
-    double r = 20;
+    double step = 0.01;
+    double lambda = 0.01;
+    double r = 10;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
@@ -144,6 +144,12 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
       for ( int i = 0 ; i < _iterations ; ++i )
       {
 
+          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+          {
+              mesh->property(smoothVector,v_it).vectorize(0.0f);
+              mesh->property(areaStar,v_it) = 0;
+          }
+
           for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
           // do something with *e_it, e_it->, or e_it.handle()
           {
@@ -159,7 +165,13 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
               TriMesh::Normal edgeNormal;
               TriMesh::Normal smoothDirection;
+
+              edgeNormal.vectorize(0.0);
+
+              //printf("normal before %f %f %f \n", edgeNormal[0], edgeNormal[1], edgeNormal[2]);
               double meanCurvature = edgeMeanCurvature(mesh, e_it.handle(), edgeNormal);
+             //printf("normal after %f %f %f \n", edgeNormal[0], edgeNormal[1], edgeNormal[2]);
+
               smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, lambda, r))*edgeNormal;
               mesh->property(smoothVector, v0) -= smoothDirection;
               mesh->property(smoothVector, v1) -= smoothDirection;
@@ -169,6 +181,9 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
           for (TriMesh::FaceIter f_it=mesh->faces_begin(); f_it!=mesh->faces_end(); ++f_it)
           {
               TriMesh::Scalar area = faceArea(mesh, f_it.handle(), areaStar);
+
+
+
 
           }
 
