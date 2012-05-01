@@ -124,8 +124,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it) {
 
     bool selectionExists = false;
-    double step = 0.01;
-    double lambda = 0.01;
+    double step = 0.001;
+    double lambda = 0.1;
     double r = 10;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
@@ -297,6 +297,7 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
 {
 
     double dihedral = _mesh->calc_dihedral_angle_fast(_eh);
+    //double dihedral;
 
     TriMesh::HalfedgeHandle  hh1, hh2;
     TriMesh::FaceHandle    fh1, fh2;
@@ -315,6 +316,12 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
 
     double edgeLength = _mesh->calc_edge_length(_eh);
 
+    #define PI 3.14159265
+
+    //dihedral = PI - acos(n1|n2);
+
+    //printf("dihedral %f \n", dihedral*180/PI);
+
     return 2*edgeLength*cos(dihedral/2.0);
 
 }
@@ -322,11 +329,23 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
 double ExplicitAnisotropicMeanCurvature::anisotropicWeight(double curvature, double lambda, double r)
 {
 
-    if (fabs(curvature) <= lambda) return 1;
+    double weight;
+
+    //printf("lambda curvature %f %f \n", lambda, curvature);
+
+    if (fabs(curvature) <= lambda)
+    {
+        weight = 1;
+        //printf("weight %f \n", weight);
+    }
     else
     {
-        return (lambda*lambda)/(r*pow(lambda-fabs(curvature), 2) + lambda*lambda);
+        weight = (lambda*lambda)/(r*pow(lambda-fabs(curvature), 2) + lambda*lambda);
     }
+
+    //printf("weight %f \n", weight);
+
+    return weight;
 }
 
 TriMesh::Scalar ExplicitAnisotropicMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar)
