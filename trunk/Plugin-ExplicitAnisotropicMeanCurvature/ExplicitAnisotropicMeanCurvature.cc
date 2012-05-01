@@ -127,6 +127,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     double step = 0.0001;
     double lambda = 0.3;
     double r = 10;
+    //there should be some singular vertices that make the smooth vector become 0
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
