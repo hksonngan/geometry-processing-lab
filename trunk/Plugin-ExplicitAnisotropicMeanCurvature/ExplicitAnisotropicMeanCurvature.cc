@@ -142,6 +142,11 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
       mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
       mesh->add_property( areaStar, "areaStar" );
 
+      mesh->request_vertex_normals();
+      mesh->request_vertex_colors();
+      mesh->request_face_normals();
+
+
       mesh->update_normals();
 
       for ( int i = 0 ; i < _iterations ; ++i )
@@ -203,6 +208,17 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               TriMesh::Normal updateVector = coefficient*mesh->property(smoothVector, v_it.handle());
               mesh->set_point(v_it, mesh->point(v_it) + updateVector);
 
+              //printf("update vector norm: %f \n", updateVector.norm());//0.01
+
+              TriMesh::Color color;
+              color[0] = 255;
+
+              if (updateVector.norm() < 0.01)
+              {
+                  mesh->set_color(v_it, color);
+                  printf("update vector too small for a vertex \n");
+              }
+
           }
 
           mesh->update_normals();
@@ -213,10 +229,11 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
       mesh->update_normals();
 
-      emit updatedObject( o_it->id(), UPDATE_GEOMETRY );
+
+      emit updatedObject( o_it->id(), UPDATE_ALL );
       
       // Create backup
-      emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_GEOMETRY );
+      emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_ALL );
 
    } else if ( o_it->dataType( DATA_POLY_MESH ) ) {
 
@@ -282,10 +299,10 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
       mesh->update_normals();
 
-      emit updatedObject( o_it->id() , UPDATE_GEOMETRY);
+      emit updatedObject( o_it->id() , UPDATE_ALL);
       
       // Create backup
-      emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_GEOMETRY);
+      emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_ALL);
 
     } else {
 
