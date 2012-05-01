@@ -125,8 +125,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
     bool selectionExists = false;
     double step = 0.0001;
-    double lambda = 0.2;
-    double r = 10;
+    double lambda = 0.3;
+    double r = 0.01;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
@@ -192,7 +192,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
           //last step update all vertices, so the geometry has not changed in the previous calculation
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-              TriMesh::Scalar coefficient = 3*step/(2*mesh->property(areaStar, v_it.handle()));
+              TriMesh::Scalar coefficient = (3*step)/(2*mesh->property(areaStar, v_it.handle()));
               TriMesh::Normal updateVector = coefficient*mesh->property(smoothVector, v_it.handle());
               mesh->set_point(v_it, mesh->point(v_it) + updateVector);
 
@@ -311,7 +311,7 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
     TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
     TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
 
-    normal = n1+n2;
+    normal = (n1+n2);
     //normal /= normal.norm();//or normal.normalize();
     normal.normalize();
 
@@ -320,12 +320,13 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
     #define PI 3.14159265
 
     //dihedral = PI - acos(n1|n2);
-    //dihedral = acos(n1|n2);
-    dihedral = _mesh->calc_dihedral_angle(_eh);
+    dihedral = acos(n1|n2);
+    //dihedral = _mesh->calc_dihedral_angle(_eh);
 
-    //printf("dihedral %f \n", dihedral*180/PI);
+    //printf("dihedralMesh %f dihedralNorm %f \n", dihedral*180/PI, acos(n1|n2)*180/PI);
 
     return 2*edgeLength*cos(dihedral/2.0);
+    //return 2*edgeLength*fabs(sin(dihedral/2.0));
 
 }
 
