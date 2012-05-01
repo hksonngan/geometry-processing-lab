@@ -174,7 +174,11 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               double meanCurvature = edgeMeanCurvature(mesh, e_it.handle(), edgeNormal);
              //printf("normal after %f %f %f \n", edgeNormal[0], edgeNormal[1], edgeNormal[2]);
 
-              if ((edgeNormal|mesh->normal(v0)) <0) edgeNormal = -edgeNormal;
+              if ((edgeNormal|mesh->normal(v0)) <0)
+              {
+                  edgeNormal = -edgeNormal;
+                  printf("edge normal flipped \n");
+              }
 
               smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, lambda, r))*edgeNormal;
               mesh->property(smoothVector, v0) -= smoothDirection;
