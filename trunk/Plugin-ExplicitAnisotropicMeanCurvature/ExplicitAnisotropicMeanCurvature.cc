@@ -141,6 +141,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
       mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
       mesh->add_property( areaStar, "areaStar" );
 
+      mesh->update_normals();
+
       for ( int i = 0 ; i < _iterations ; ++i )
       {
 
@@ -195,6 +197,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               mesh->set_point(v_it, mesh->point(v_it) + updateVector);
 
           }
+
+          mesh->update_normals();
 
 
       }// Iterations end
