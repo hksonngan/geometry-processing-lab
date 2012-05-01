@@ -128,6 +128,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     double lambda = 0.3;
     double r = 10;
     //there should be some singular vertices that make the smooth vector become 0
+    //it's because of the mean curvature He
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
 
@@ -187,6 +188,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               }
 
               smoothDirection = (meanCurvature*anisotropicWeight(meanCurvature, lambda, r))*edgeNormal;
+              //smoothDirection = (meanCurvature)*edgeNormal;
+
               mesh->property(smoothVector, v0) -= smoothDirection;
               mesh->property(smoothVector, v1) -= smoothDirection;
 
