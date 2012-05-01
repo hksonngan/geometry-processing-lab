@@ -103,7 +103,7 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
 
     double anisotropicWeight(double curvature, double lambda, double r);
 
-    TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh, const OpenMesh::VPropHandleT< double > & areaStar);
+    TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
 
    private slots:
     void smooth();
