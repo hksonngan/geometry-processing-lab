@@ -157,6 +157,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
           {
               mesh->property(smoothVector,v_it).vectorize(0.0f);
               mesh->property(areaStar,v_it) = 0;
+              selectionExists |= mesh->status(v_it).selected();
           }
 
 
@@ -194,6 +195,9 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
+              if(selectionExists && mesh->status(v_it).selected() == false) {
+                continue;
+              }
               mesh->set_point(v_it, mesh->point(v_it) - (3*step/mesh->property(areaStar, v_it)*mesh->property(smoothVector, v_it)));
           }
 
