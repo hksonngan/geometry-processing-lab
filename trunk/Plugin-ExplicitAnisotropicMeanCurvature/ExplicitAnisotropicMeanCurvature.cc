@@ -198,7 +198,17 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               if(selectionExists && mesh->status(v_it).selected() == false) {
                 continue;
               }
-              mesh->set_point(v_it, mesh->point(v_it) - (3*step/mesh->property(areaStar, v_it)*mesh->property(smoothVector, v_it)));
+
+              TriMesh::Scalar area = mesh->property(areaStar, v_it);
+              TriMesh::Normal updateVector = mesh->property(smoothVector, v_it);
+
+              if(selectionExists)
+              {
+                  printf("area: %f update length: %f\n", area, updateVector.norm());
+
+              }
+
+              mesh->set_point(v_it, mesh->point(v_it) - (3*step/area)*updateVector);
           }
 
           mesh->update_normals();
