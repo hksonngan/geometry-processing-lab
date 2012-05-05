@@ -224,7 +224,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
 
 
-      updateLineNode(meshObject, smoothVector);
+      updateLineNode(meshObject, smoothVector, areaStar);
 
 
       emit updatedObject( o_it->id(), UPDATE_ALL );
@@ -341,10 +341,12 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
     #define PI 3.14159265
 
     //dihedral = PI - acos(n1|n2);
-    dihedral = acos(n1|n2);
-    //dihedral = _mesh->calc_dihedral_angle(_eh);
+    //dihedral = acos(n1|n2);
+    dihedral = _mesh->calc_dihedral_angle(_eh);
 
     //printf("dihedralMesh %f dihedralNorm %f \n", dihedral*180/PI, acos(n1|n2)*180/PI);
+
+    if (dihedral < 0) normal *= -1;
 
     return 2*edgeLength*cos(dihedral/2.0);
     //return 2*edgeLength*fabs(sin(dihedral/2.0));
@@ -405,7 +407,7 @@ TriMesh::Scalar ExplicitAnisotropicMeanCurvature::faceArea(TriMesh *_mesh, TriMe
 
 void
 ExplicitAnisotropicMeanCurvature::
-updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector )
+updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar)
 {
   ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
   //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
@@ -417,7 +419,8 @@ updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Nor
   {
     TriMesh::Point  p = _meshObject->mesh()->point(vit);
     TriMesh::Normal n = _meshObject->mesh()->property(smoothVector, vit);
-    addLine(node, p, p+0.1*n, Color(255,0,0) );
+    TriMesh::Scalar length = _meshObject->mesh()->property(areaStar, vit);
+    addLine(node, p, p+length*50*n, Color(255,0,0) );
   }
 }
 

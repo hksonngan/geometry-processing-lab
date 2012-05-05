@@ -108,7 +108,7 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
 
     double anisotropicWeight(double curvature, double lambda, double r);
 
-    void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector);
+    void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar);
 
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
