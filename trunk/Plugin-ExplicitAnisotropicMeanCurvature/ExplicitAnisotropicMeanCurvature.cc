@@ -125,8 +125,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
     for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it) {
 
     bool selectionExists = false;
-    double step = 0.0001;
-    double lambda = 0.3;
+    double step = 0.00001;
+    double lambda = 0.5;
     double r = 10;
     //there should be some singular vertices that make the smooth vector become 0
     //it's because of the mean curvature He
