@@ -317,8 +317,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal)
 {
 
-
-    double dihedral;
+    //dihedral = 0 on the boundary
+    double dihedral = 0;
 
     TriMesh::HalfedgeHandle  hh1, hh2;
     TriMesh::FaceHandle    fh1, fh2;
@@ -326,30 +326,43 @@ double ExplicitAnisotropicMeanCurvature::edgeMeanCurvature(TriMesh *_mesh, TriMe
     hh1 = _mesh->halfedge_handle(_eh, 0);
     hh2 = _mesh->halfedge_handle(_eh, 1);
 
-    fh1 = _mesh->face_handle(hh1);
-    fh2 = _mesh->face_handle(hh2);
+    //normal is the edge vector rotated by 90 degree
+    if ( _mesh->is_boundary( hh1 ) )
+    {
 
-    TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
-    TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
+        fh2 = _mesh->face_handle(hh2);
+        TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
+        TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh2)) - _mesh->point(_mesh->from_vertex_handle(hh2));
+        normal = (edgeVector%n2);
 
-    normal = (n1+n2);
-    //normal /= normal.norm();//or normal.normalize();
-    normal.normalize();
+    }else if ( _mesh->is_boundary( hh2 ) )
+    {
+
+        fh1 = _mesh->face_handle(hh1);
+        TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
+        TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh1)) - _mesh->point(_mesh->from_vertex_handle(hh1));
+        normal = (edgeVector%n1);
+
+    }else
+    {
+
+        fh1 = _mesh->face_handle(hh1);
+        fh2 = _mesh->face_handle(hh2);
+
+        TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
+        TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
+
+        normal = (n1+n2);
+        normal.normalize();
+
+        dihedral = _mesh->calc_dihedral_angle(_eh);
+
+        if (dihedral < 0) normal *= -1;
+
+    }
 
     double edgeLength = _mesh->calc_edge_length(_eh);
-
-    #define PI 3.14159265
-
-    //dihedral = PI - acos(n1|n2);
-    //dihedral = acos(n1|n2);
-    dihedral = _mesh->calc_dihedral_angle(_eh);
-
-    //printf("dihedralMesh %f dihedralNorm %f \n", dihedral*180/PI, acos(n1|n2)*180/PI);
-
-    if (dihedral < 0) normal *= -1;
-
     return 2*edgeLength*cos(dihedral/2.0);
-    //return 2*edgeLength*fabs(sin(dihedral/2.0));
 
 }
 
