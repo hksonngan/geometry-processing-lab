@@ -13,12 +13,11 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations)
 
     bool selectionExists = false;
     double step = 0.00001;
-    double lambda = 0.5;
+    double lambda = 0.2;
     double r = 10;
-    //there should be some singular vertices that make the smooth vector become 0
-    //it's because of the mean curvature He
 
-    if ( o_it->dataType( DATA_TRIANGLE_MESH ) ) {
+    if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
+    {
 
         // Get the mesh to work on
       //TriMesh* mesh = PluginFunctions::triMesh(*o_it);
@@ -28,6 +27,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations)
       // Property for the active mesh to store original point positions
       OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
       OpenMesh::VPropHandleT< double > areaStar;
+      OpenMesh::VPropHandleT< bool > isFeature;
 
       // Add a property to the mesh to store mean curvature and area
       mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
@@ -47,20 +47,15 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations)
           {
               mesh->property(smoothVector,v_it).vectorize(0.0f);
               mesh->property(areaStar,v_it) = 0;
+              mesh->property(isFeature,v_it) = false;
               selectionExists |= mesh->status(v_it).selected();
           }
 
 
-
-
-
-          //last step update all vertices, so the geometry has not changed in the previous calculation
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-
-              //mesh->set_point(v_it, mesh->point(v_it) + updateVector);
-              //TriMesh::Normal updateVector;
-              //updateVector.vectorize(0);
+              TriMesh::Normal isotropic;
+              isotropic.vectorized(0);
 
               for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
               {
@@ -70,9 +65,11 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations)
 
                   mesh->property(smoothVector, v_it) += 0.5*meanCurvature*anisotropicWeight(meanCurvature, lambda, r)*edgeNormal;
 
-
+                  isotropic += 0.5*meanCurvature*edgeNormal;
 
               }
+
+              if (mesh->property(smoothVector, v_it) != isotropic) mesh->property(isFeature,v_it) = true;
 
               for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
               {
@@ -192,7 +189,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations)
 
       emit log(LOGERR, "DataType not supported.");
     }
-  }
+ }
 
   // Show script logging
   emit scriptInfo("simpleLaplace(" + QString::number(_iterations) + ")");
