@@ -18,7 +18,7 @@ public:
     double anisotropicWeight(double curvature, double lambda, double r);
 
 
-
+    void smooth(int _iterations);
 
 
     TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
