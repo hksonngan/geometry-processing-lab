@@ -214,6 +214,10 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
       pmc.updateLineNode(meshObject, smoothVector, areaStar);
 
+      // Remove the property
+      mesh->remove_property( smoothVector );
+      mesh->remove_property( areaStar );
+
 
       emit updatedObject( o_it->id(), UPDATE_ALL );
       

@@ -115,7 +115,10 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
       updateLineNode(meshObject, smoothVector, areaStar);
 
 
-
+      // Remove the property
+      mesh->remove_property( smoothVector );
+      mesh->remove_property( areaStar );
+      mesh->remove_property( isFeature );
 
 
 }
