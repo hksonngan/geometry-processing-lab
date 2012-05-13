@@ -25,16 +25,21 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
       // Add a property to the mesh to store mean curvature and area
       mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
       mesh->add_property( areaStar, "areaStar" );
+      mesh->add_property( isFeature, "isFeature" );
 
       mesh->request_vertex_normals();
       mesh->request_vertex_colors();
       mesh->request_face_normals();
+
+      unsigned int count(meshObject->mesh()->n_vertices());
 
 
       mesh->update_normals();
 
       for ( int i = 0 ; i < _iterations ; ++i )
       {
+
+          unsigned int noFeatureVertices = 0;
 
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
@@ -63,7 +68,15 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
               }
 
-              if (mesh->property(smoothVector, v_it) != isotropic) mesh->property(isFeature,v_it) = true;
+              if (mesh->property(smoothVector, v_it) != isotropic)
+              {
+                  mesh->property(isFeature,v_it) = true;
+                  noFeatureVertices++;
+                  TriMesh::Normal aniso = mesh->property(smoothVector, v_it);
+                  if (noFeatureVertices%10 == 0) printf("aniso x %f iso x %f y %f %f z %f %f \n",
+                         aniso[0], isotropic[0], aniso[1], isotropic[1], aniso[2], isotropic[2]);
+
+              }
 
               for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
               {
@@ -74,6 +87,8 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
           }
 
+          printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
+
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
               if(selectionExists && mesh->status(v_it).selected() == false) {
@@ -82,12 +97,6 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
               TriMesh::Scalar area = mesh->property(areaStar, v_it);
               TriMesh::Normal updateVector = mesh->property(smoothVector, v_it);
-
-              if(selectionExists)
-              {
-                  printf("area: %f update length: %f\n", area, updateVector.norm());
-
-              }
 
               mesh->set_point(v_it, mesh->point(v_it) - (3*step/area)*updateVector);
           }

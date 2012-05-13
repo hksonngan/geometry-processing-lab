@@ -110,7 +110,8 @@ void ExplicitAnisotropicMeanCurvature::smooth() {
         iterations = iterationsSpinbox_->value();
     }
     
-    smooth(iterations);
+    //smooth(iterations);
+    prescribedMeanCurvature(iterations);
 }
 
 /** \brief explicit anisotropic mean curvature
