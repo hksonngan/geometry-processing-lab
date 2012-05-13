@@ -17,6 +17,8 @@ public:
 
     TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
 
+    void volumeGradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh, TriMesh::Normal & gradient);
+
     double edgeMeanCurvature(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
     double edgeMeanCurvature(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh, TriMesh::Normal & normal);
 

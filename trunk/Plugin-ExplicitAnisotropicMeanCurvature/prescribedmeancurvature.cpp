@@ -25,11 +25,13 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
       OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
       OpenMesh::VPropHandleT< double > areaStar;
       OpenMesh::VPropHandleT< bool > isFeature;
+      OpenMesh::VPropHandleT< TriMesh::Normal > volumeGradientProp;
 
       // Add a property to the mesh to store mean curvature and area
       mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
       mesh->add_property( areaStar, "areaStar" );
       mesh->add_property( isFeature, "isFeature" );
+      mesh->add_property( volumeGradientProp, "volumeGradientProp" );
 
       mesh->request_vertex_normals();
       mesh->request_vertex_colors();
@@ -48,6 +50,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
               mesh->property(smoothVector,v_it).vectorize(0.0f);
+              mesh->property(volumeGradientProp,v_it).vectorize(0.0f);
               mesh->property(areaStar,v_it) = 0;
               mesh->property(isFeature,v_it) = false;
               selectionExists |= mesh->status(v_it).selected();
@@ -86,6 +89,10 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
               {
 
                   mesh->property(areaStar, v_it) += faceArea(mesh, vf_it.handle());
+                  //volume gradient
+                  TriMesh::Normal volGrad;
+                  volumeGradient(mesh, vf_it.handle(), v_it, volGrad);
+                  mesh->property(volumeGradientProp, v_it) += volGrad;
               }
 
 
@@ -119,6 +126,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
       mesh->remove_property( smoothVector );
       mesh->remove_property( areaStar );
       mesh->remove_property( isFeature );
+      mesh->remove_property( volumeGradientProp );
 
 
 }
@@ -226,6 +234,34 @@ TriMesh::Scalar PrescribedMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceH
 }
 
 
+/*
+ * circulate around the oriented face using FaceHalfEdgeIter to extract p, q, r in CCW
+ *
+ * take (qxr)/6
+ */
+void
+PrescribedMeanCurvature::
+volumeGradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh, TriMesh::Normal & gradient)
+{
+
+    TriMesh::Point  q, r;
+    TriMesh::VertexHandle vq, vr;
+
+    //from p to q to r
+    for (TriMesh::FaceHalfedgeIter fhh_it=_mesh->fh_iter(fh); fhh_it; ++fhh_it)
+    {
+        if (_mesh->from_vertex_handle(fhh_it) == vh)
+        {
+            vq = _mesh->to_vertex_handle(fhh_it);
+            vr = _mesh->to_vertex_handle(_mesh->next_halfedge_handle(fhh_it));
+        }
+    }
+
+
+    gradient = q%r;
+    gradient /= 6;
+
+}
 
 
 void
