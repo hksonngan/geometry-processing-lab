@@ -128,7 +128,11 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
     bool selectionExists = false;
     double step = 0.00001;
-    double lambda = 0.2;
+    /*
+      lambda = 0.1 and bunny
+      number of feature vertices: 1389 in total 8810
+    */
+    double lambda = 0.1;
 
     if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
     {
