@@ -4,24 +4,18 @@
 #include <OpenFlipper/common/Types.hh>
 #include <ObjectTypes/PolyMesh/PolyMesh.hh>
 #include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
+#include "ExplicitAnisotropicMeanCurvature.hh"
 
-class PrescribedMeanCurvature
+class PrescribedMeanCurvature: public ExplicitAnisotropicMeanCurvature
 {
 public:
     PrescribedMeanCurvature();
 
-
-
-    double edgeMeanCurvature(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
-
-
-    double anisotropicWeight(double curvature, double lambda, double r);
+protected:
 
 
     void smooth(int _iterations);
 
-
-    TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
 
 };
 

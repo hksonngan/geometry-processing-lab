@@ -95,13 +95,12 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
     QString name() { return (QString("Explicit Anisotropic Mean Curvature Smoother")); };
     QString description( ) { return (QString("Smooths the active Mesh")); };
 
-   private:
+protected:
 
     typedef ACG::Vec3uc Color;
     typedef ACG::Vec3d  Vec3d;
 
-    /// SpinBox for Number of iterations
-    QSpinBox* iterationsSpinbox_;
+    TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
 
     double edgeMeanCurvature(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
     double edgeMeanCurvature(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh, TriMesh::Normal & normal);
@@ -110,11 +109,20 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
 
     void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar);
 
+   private:
+
+
+
+    /// SpinBox for Number of iterations
+    QSpinBox* iterationsSpinbox_;
+
+
+
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
 
 
-    TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
+
 
    private slots:
     void smooth();
