@@ -6,22 +6,15 @@ PrescribedMeanCurvature::PrescribedMeanCurvature()
 
 
 
-void PrescribedMeanCurvature::smooth(int _iterations)
+void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject)
 {
 
-    for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it)
-    {
 
     bool selectionExists = false;
     double step = 0.00001;
     double lambda = 0.2;
-    double r = 10;
 
 
-
-        // Get the mesh to work on
-      //TriMesh* mesh = PluginFunctions::triMesh(*o_it);
-        TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
         TriMesh* mesh = meshObject->mesh();
 
       // Property for the active mesh to store original point positions
@@ -62,8 +55,9 @@ void PrescribedMeanCurvature::smooth(int _iterations)
 
                   TriMesh::Normal edgeNormal;
                   TriMesh::Scalar meanCurvature = edgeMeanCurvature(mesh, ve_it.handle(), edgeNormal);
+                  double weight = anisotropicWeight(meanCurvature, lambda, R);
 
-                  mesh->property(smoothVector, v_it) += 0.5*meanCurvature*anisotropicWeight(meanCurvature, lambda, r)*edgeNormal;
+                  mesh->property(smoothVector, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
                   isotropic += 0.5*meanCurvature*edgeNormal;
 
@@ -105,9 +99,10 @@ void PrescribedMeanCurvature::smooth(int _iterations)
 
 
       mesh->update_normals();
+      updateLineNode(meshObject, smoothVector, areaStar);
 
 
- }
+
 
 
 }
@@ -171,19 +166,16 @@ double PrescribedMeanCurvature::anisotropicWeight(double curvature, double lambd
 
     double weight;
 
-    //printf("lambda curvature %f %f \n", lambda, curvature);
+    //printf("lambda %f curvature %f \n", lambda, curvature);
 
     if (fabs(curvature) <= lambda)
     {
         weight = 1;
-        //printf("weight %f \n", weight);
     }
     else
     {
         weight = (lambda*lambda)/(r*pow(lambda-fabs(curvature), 2) + lambda*lambda);
     }
-
-    //printf("weight %f \n", weight);
 
     return weight;
 }
@@ -217,3 +209,59 @@ TriMesh::Scalar PrescribedMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceH
     return area;
 }
 
+
+
+
+void
+PrescribedMeanCurvature::
+updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar)
+{
+  ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
+  //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
+
+  node->clear();
+
+  for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
+                          vit != _meshObject->mesh()->vertices_end(); ++vit)
+  {
+    TriMesh::Point  p = _meshObject->mesh()->point(vit);
+    TriMesh::Normal n = _meshObject->mesh()->property(smoothVector, vit);
+    TriMesh::Scalar length = _meshObject->mesh()->property(areaStar, vit);
+    addLine(node, p, p+length*50*n, Color(255,0,0) );
+  }
+}
+
+ACG::SceneGraph::LineNode *
+PrescribedMeanCurvature::
+getLineNode(TriMeshObject * _meshObject)
+{
+  ACG::SceneGraph::LineNode * line_node = 0;
+
+  // get or add line node
+  if( !_meshObject->hasAdditionalNode( "NormalEstimationPlugin", "LineNode" ) )
+  {
+    line_node = new ACG::SceneGraph::LineNode( ACG::SceneGraph::LineNode::LineSegmentsMode, _meshObject->manipulatorNode() );
+
+    if( !_meshObject->addAdditionalNode(line_node, QString("NormalEstimationPlugin"), QString("LineNode") ) )
+    {
+      std::cerr << "NormalEstimationPlugin::getLineNode(): could not add line node.\n";
+      return 0;
+    }
+    line_node->clear();
+    line_node->set_line_width(1.0);
+    line_node->set_base_color( ACG::Vec4f(255,0,255,255) );
+    line_node->show();
+  }
+  else
+    _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
+
+  return line_node;
+}
+
+void
+PrescribedMeanCurvature::
+addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color )
+{
+  _line_node->add_line( _p0, _p1 );
+  _line_node->add_color(_color);
+}

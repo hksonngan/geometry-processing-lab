@@ -207,7 +207,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
 
 
-      updateLineNode(meshObject, smoothVector, areaStar);
+      pmc.updateLineNode(meshObject, smoothVector, areaStar);
 
 
       emit updatedObject( o_it->id(), UPDATE_ALL );
@@ -298,61 +298,46 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
 
 
 
-
-
-void
-ExplicitAnisotropicMeanCurvature::
-updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar)
+void ExplicitAnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 {
-  ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
-  //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
 
-  node->clear();
-
-  for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
-                          vit != _meshObject->mesh()->vertices_end(); ++vit)
-  {
-    TriMesh::Point  p = _meshObject->mesh()->point(vit);
-    TriMesh::Normal n = _meshObject->mesh()->property(smoothVector, vit);
-    TriMesh::Scalar length = _meshObject->mesh()->property(areaStar, vit);
-    addLine(node, p, p+length*50*n, Color(255,0,0) );
-  }
-}
-
-ACG::SceneGraph::LineNode *
-ExplicitAnisotropicMeanCurvature::
-getLineNode(TriMeshObject * _meshObject)
-{
-  ACG::SceneGraph::LineNode * line_node = 0;
-
-  // get or add line node
-  if( !_meshObject->hasAdditionalNode( "NormalEstimationPlugin", "LineNode" ) )
-  {
-    line_node = new ACG::SceneGraph::LineNode( ACG::SceneGraph::LineNode::LineSegmentsMode, _meshObject->manipulatorNode() );
-
-    if( !_meshObject->addAdditionalNode(line_node, QString("NormalEstimationPlugin"), QString("LineNode") ) )
+    for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ; o_it != PluginFunctions::objectsEnd(); ++o_it)
     {
-      std::cerr << "NormalEstimationPlugin::getLineNode(): could not add line node.\n";
-      return 0;
-    }
-    line_node->clear();
-    line_node->set_line_width(1.0);
-    line_node->set_base_color( ACG::Vec4f(255,0,255,255) );
-    line_node->show();
+
+        if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
+        {
+
+
+            TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
+
+            pmc.smooth(_iterations, meshObject);
+
+
+
+
+          emit updatedObject( o_it->id(), UPDATE_ALL );
+
+          // Create backup
+          emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_ALL );
+
+       }
+       else
+       {
+
+          emit log(LOGERR, "DataType not supported.");
+       }
+
   }
-  else
-    _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
 
-  return line_node;
+  // Show script logging
+  emit scriptInfo("simpleLaplace(" + QString::number(_iterations) + ")");
+
+  emit updateView();
 }
 
-void
-ExplicitAnisotropicMeanCurvature::
-addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color )
-{
-  _line_node->add_line( _p0, _p1 );
-  _line_node->add_color(_color);
-}
+
+
+
 
 
 Q_EXPORT_PLUGIN2( explicitAnisotropicMeanCurvature , ExplicitAnisotropicMeanCurvature );

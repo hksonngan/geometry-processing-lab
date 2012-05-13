@@ -54,8 +54,6 @@
 #include <OpenFlipper/common/Types.hh>
 #include <ObjectTypes/PolyMesh/PolyMesh.hh>
 #include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
-#include <ACG/Scenegraph/LineNode.hh>
-#include <ACG/Math/VectorT.hh>
 #include "prescribedmeancurvature.h"
 
 class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface, LoggingInterface, ScriptInterface, BackupInterface
@@ -100,7 +98,7 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
 
 
 
-    void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar);
+
 
    private:
 
@@ -109,11 +107,7 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
     /// SpinBox for Number of iterations
     QSpinBox* iterationsSpinbox_;
 
-    typedef ACG::Vec3uc Color;
-    typedef ACG::Vec3d  Vec3d;
 
-    ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
-    void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
 
     PrescribedMeanCurvature pmc;
 
@@ -129,6 +123,8 @@ class ExplicitAnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxI
    public slots:
 
     void smooth(int _iterations);
+
+    void prescribedMeanCurvature(int _iterations);
        
     QString version() { return QString("1.0"); };
 };
