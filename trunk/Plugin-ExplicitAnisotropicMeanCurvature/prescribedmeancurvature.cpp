@@ -12,7 +12,11 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
     bool selectionExists = false;
     double step = 0.00001;
-    double lambda = 0.2;
+    /*
+      lambda = 0.1 and bunny
+      number of feature vertices: 1389 in total 8810
+    */
+    double lambda = 0.1;
 
 
         TriMesh* mesh = meshObject->mesh();
@@ -53,7 +57,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
               TriMesh::Normal isotropic;
-              isotropic.vectorized(0);
+              isotropic.vectorize(0);
 
               for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
               {
@@ -72,9 +76,9 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
               {
                   mesh->property(isFeature,v_it) = true;
                   noFeatureVertices++;
-                  TriMesh::Normal aniso = mesh->property(smoothVector, v_it);
-                  if (noFeatureVertices%10 == 0) printf("aniso x %f iso x %f y %f %f z %f %f \n",
-                         aniso[0], isotropic[0], aniso[1], isotropic[1], aniso[2], isotropic[2]);
+                  //TriMesh::Normal aniso = mesh->property(smoothVector, v_it);
+                  //if (noFeatureVertices%10 == 0) printf("aniso x %f iso x %f y %f %f z %f %f \n",
+                  //       aniso[0], isotropic[0], aniso[1], isotropic[1], aniso[2], isotropic[2]);
 
               }
 
