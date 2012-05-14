@@ -14,6 +14,10 @@ public:
 
 
     static const double R = 10;
+    //stable time step for explicit methods
+    //for implicit method multiply by a factor of 10 or 100
+    //for fine scale noise multiply by a factor of 0.1
+    static const double TIME_STEP = 0.00001;
 
     TriMesh::Scalar faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh);
 

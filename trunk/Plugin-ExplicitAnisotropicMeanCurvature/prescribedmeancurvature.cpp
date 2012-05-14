@@ -11,12 +11,12 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
     bool selectionExists = false;
-    double step = 0.00001;
+
     /*
-      lambda = 0.1 and bunny
-      number of feature vertices: 1389 in total 8810
+      bunny: lambda = 0.1 and number of feature vertices: 1389 in total 8810
+      cylinder: lambda = 0.32 or 0.31
     */
-    double lambda = 0.1;
+    double lambda = 0.31;
 
 
         TriMesh* mesh = meshObject->mesh();
@@ -109,7 +109,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
               TriMesh::Scalar area = mesh->property(areaStar, v_it);
               TriMesh::Normal updateVector = mesh->property(smoothVector, v_it);
 
-              mesh->set_point(v_it, mesh->point(v_it) - (3*step/area)*updateVector);
+              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*updateVector);
           }
 
           mesh->update_normals();
