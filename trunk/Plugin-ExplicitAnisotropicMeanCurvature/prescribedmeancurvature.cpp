@@ -15,8 +15,11 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
     /*
       bunny: lambda = 0.1 and number of feature vertices: 1389 in total 8810
       cylinder: lambda = 0.32 or 0.31
+      cylinder does not manifest the problem with curved edges, but the bunny does
+      espectially in the ears regions having curved edges (or high curvature features)
+      even with smaller time step
     */
-    double lambda = 0.31;
+    double lambda = 0.1;
 
 
         TriMesh* mesh = meshObject->mesh();
