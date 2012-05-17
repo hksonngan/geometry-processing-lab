@@ -101,13 +101,9 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
                   mesh->property(volumeGradientProp, v_it) += volGrad;
               }
 
-
-
-
-
           }
 
-          smoothAnisotropicMeanCurvature(mesh, anisoMeanCurvature, smoothedAMC);
+          smoothAnisotropicMeanCurvature(mesh, anisoMeanCurvature, smoothedAMC, volumeGradientProp, isFeature);
 
           printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
 
@@ -146,14 +142,23 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
 void PrescribedMeanCurvature::
-smoothAnisotropicMeanCurvature(TriMesh *_mesh, const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, const OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC)
+smoothAnisotropicMeanCurvature(TriMesh *_mesh
+                               , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
+                               , const OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC
+                               , const OpenMesh::VPropHandleT< TriMesh::Normal > & volumeGrad
+                               , const OpenMesh::VPropHandleT< bool > & isFeature)
 {
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
 
+        if (!_mesh->property(isFeature, v_it)) continue;
+
+
         TriMesh::Point p, q, r1, r2;
         p = _mesh->point(v_it);
         double totalAngle = 0;
+        TriMesh::Normal unitVec;
+        TriMesh::Normal volGradient;
 
 
         // ( .. for each Incoming halfedge .. )
@@ -188,10 +193,20 @@ smoothAnisotropicMeanCurvature(TriMesh *_mesh, const OpenMesh::VPropHandleT< Tri
 
         }
 
-        _mesh->property(smoothedAMC, v_it) = 0.5*(_mesh->property(anisoMeanCurvature, v_it) + _mesh->property(smoothedAMC, v_it)/totalAngle);
+        unitVec = 0.5*(_mesh->property(anisoMeanCurvature, v_it) + _mesh->property(smoothedAMC, v_it)/totalAngle);
+        unitVec.normalize();
+
+        volGradient = _mesh->property(volumeGrad, v_it);
+        double sign = volGradient|unitVec;
+        if (sign < 0) unitVec *= -1;
+
+        _mesh->property(volumeGrad, v_it) = unitVec;
 
     }
 }
+
+
+
 
 
 double PrescribedMeanCurvature::
