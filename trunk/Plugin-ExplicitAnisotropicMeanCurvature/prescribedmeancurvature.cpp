@@ -124,7 +124,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
               TriMesh::Scalar area = mesh->property(areaStar, v_it);
               TriMesh::Normal updateVector = mesh->property(anisoMeanCurvature, v_it);
-              updateVector -= mesh->property(smoothedAPMC, v_it)*mesh->property(volumeGradientProp, v_it);
+              //updateVector -= mesh->property(smoothedAPMC, v_it)*mesh->property(volumeGradientProp, v_it);
 
               mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*updateVector);
           }
@@ -423,8 +423,8 @@ updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Nor
     TriMesh::Point  p = _meshObject->mesh()->point(vit);
     TriMesh::Normal n = _meshObject->mesh()->property(anisoMeanCurvature, vit);
     TriMesh::Scalar coefficient = _meshObject->mesh()->property(areaStar, vit);
-    coefficient = 3/coefficient;//no time step involved
-    addLine(node, p, p+coefficient*n, Color(255,0,0) );
+    coefficient = 3*TIME_STEP/coefficient;
+    addLine(node, p, p+coefficient*n*50, Color(255,0,0) );
   }
 }
 
