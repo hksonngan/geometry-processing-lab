@@ -102,10 +102,12 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
               }
 
 
-              smoothAnisotropicMeanCurvature(mesh, anisoMeanCurvature, smoothedAMC);
+
 
 
           }
+
+          smoothAnisotropicMeanCurvature(mesh, anisoMeanCurvature, smoothedAMC);
 
           printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
 
@@ -144,7 +146,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
 void PrescribedMeanCurvature::
-smoothAnisotropicMeanCurvature(TriMesh *_mesh, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC)
+smoothAnisotropicMeanCurvature(TriMesh *_mesh, const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, const OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC)
 {
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
@@ -193,7 +195,7 @@ smoothAnisotropicMeanCurvature(TriMesh *_mesh, OpenMesh::VPropHandleT< TriMesh::
 
 
 double PrescribedMeanCurvature::
-calAngle(TriMesh::Point p, TriMesh::Point q, TriMesh::Point r)
+calAngle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Point & r)
 {
     TriMesh::Normal pq = q - p;
     TriMesh::Normal pr = r - p;

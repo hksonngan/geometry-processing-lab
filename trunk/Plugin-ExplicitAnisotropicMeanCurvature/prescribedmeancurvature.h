@@ -37,8 +37,8 @@ private:
     typedef ACG::Vec3uc Color;
     typedef ACG::Vec3d  Vec3d;
 
-    double calAngle(TriMesh::Point p, TriMesh::Point q, TriMesh::Point r);
-    void smoothAnisotropicMeanCurvature(TriMesh *_mesh, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC);
+    double calAngle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Point & r);
+    void smoothAnisotropicMeanCurvature(TriMesh *_mesh, const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, const OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC);
 
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
