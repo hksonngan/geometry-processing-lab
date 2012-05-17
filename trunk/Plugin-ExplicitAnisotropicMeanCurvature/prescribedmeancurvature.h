@@ -37,6 +37,13 @@ private:
     typedef ACG::Vec3uc Color;
     typedef ACG::Vec3d  Vec3d;
 
+    void computePMCFunction(TriMesh *_mesh
+                            , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
+                            , const OpenMesh::VPropHandleT< TriMesh::Normal > & volumeGrad
+                            , const OpenMesh::VPropHandleT< bool > & isFeature
+                            , const OpenMesh::VPropHandleT< double > & anisoPMC
+                            , const OpenMesh::VPropHandleT< double > & smoothedAPMC);
+
     double calAngle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Point & r);
     /*
       This method replaces volume gradient of a vertex by its anisotropic one if the vertex is a feature vertex
