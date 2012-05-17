@@ -30,12 +30,15 @@ public:
 
     void smooth(int _iterations, TriMeshObject * meshObject);
 
-    void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothVector, OpenMesh::VPropHandleT< double >& areaStar);
+    void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< double >& areaStar);
 
 private:
 
     typedef ACG::Vec3uc Color;
     typedef ACG::Vec3d  Vec3d;
+
+    double calAngle(TriMesh::Point p, TriMesh::Point q, TriMesh::Point r);
+    void smoothAnisotropicMeanCurvature(TriMesh *_mesh, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC);
 
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
