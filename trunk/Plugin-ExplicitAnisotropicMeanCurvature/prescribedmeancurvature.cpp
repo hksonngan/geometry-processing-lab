@@ -116,17 +116,37 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
           printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
 
+          int idx = 0;
+
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
               if(selectionExists && mesh->status(v_it).selected() == false) {
                 continue;
               }
 
+              idx++;
+
               TriMesh::Scalar area = mesh->property(areaStar, v_it);
               TriMesh::Normal updateVector = mesh->property(anisoMeanCurvature, v_it);
               //updateVector -= mesh->property(smoothedAPMC, v_it)*mesh->property(volumeGradientProp, v_it);
 
-              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*updateVector);
+              TriMesh::Normal result = updateVector -
+                      mesh->property(smoothedAPMC, v_it)*mesh->property(volumeGradientProp, v_it);
+
+              //update vector 0.037427 smooth function inf volume 0.000000 result -nan
+              //update vector 0.048741 smooth function 0.107641 volume 1.000000 result 0.154345
+              //this means volume gradient for non-feature vertex = 0
+              //f = Ha/Va
+
+//              if (idx % 20 == 0)
+//              {
+//                  printf("update vector %f smooth function %f volume %f result %f \n",
+//                         updateVector.norm(), mesh->property(smoothedAPMC, v_it)
+//                         , (mesh->property(volumeGradientProp, v_it)).norm()
+//                         , result.norm());
+//              }
+
+              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
           }
 
           mesh->update_normals();
@@ -401,6 +421,8 @@ volumeGradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh,
         }
     }
 
+    q = _mesh->point(vq);
+    r = _mesh->point(vr);
 
     gradient = q%r;
     gradient /= 6;
