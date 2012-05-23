@@ -18,6 +18,9 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
       cylinder does not manifest the problem with curved edges, but the bunny does
       espectially in the ears regions having curved edges (or high curvature features)
       even with smaller time step
+
+      for scan images: lambda often 1.0
+      can only smooth raw scan patches
     */
     double lambda = 0.1;
 
@@ -120,7 +123,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-              if(selectionExists && mesh->status(v_it).selected() == false) {
+              if(mesh->is_boundary(v_it.handle())) {
                 continue;
               }
 
