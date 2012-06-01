@@ -1,5 +1,5 @@
 #include "prescribedmeancurvature.h"
-#include <Eigen/Dense>
+#include <Eigen/Sparse>
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {

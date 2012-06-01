@@ -7,6 +7,22 @@
 #include <ACG/Scenegraph/LineNode.hh>
 #include <ACG/Math/VectorT.hh>
 
+
+
+/*
+  This class implements the smoothing method from the paper:
+    "Anisotropic Filtering of Non-Linear Surface Features".
+
+  for semi implicit method we need to express
+  Ha = Ka^j.P^j+1, where j is time step
+  Ka can be computed using the information from step j
+  but it is applied into the vertices from step j+1 and never into step j
+  Consequently, Ha is semi-implicit.
+  We have to determine which part of Ha is from j (Ka component) and which is from j+1 (P component).
+  and they must not be inter-dependent on each other to make the method linear.
+  Otherwise, we have to use iterative solver.
+  Obviously, we want as many components being j+1 as possible.
+*/
 class PrescribedMeanCurvature
 {
 public:
