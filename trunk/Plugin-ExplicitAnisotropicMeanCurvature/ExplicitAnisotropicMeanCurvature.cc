@@ -175,8 +175,8 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               {
 
                   TriMesh::Normal edgeNormal;
-                  TriMesh::Scalar meanCurvature = pmc.edgeMeanCurvature(mesh, ve_it.handle(), edgeNormal);
-                  double weight = pmc.anisotropicWeight(meanCurvature, lambda, PrescribedMeanCurvature::R);
+                  TriMesh::Scalar meanCurvature = pmc.edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+                  double weight = pmc.anisotropic_weight(meanCurvature, lambda, PrescribedMeanCurvature::R);
 
                   mesh->property(smoothVector, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
@@ -185,7 +185,7 @@ void ExplicitAnisotropicMeanCurvature::smooth(int _iterations) {
               for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
               {
 
-                  mesh->property(areaStar, v_it) += pmc.faceArea(mesh, vf_it.handle());
+                  mesh->property(areaStar, v_it) += pmc.face_area(mesh, vf_it.handle());
               }
 
           }
