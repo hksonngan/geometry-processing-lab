@@ -1,5 +1,8 @@
 #include "prescribedmeancurvature.h"
+#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
 #include <Eigen/Sparse>
+//install cholmod first
+#include <unsupported/Eigen/CholmodSupport>
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {
@@ -29,23 +32,23 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
         TriMesh* mesh = meshObject->mesh();
 
       // Property for the active mesh to store original point positions
-      OpenMesh::VPropHandleT< TriMesh::Normal > anisoMeanCurvature;
-      //the smoothedAMC is for temporary use
-      OpenMesh::VPropHandleT< TriMesh::Normal > smoothedAMC;
-      OpenMesh::VPropHandleT< double > areaStar;
-      OpenMesh::VPropHandleT< double > anisoPMC;
-      OpenMesh::VPropHandleT< double > smoothedAPMC;
-      OpenMesh::VPropHandleT< bool > isFeature;
-      OpenMesh::VPropHandleT< TriMesh::Normal > volumeGradientProp;
+      OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
+      //the smoothed_amc_Ha is for temporary use
+      OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
+      OpenMesh::VPropHandleT< double > area_star;
+      OpenMesh::VPropHandleT< double > apmc_function_f;
+      OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
+      OpenMesh::VPropHandleT< bool > is_feature;
+      OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
 
       // Add a property to the mesh to store mean curvature and area
-      mesh->add_property( anisoMeanCurvature, "explicitAnisotropicMeanCurvature" );
-      mesh->add_property( smoothedAMC, "smoothedAnisotropicMeanCurvature" );
-      mesh->add_property( areaStar, "areaStar" );
-      mesh->add_property( anisoPMC, "anisotropicPrescribedMeanCurvature" );
-      mesh->add_property( smoothedAPMC, "smoothedAPMC" );
-      mesh->add_property( isFeature, "isFeature" );
-      mesh->add_property( volumeGradientProp, "volumeGradientProp" );
+      mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
+      mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
+      mesh->add_property( area_star, "area_star" );
+      mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
+      mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
+      mesh->add_property( is_feature, "is_feature" );
+      mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
 
       mesh->request_vertex_normals();
       mesh->request_vertex_colors();
@@ -63,13 +66,13 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-              mesh->property(anisoMeanCurvature,v_it).vectorize(0.0f);
-              mesh->property(smoothedAMC,v_it).vectorize(0.0f);
-              mesh->property(volumeGradientProp,v_it).vectorize(0.0f);
-              mesh->property(areaStar,v_it) = 0;
-              mesh->property(anisoPMC,v_it) = 0;
-              mesh->property(smoothedAPMC,v_it) = 0;
-              mesh->property(isFeature,v_it) = false;
+              mesh->property(amc_Ha,v_it).vectorize(0.0f);
+              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
+              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+              mesh->property(area_star,v_it) = 0;
+              mesh->property(apmc_function_f,v_it) = 0;
+              mesh->property(smoothed_apmc_function_f,v_it) = 0;
+              mesh->property(is_feature,v_it) = false;
               selectionExists |= mesh->status(v_it).selected();
           }
 
@@ -83,18 +86,18 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
               {
 
                   TriMesh::Normal edgeNormal;
-                  TriMesh::Scalar meanCurvature = edgeMeanCurvature(mesh, ve_it.handle(), edgeNormal);
-                  double weight = anisotropicWeight(meanCurvature, lambda, R);
+                  TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+                  double weight = anisotropic_weight(meanCurvature, lambda, R);
 
-                  mesh->property(anisoMeanCurvature, v_it) += 0.5*meanCurvature*weight*edgeNormal;
+                  mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
                   isotropic += 0.5*meanCurvature*edgeNormal;
 
               }
 
-              if (mesh->property(anisoMeanCurvature, v_it) != isotropic)
+              if (mesh->property(amc_Ha, v_it) != isotropic)
               {
-                  mesh->property(isFeature,v_it) = true;
+                  mesh->property(is_feature,v_it) = true;
                   noFeatureVertices++;
                   //TriMesh::Normal aniso = mesh->property(smoothVector, v_it);
                   //if (noFeatureVertices%10 == 0) printf("aniso x %f iso x %f y %f %f z %f %f \n",
@@ -105,18 +108,19 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
               for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
               {
 
-                  mesh->property(areaStar, v_it) += faceArea(mesh, vf_it.handle());
+                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
                   //volume gradient
                   TriMesh::Normal volGrad;
-                  volumeGradient(mesh, vf_it.handle(), v_it, volGrad);
-                  mesh->property(volumeGradientProp, v_it) += volGrad;
+                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
+                  mesh->property(volume_gradient_Va, v_it) += volGrad;
               }
 
           }
 
-          smoothAnisotropicMeanCurvature(mesh, anisoMeanCurvature, smoothedAMC, volumeGradientProp, isFeature);
+          smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
 
-          computePMCFunction(mesh, anisoMeanCurvature, volumeGradientProp, isFeature, anisoPMC, smoothedAPMC);
+          compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
+                                  , is_feature, apmc_function_f, smoothed_apmc_function_f);
 
           printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
 
@@ -130,12 +134,12 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
               idx++;
 
-              TriMesh::Scalar area = mesh->property(areaStar, v_it);
-              TriMesh::Normal updateVector = mesh->property(anisoMeanCurvature, v_it);
+              TriMesh::Scalar area = mesh->property(area_star, v_it);
+              TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
               //updateVector -= mesh->property(smoothedAPMC, v_it)*mesh->property(volumeGradientProp, v_it);
 
               TriMesh::Normal result = updateVector -
-                      mesh->property(smoothedAPMC, v_it)*mesh->property(volumeGradientProp, v_it);
+                      mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
 
               //update vector 0.037427 smooth function inf volume 0.000000 result -nan
               //update vector 0.048741 smooth function 0.107641 volume 1.000000 result 0.154345
@@ -160,36 +164,36 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
       mesh->update_normals();
-      updateLineNode(meshObject, anisoMeanCurvature, areaStar);
+      updateLineNode(meshObject, amc_Ha, area_star);
 
 
       // Remove the property
-      mesh->remove_property( anisoMeanCurvature );
-      mesh->remove_property( areaStar );
-      mesh->remove_property( isFeature );
-      mesh->remove_property( volumeGradientProp );
-      mesh->remove_property( smoothedAMC );
-      mesh->remove_property( smoothedAPMC );
-      mesh->remove_property( anisoPMC );
+      mesh->remove_property( amc_Ha );
+      mesh->remove_property( area_star );
+      mesh->remove_property( is_feature );
+      mesh->remove_property( volume_gradient_Va );
+      mesh->remove_property( smoothed_amc_Ha );
+      mesh->remove_property( smoothed_apmc_function_f );
+      mesh->remove_property( apmc_function_f );
 
 }
 
 
 void PrescribedMeanCurvature::
-computePMCFunction(TriMesh *_mesh
-                   , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
-                   , const OpenMesh::VPropHandleT< TriMesh::Normal > & volumeGrad
-                   , const OpenMesh::VPropHandleT< bool > & isFeature
-                   , const OpenMesh::VPropHandleT< double > & anisoPMC
-                   , const OpenMesh::VPropHandleT< double > & smoothedAPMC)
+compute_apmc_function_f(TriMesh *_mesh
+                   , const OpenMesh::VPropHandleT< TriMesh::Normal > & amc_Ha
+                   , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
+                   , const OpenMesh::VPropHandleT< bool > & is_feature
+                   , const OpenMesh::VPropHandleT< double > & apmc_function_f
+                   , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f)
 {
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
-        TriMesh::Normal volGrad = _mesh->property(volumeGrad, v_it);
-        TriMesh::Normal anisoMCVec = _mesh->property(anisoMeanCurvature, v_it);
+        TriMesh::Normal volGrad = _mesh->property(volume_gradient_Va, v_it);
+        TriMesh::Normal anisoMCVec = _mesh->property(amc_Ha, v_it);
         TriMesh::Scalar pmc = anisoMCVec.norm()/volGrad.norm();
 
-        _mesh->property(anisoPMC, v_it) = pmc;
+        _mesh->property(apmc_function_f, v_it) = pmc;
 
     }
 
@@ -197,7 +201,7 @@ computePMCFunction(TriMesh *_mesh
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
 
-        bool feature = _mesh->property(isFeature, v_it);
+        bool feature = _mesh->property(is_feature, v_it);
         TriMesh::Scalar avg = 0;
         int i = 0;
 
@@ -205,15 +209,15 @@ computePMCFunction(TriMesh *_mesh
         for ( ; vv_iter; ++vv_iter )
         {
             //if the center vertex is feature vertex we only average over feature neighbors
-            if (feature && !_mesh->property(isFeature, vv_iter)) continue;
+            if (feature && !_mesh->property(is_feature, vv_iter)) continue;
 
-            avg += _mesh->property(anisoPMC, vv_iter);
+            avg += _mesh->property(apmc_function_f, vv_iter);
             i++;
 
         }
 
         avg /= i;
-        _mesh->property(smoothedAPMC, v_it) = avg;
+        _mesh->property(smoothed_apmc_function_f, v_it) = avg;
 
     }
 
@@ -221,22 +225,22 @@ computePMCFunction(TriMesh *_mesh
 
 
 void PrescribedMeanCurvature::
-smoothAnisotropicMeanCurvature(TriMesh *_mesh
-                               , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
-                               , const OpenMesh::VPropHandleT< TriMesh::Normal > & smoothedAMC
-                               , const OpenMesh::VPropHandleT< TriMesh::Normal > & volumeGrad
-                               , const OpenMesh::VPropHandleT< bool > & isFeature)
+smooth_amc(TriMesh *_mesh
+           , const OpenMesh::VPropHandleT< TriMesh::Normal > & amc_Ha
+           , const OpenMesh::VPropHandleT< TriMesh::Normal > & smoothed_amc_Ha
+           , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_grad
+           , const OpenMesh::VPropHandleT< bool > & is_feature)
 {
+    //only replace volume gradient by its aniso counterpart at feature vertices
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
 
-        if (!_mesh->property(isFeature, v_it)) continue;
-
+        if (!_mesh->property(is_feature, v_it)) continue;
 
         TriMesh::Point p, q, r1, r2;
         p = _mesh->point(v_it);
         double totalAngle = 0;
-        TriMesh::Normal unitVec;
+        TriMesh::Normal e_Ha;
         TriMesh::Normal volGradient;
 
 
@@ -253,7 +257,7 @@ smoothAnisotropicMeanCurvature(TriMesh *_mesh
             {
 
                 r1 = _mesh->point(_mesh->to_vertex_handle(_mesh->next_halfedge_handle(vih_it)));
-                sumAngle += calAngle(p, q, r1);
+                sumAngle += cal_angle(p, q, r1);
 
             }
 
@@ -262,24 +266,24 @@ smoothAnisotropicMeanCurvature(TriMesh *_mesh
             if (!_mesh->is_boundary(opp))
             {
                 r2 = _mesh->point(_mesh->from_vertex_handle(_mesh->prev_halfedge_handle(opp)));
-                sumAngle += calAngle(p, q, r2);
+                sumAngle += cal_angle(p, q, r2);
 
             }
 
             totalAngle += sumAngle;
 
-            _mesh->property(smoothedAMC, v_it) += sumAngle*_mesh->property(anisoMeanCurvature, qvh);
+            _mesh->property(smoothed_amc_Ha, v_it) += sumAngle*_mesh->property(amc_Ha, qvh);
 
         }
 
-        unitVec = 0.5*(_mesh->property(anisoMeanCurvature, v_it) + _mesh->property(smoothedAMC, v_it)/totalAngle);
-        unitVec.normalize();
+        e_Ha = 0.5*(_mesh->property(amc_Ha, v_it) + _mesh->property(smoothed_amc_Ha, v_it)/totalAngle);
+        e_Ha.normalize();
 
-        volGradient = _mesh->property(volumeGrad, v_it);
-        double sign = volGradient|unitVec;
-        if (sign < 0) unitVec *= -1;
+        volGradient = _mesh->property(volume_grad, v_it);
+        double sign = volGradient|e_Ha;
+        if (sign < 0) e_Ha *= -1;
 
-        _mesh->property(volumeGrad, v_it) = unitVec;
+        _mesh->property(volume_grad, v_it) = e_Ha;
 
     }
 }
@@ -289,7 +293,7 @@ smoothAnisotropicMeanCurvature(TriMesh *_mesh
 
 
 double PrescribedMeanCurvature::
-calAngle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Point & r)
+cal_angle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Point & r)
 {
     TriMesh::Normal pq = q - p;
     TriMesh::Normal pr = r - p;
@@ -301,7 +305,7 @@ calAngle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Poin
 
 
 double PrescribedMeanCurvature::
-edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal)
+edge_mean_curvature_He_Ne(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal)
 {
 
     //dihedral = 0 on the boundary
@@ -321,6 +325,7 @@ edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & nor
         TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
         TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh2)) - _mesh->point(_mesh->from_vertex_handle(hh2));
         normal = (edgeVector%n2);
+        normal.normalize();
 
     }else if ( _mesh->is_boundary( hh2 ) )
     {
@@ -329,6 +334,7 @@ edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & nor
         TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
         TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh1)) - _mesh->point(_mesh->from_vertex_handle(hh1));
         normal = (edgeVector%n1);
+        normal.normalize();
 
     }else
     {
@@ -353,7 +359,7 @@ edgeMeanCurvature(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & nor
 
 }
 
-double PrescribedMeanCurvature::anisotropicWeight(double curvature, double lambda, double r)
+double PrescribedMeanCurvature::anisotropic_weight(double curvature, double lambda, double r)
 {
 
     double weight;
@@ -372,7 +378,7 @@ double PrescribedMeanCurvature::anisotropicWeight(double curvature, double lambd
     return weight;
 }
 
-TriMesh::Scalar PrescribedMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceHandle fh)
+TriMesh::Scalar PrescribedMeanCurvature::face_area(TriMesh *_mesh, TriMesh::FaceHandle fh)
 {
     // calaculate face area
     TriMesh::Point  p1, p2, p3;
@@ -409,7 +415,7 @@ TriMesh::Scalar PrescribedMeanCurvature::faceArea(TriMesh *_mesh, TriMesh::FaceH
  */
 void
 PrescribedMeanCurvature::
-volumeGradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh, TriMesh::Normal & gradient)
+volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh, TriMesh::Normal & gradient)
 {
 
     TriMesh::Point  q, r;
