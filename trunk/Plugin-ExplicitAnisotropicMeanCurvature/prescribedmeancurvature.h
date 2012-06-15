@@ -153,6 +153,8 @@ private:
     double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Scalar & normal_length
                                    , TriMesh::VertexHandle _vh, Mat3x3 & cross);
 
+    double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
+
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
 

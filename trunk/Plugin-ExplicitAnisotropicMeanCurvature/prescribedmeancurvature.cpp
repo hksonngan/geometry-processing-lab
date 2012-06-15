@@ -264,6 +264,37 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh:
 
 
 
+double PrescribedMeanCurvature::area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh)
+{
+
+    TriMesh::HalfedgeHandle  hh1, hh2;
+    TriMesh::FaceHandle    fh1, fh2;
+    double area_star = 0;
+
+    hh1 = _mesh->halfedge_handle(_eh, 0);
+    hh2 = _mesh->halfedge_handle(_eh, 1);
+
+    if ( _mesh->is_boundary( hh1 ) )
+    {
+        fh2 = _mesh->face_handle(hh2);
+        area_star = face_area(_mesh, fh2);
+
+    }else if ( _mesh->is_boundary( hh2 ) )
+    {
+        fh1 = _mesh->face_handle(hh1);
+        area_star = face_area(_mesh, fh1);
+    }else
+    {
+        fh1 = _mesh->face_handle(hh1);
+        fh2 = _mesh->face_handle(hh2);
+
+        area_star += face_area(_mesh, fh2);
+        area_star += face_area(_mesh, fh1);
+    }
+
+    return area_star;
+}
+
 
 
 void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * meshObject)
@@ -350,14 +381,14 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
               mesh->property(amc_Ha_matrix,v_it) = Mat3x3(0, 0, 0, 0, 0, 0, 0, 0, 0);
-              mesh->property(amc_Ha,v_it).vectorize(0.0f);
-              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
-              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
-              mesh->property(area_star,v_it) = 0;
-              mesh->property(apmc_function_f,v_it) = 0;
-              mesh->property(smoothed_apmc_function_f,v_it) = 0;
-              mesh->property(is_feature,v_it) = false;
-              selectionExists |= mesh->status(v_it).selected();
+//              mesh->property(amc_Ha,v_it).vectorize(0.0f);
+//              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
+//              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+//              mesh->property(area_star,v_it) = 0;
+//              mesh->property(apmc_function_f,v_it) = 0;
+//              mesh->property(smoothed_apmc_function_f,v_it) = 0;
+//              mesh->property(is_feature,v_it) = false;
+//              selectionExists |= mesh->status(v_it).selected();
           }
 
 
@@ -388,39 +419,39 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 //                  noFeatureVertices++;
 //              }
 
-              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
-              {
+//              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
+//              {
 
-                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
-                  //volume gradient
-                  TriMesh::Normal volGrad;
-                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
-                  mesh->property(volume_gradient_Va, v_it) += volGrad;
-              }
+//                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
+//                  //volume gradient
+//                  TriMesh::Normal volGrad;
+//                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
+//                  mesh->property(volume_gradient_Va, v_it) += volGrad;
+//              }
 
           }
 
-          smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
+//          smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
 
-          compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
-                                  , is_feature, apmc_function_f, smoothed_apmc_function_f);
+//          compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
+//                                  , is_feature, apmc_function_f, smoothed_apmc_function_f);
 
-          //printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
+//          //printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
 
-          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-          {
-              if(mesh->is_boundary(v_it.handle())) {
-                continue;
-              }
+//          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+//          {
+//              if(mesh->is_boundary(v_it.handle())) {
+//                continue;
+//              }
 
-              TriMesh::Scalar area = mesh->property(area_star, v_it);
-              TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
+//              TriMesh::Scalar area = mesh->property(area_star, v_it);
+//              TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
 
-              TriMesh::Normal result = updateVector -
-                      mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
+//              TriMesh::Normal result = updateVector -
+//                      mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
 
-              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
-          }
+//              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
+//          }
 
           mesh->update_normals();
 
