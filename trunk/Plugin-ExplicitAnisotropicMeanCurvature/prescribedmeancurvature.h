@@ -6,6 +6,7 @@
 #include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
 #include <ACG/Scenegraph/LineNode.hh>
 #include <ACG/Math/VectorT.hh>
+#include "Mat3x3.hh"
 
 
 
@@ -95,6 +96,8 @@ public:
 
     void smooth(int _iterations, TriMeshObject * meshObject);
 
+    void smooth_implicit(int _iterations, TriMeshObject * meshObject);
+
     void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< double >& areaStar);
 
 private:
@@ -147,6 +150,8 @@ private:
                             , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f);
 
 
+    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Scalar & normal_length
+                                   , TriMesh::VertexHandle _vh, Mat3x3 & cross);
 
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );
