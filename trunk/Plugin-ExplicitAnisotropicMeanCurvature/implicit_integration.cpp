@@ -67,7 +67,63 @@ init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
 
     }
 
+    mass = Eigen::SparseMatrix<double>(mass_dyn);
+
 }
+
+
+
+
+void Implicit_Integration::
+init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
+                , const OpenMesh::VPropHandleT< int > &vertex_id
+                , const OpenMesh::VPropHandleT < std::vector<int> > &vertex_one_ring
+                , Eigen::SparseMatrix<double> &amc_matrix)
+{
+
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        //VertexOHalfedgeIter MyMesh::voh_iter (VertexHandle _vh);
+        for (TriMesh::VertexOHalfedgeIter voh_it=mesh->voh_iter(v_it.handle()); voh_it; ++voh_it)
+        {
+
+            TriMesh::EdgeHandle eh = mesh->edge_handle(voh_it.handle());
+            Mat3x3 the_cross;
+            TriMesh::Scalar normalLength;
+            TriMesh::Scalar meanCurvature = pmc->calculate_cross_matrix_Ax_qjpi(mesh, eh
+                                                                           , normalLength
+                                                                           , v_it.handle(), the_cross);
+
+
+            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_lambda()
+                                                    , PrescribedMeanCurvature::R);
+
+            the_cross *= ((0.5*meanCurvature*weight)/normalLength);
+
+            //identify the vertex qj+1 and qj-1
+            //be careful about the haldfedge directions or the normal will point inward
+
+
+            TriMesh::VertexHandle p, q;
+
+//            p = mesh->from_vertex_handle(hh);
+//            q = mesh->to_vertex_handle(hh);
+
+
+
+//            int pId = mesh->property(vertex_id, p);
+//            int qId = mesh->property(vertex_id, q);
+
+        }
+
+    }
+
+}
+
+
+
+
 
 
 

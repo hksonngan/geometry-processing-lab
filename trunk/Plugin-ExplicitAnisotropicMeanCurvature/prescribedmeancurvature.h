@@ -100,12 +100,36 @@ public:
 
     double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
 
+    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Scalar & normal_length
+                                   , TriMesh::VertexHandle _vh, Mat3x3 & cross);
+
+    double get_lambda()
+    {
+        return m_lambda;
+    }
+
     void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< double >& areaStar);
 
 private:
 
     typedef ACG::Vec3uc Color;
     typedef ACG::Vec3d  Vec3d;
+
+
+    /*
+      bunny: lambda = 0.1 and number of feature vertices: 1389 in total 8810
+      cylinder: lambda = 0.32 or 0.31
+      cylinder does not manifest the problem with curved edges, but the bunny does
+      espectially in the ears regions having curved edges (or high curvature features)
+      even with smaller time step
+
+      for scan images: lambda often 1.0
+      can only smooth raw scan patches
+
+      todo: automatic lambda computation
+    */
+    double m_lambda;
+
 
     /**
      * @brief   calculate vertex angle at p.
@@ -152,8 +176,7 @@ private:
                             , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f);
 
 
-    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Scalar & normal_length
-                                   , TriMesh::VertexHandle _vh, Mat3x3 & cross);
+
 
 
 

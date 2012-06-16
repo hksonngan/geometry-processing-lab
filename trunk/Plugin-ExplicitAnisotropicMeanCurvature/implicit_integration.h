@@ -9,6 +9,7 @@
 #include <ObjectTypes/PolyMesh/PolyMesh.hh>
 #include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
 #include "prescribedmeancurvature.h"
+#include "Mat3x3.hh"
 
 /**
  * @brief perform semi-implicit integration scheme for prescribed mean curvature mesh smoothing.
@@ -33,6 +34,11 @@ private:
                           , const OpenMesh::VPropHandleT< double > & area_star
                           , const OpenMesh::VPropHandleT< int > & vertex_id
                           , Eigen::SparseMatrix<double> & mass);
+
+    void init_amc_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
+                         , const OpenMesh::VPropHandleT< int > & vertex_id
+                         , const OpenMesh::VPropHandleT < std::vector<int> > & vertex_one_ring
+                         , Eigen::SparseMatrix<double> & amc_matrix);
 
 };
 

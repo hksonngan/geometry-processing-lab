@@ -6,6 +6,7 @@
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {
+    m_lambda = 0.1;
 }
 
 
@@ -15,18 +16,6 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
     bool selectionExists = false;
-
-    /*
-      bunny: lambda = 0.1 and number of feature vertices: 1389 in total 8810
-      cylinder: lambda = 0.32 or 0.31
-      cylinder does not manifest the problem with curved edges, but the bunny does
-      espectially in the ears regions having curved edges (or high curvature features)
-      even with smaller time step
-
-      for scan images: lambda often 1.0
-      can only smooth raw scan patches
-    */
-    double lambda = 0.1;
 
 
         TriMesh* mesh = meshObject->mesh();
@@ -113,7 +102,7 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
                   TriMesh::Normal edgeNormal;
                   TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
-                  double weight = anisotropic_weight(meanCurvature, lambda, R);
+                  double weight = anisotropic_weight(meanCurvature, m_lambda, R);
 
                   mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
@@ -303,23 +292,13 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
     bool selectionExists = false;
 
-    /*
-      bunny: lambda = 0.1 and number of feature vertices: 1389 in total 8810
-      cylinder: lambda = 0.32 or 0.31
-      cylinder does not manifest the problem with curved edges, but the bunny does
-      espectially in the ears regions having curved edges (or high curvature features)
-      even with smaller time step
 
-      for scan images: lambda often 1.0
-      can only smooth raw scan patches
-    */
-    double lambda = 0.1;
 
 
       TriMesh* mesh = meshObject->mesh();
 
       // Property for the active mesh to store original point positions
-      OpenMesh::VPropHandleT< Mat3x3 > amc_Ha_matrix;
+      //OpenMesh::VPropHandleT< Mat3x3 > amc_Ha_matrix;
       OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
       //the smoothed_amc_Ha is for temporary use
       OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
@@ -333,6 +312,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
       // Add a property to the mesh to store mean curvature and area
       mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
+      //mesh->add_property( amc_Ha_matrix, "anisotropic_mean_curvature_Ha_matrix" );
       mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
       mesh->add_property( area_star, "area_star" );
       mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
@@ -380,7 +360,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-              mesh->property(amc_Ha_matrix,v_it) = Mat3x3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+              //mesh->property(amc_Ha_matrix,v_it) = Mat3x3(0, 0, 0, 0, 0, 0, 0, 0, 0);
 //              mesh->property(amc_Ha,v_it).vectorize(0.0f);
 //              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
 //              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
@@ -397,21 +377,21 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
               //TriMesh::Normal isotropic;
               //isotropic.vectorize(0);
 
-              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
-              {
+//              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
+//              {
 
-                  Mat3x3 the_cross;
-                  TriMesh::Scalar normalLength;
-                  TriMesh::Scalar meanCurvature = calculate_cross_matrix_Ax_qjpi(mesh, ve_it.handle()
-                                                                                 , normalLength
-                                                                                 , v_it.handle(), the_cross);
-                  double weight = anisotropic_weight(meanCurvature, lambda, R);
+//                  Mat3x3 the_cross;
+//                  TriMesh::Scalar normalLength;
+//                  TriMesh::Scalar meanCurvature = calculate_cross_matrix_Ax_qjpi(mesh, ve_it.handle()
+//                                                                                 , normalLength
+//                                                                                 , v_it.handle(), the_cross);
+//                  double weight = anisotropic_weight(meanCurvature, m_lambda, R);
 
-                  mesh->property(amc_Ha_matrix, v_it) += ((0.5*meanCurvature*weight)/normalLength)*the_cross;
+//                  mesh->property(amc_Ha_matrix, v_it) += ((0.5*meanCurvature*weight)/normalLength)*the_cross;
 
-                  //isotropic += 0.5*meanCurvature*edgeNormal;
+//                  //isotropic += 0.5*meanCurvature*edgeNormal;
 
-              }
+//              }
 
 //              if (mesh->property(amc_Ha, v_it) != isotropic)
 //              {
