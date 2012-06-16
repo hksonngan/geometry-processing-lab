@@ -81,10 +81,11 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
                 , Eigen::SparseMatrix<double> &amc_matrix)
 {
 
+    Eigen::DynamicSparseMatrix<double> amc_dyn(amc_matrix.rows(), amc_matrix.cols());
+
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
 
-        //VertexOHalfedgeIter MyMesh::voh_iter (VertexHandle _vh);
         for (TriMesh::VertexOHalfedgeIter voh_it=mesh->voh_iter(v_it.handle()); voh_it; ++voh_it)
         {
 
@@ -103,21 +104,46 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
 
             //identify the vertex qj+1 and qj-1
             //be careful about the haldfedge directions or the normal will point inward
+            TriMesh::VertexHandle q_plus, q_minus;
+
+            q_plus = mesh->to_vertex_handle(mesh->next_halfedge_handle(voh_it));
+            q_minus = mesh->from_vertex_handle(
+                        mesh->prev_halfedge_handle( mesh->opposite_halfedge_handle(voh_it) ) );
+
+            int q_plus_id = mesh->property(vertex_id, q_plus);
+            int q_minus_id = mesh->property(vertex_id, q_minus);
+            int p_id = mesh->property(vertex_id, v_it);
+
+            //put the_cross in the q_plus_id and -the_cross in the q_minus_id positions
+            //remember to sum up the value at each entry
+
+            amc_dyn.coeffRef(p_id*3, q_plus_id*3) += the_cross(0, 0);
+            amc_dyn.coeffRef(p_id*3, q_plus_id*3+1) += the_cross(0, 1);
+            amc_dyn.coeffRef(p_id*3, q_plus_id*3+2) += the_cross(0, 2);
+            amc_dyn.coeffRef(p_id*3+1, q_plus_id*3) += the_cross(1, 0);
+            amc_dyn.coeffRef(p_id*3+1, q_plus_id*3+1) += the_cross(1, 1);
+            amc_dyn.coeffRef(p_id*3+1, q_plus_id*3+2) += the_cross(1, 2);
+            amc_dyn.coeffRef(p_id*3+2, q_plus_id*3) += the_cross(2, 0);
+            amc_dyn.coeffRef(p_id*3+2, q_plus_id*3+1) += the_cross(2, 1);
+            amc_dyn.coeffRef(p_id*3+2, q_plus_id*3+2) += the_cross(2, 2);
 
 
-            TriMesh::VertexHandle p, q;
 
-//            p = mesh->from_vertex_handle(hh);
-//            q = mesh->to_vertex_handle(hh);
-
-
-
-//            int pId = mesh->property(vertex_id, p);
-//            int qId = mesh->property(vertex_id, q);
+            amc_dyn.coeffRef(p_id*3, q_minus_id*3) -= the_cross(0, 0);
+            amc_dyn.coeffRef(p_id*3, q_minus_id*3+1) -= the_cross(0, 1);
+            amc_dyn.coeffRef(p_id*3, q_minus_id*3+2) -= the_cross(0, 2);
+            amc_dyn.coeffRef(p_id*3+1, q_minus_id*3) -= the_cross(1, 0);
+            amc_dyn.coeffRef(p_id*3+1, q_minus_id*3+1) -= the_cross(1, 1);
+            amc_dyn.coeffRef(p_id*3+1, q_minus_id*3+2) -= the_cross(1, 2);
+            amc_dyn.coeffRef(p_id*3+2, q_minus_id*3) -= the_cross(2, 0);
+            amc_dyn.coeffRef(p_id*3+2, q_minus_id*3+1) -= the_cross(2, 1);
+            amc_dyn.coeffRef(p_id*3+2, q_minus_id*3+2) -= the_cross(2, 2);
 
         }
 
     }
+
+    amc_matrix = Eigen::SparseMatrix<double>(amc_dyn);
 
 }
 

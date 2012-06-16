@@ -308,7 +308,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
       OpenMesh::VPropHandleT< bool > is_feature;
       OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
       OpenMesh::VPropHandleT< int > vertex_id;
-      OpenMesh::VPropHandleT < std::vector<int> > vertex_one_ring;
+      //OpenMesh::VPropHandleT < std::vector<int> > vertex_one_ring;
 
       // Add a property to the mesh to store mean curvature and area
       mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
@@ -320,7 +320,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
       mesh->add_property( is_feature, "is_feature" );
       mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
       mesh->add_property( vertex_id, "vertex_id" );
-      mesh->add_property( vertex_one_ring, "vertex_one_ring" );
+      //mesh->add_property( vertex_one_ring, "vertex_one_ring" );
 
       mesh->request_vertex_normals();
       mesh->request_vertex_colors();
@@ -340,15 +340,15 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
           idx++;
       }
 
-      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-      {
+//      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+//      {
 
-          for (TriMesh::VertexVertexIter vv_it=mesh->vv_iter(v_it.handle()); vv_it; ++vv_it)
-          {
-              mesh->property(vertex_one_ring, v_it).push_back( mesh->property(vertex_id, vv_it) );
-          }
+//          for (TriMesh::VertexVertexIter vv_it=mesh->vv_iter(v_it.handle()); vv_it; ++vv_it)
+//          {
+//              mesh->property(vertex_one_ring, v_it).push_back( mesh->property(vertex_id, vv_it) );
+//          }
 
-      }
+//      }
 
 
 
@@ -452,7 +452,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
       mesh->remove_property( smoothed_apmc_function_f );
       mesh->remove_property( apmc_function_f );
       mesh->remove_property( vertex_id );
-      mesh->remove_property( vertex_one_ring );
+      //mesh->remove_property( vertex_one_ring );
 
 }
 
