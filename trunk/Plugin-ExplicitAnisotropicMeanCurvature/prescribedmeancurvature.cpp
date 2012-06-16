@@ -384,7 +384,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 //              mesh->property(amc_Ha,v_it).vectorize(0.0f);
 //              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
 //              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
-//              mesh->property(area_star,v_it) = 0;
+              mesh->property(area_star,v_it) = 0;
 //              mesh->property(apmc_function_f,v_it) = 0;
 //              mesh->property(smoothed_apmc_function_f,v_it) = 0;
 //              mesh->property(is_feature,v_it) = false;
@@ -419,15 +419,15 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 //                  noFeatureVertices++;
 //              }
 
-//              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
-//              {
+              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
+              {
 
-//                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
+                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
 //                  //volume gradient
 //                  TriMesh::Normal volGrad;
 //                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
 //                  mesh->property(volume_gradient_Va, v_it) += volGrad;
-//              }
+              }
 
           }
 

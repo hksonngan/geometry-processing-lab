@@ -30,6 +30,8 @@ private:
     void init_vertex_vector(TriMesh * mesh, Eigen::VectorXd & vertices);
 
     void init_mass_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
+                          , const OpenMesh::VPropHandleT< double > & area_star
+                          , const OpenMesh::VPropHandleT< int > & vertex_id
                           , Eigen::SparseMatrix<double> & mass);
 
 };
