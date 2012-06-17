@@ -3,6 +3,7 @@
 #include <Eigen/Sparse>
 //install cholmod first
 #include <unsupported/Eigen/CholmodSupport>
+#include "implicit_integration.h"
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {
@@ -380,16 +381,13 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 //              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
 //              {
 
-//                  Mat3x3 the_cross;
-//                  TriMesh::Scalar normalLength;
-//                  TriMesh::Scalar meanCurvature = calculate_cross_matrix_Ax_qjpi(mesh, ve_it.handle()
-//                                                                                 , normalLength
-//                                                                                 , v_it.handle(), the_cross);
-//                  double weight = anisotropic_weight(meanCurvature, m_lambda, R);
+//              TriMesh::Normal edgeNormal;
+//              TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+//              double weight = anisotropic_weight(meanCurvature, m_lambda, R);
 
-//                  mesh->property(amc_Ha_matrix, v_it) += ((0.5*meanCurvature*weight)/normalLength)*the_cross;
+//              mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
-//                  //isotropic += 0.5*meanCurvature*edgeNormal;
+//              isotropic += 0.5*meanCurvature*edgeNormal;
 
 //              }
 
@@ -432,6 +430,10 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
 //              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
 //          }
+
+
+          Implicit_Integration implicit_solver;
+          implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id);
 
           mesh->update_normals();
 

@@ -24,10 +24,28 @@ class Implicit_Integration
 public:
     Implicit_Integration();
 
-
+    /**
+     * @brief establish the mass matrix and the matrix for calculating aniso. mean curvature Ka.
+     *  solve the system of linear equations.
+     *
+     * @param mesh          the mesh
+     * @param mesh_size     the number of vertices
+     * @param area_star     vertex property containing area star
+     * @param vertex_id     vertex property containing vertex id
+     */
+    void compute_semi_implicit_integration(TriMesh * mesh
+                                           , unsigned int mesh_size
+                                           , const OpenMesh::VPropHandleT< double > & area_star
+                                           , const OpenMesh::VPropHandleT< int > & vertex_id);
 
 private:
 
+    /**
+     * @brief           populate a dense vector of vertices.
+     *
+     * @param mesh
+     * @param vertices  this has the length of 3*n where n is the number of vertices
+     */
     void init_vertex_vector(TriMesh * mesh, Eigen::VectorXd & vertices);
 
     void init_mass_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
@@ -37,7 +55,6 @@ private:
 
     void init_amc_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
                          , const OpenMesh::VPropHandleT< int > & vertex_id
-                         , const OpenMesh::VPropHandleT < std::vector<int> > & vertex_one_ring
                          , Eigen::SparseMatrix<double> & amc_matrix);
 
 };

@@ -77,7 +77,6 @@ init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
 void Implicit_Integration::
 init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
                 , const OpenMesh::VPropHandleT< int > &vertex_id
-                , const OpenMesh::VPropHandleT < std::vector<int> > &vertex_one_ring
                 , Eigen::SparseMatrix<double> &amc_matrix)
 {
 
@@ -146,6 +145,58 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
     amc_matrix = Eigen::SparseMatrix<double>(amc_dyn);
 
 }
+
+
+
+
+
+void Implicit_Integration::
+compute_semi_implicit_integration(TriMesh *mesh
+                                  , unsigned int mesh_size
+                                  , const OpenMesh::VPropHandleT< double > & area_star
+                                  , const OpenMesh::VPropHandleT< int > & vertex_id)
+{
+    //unsigned int mesh_size = (mesh()->n_vertices())*3;
+    PrescribedMeanCurvature pmc;
+
+    Eigen::VectorXd input_vertices(mesh_size);
+    this->init_vertex_vector(mesh, input_vertices);
+
+    Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
+    this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+
+    Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
+    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+
+    Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
+    A = mass_matrix + PrescribedMeanCurvature::TIME_STEP*amc_matrix;
+
+    Eigen::VectorXd b(mesh_size);
+    b = mass_matrix*input_vertices;
+
+    Eigen::VectorXd x(mesh_size);
+    Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
+    printf("start computing the matrix \n");
+    cholmoDec.compute(A);
+    printf("start solving the equations \n");
+    x = cholmoDec.solve(b);
+
+    //convert the result back to vertex and update the mesh
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+        TriMesh::Point point = TriMesh::Point(0,0,0);
+        int idx = mesh->property(vertex_id, v_it);
+
+        point[0] = x[idx*3];
+        point[1] = x[idx*3+1];
+        point[2] = x[idx*3+2];
+
+        mesh->set_point(v_it, point);
+    }
+
+}
+
+
 
 
 
