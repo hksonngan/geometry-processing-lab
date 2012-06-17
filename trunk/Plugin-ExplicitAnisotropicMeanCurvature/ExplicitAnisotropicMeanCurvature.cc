@@ -319,8 +319,8 @@ void ExplicitAnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
 
-            pmc.smooth(_iterations, meshObject);
-
+            //pmc.smooth(_iterations, meshObject);
+            pmc.smooth_implicit(_iterations, meshObject);
 
 
 

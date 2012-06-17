@@ -8,14 +8,14 @@ Implicit_Integration::Implicit_Integration()
 void Implicit_Integration::
 init_vertex_vector(TriMesh *mesh, Eigen::VectorXd &vertices)
 {
-    unsigned int count = 0;
+    unsigned int id = 0;
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
         TriMesh::Point point = mesh->point(v_it);
-        vertices[count] = point[0];
-        vertices[count+1] = point[1];
-        vertices[count+2] = point[2];
-        count += 3;
+        vertices[id*3] = point[0];
+        vertices[id*3+1] = point[1];
+        vertices[id*3+2] = point[2];
+        id++;
     }
 }
 
@@ -156,20 +156,26 @@ compute_semi_implicit_integration(TriMesh *mesh
                                   , const OpenMesh::VPropHandleT< double > & area_star
                                   , const OpenMesh::VPropHandleT< int > & vertex_id)
 {
-    //unsigned int mesh_size = (mesh()->n_vertices())*3;
+
+    printf("entering implicit step \n");
+
     PrescribedMeanCurvature pmc;
+    mesh_size *= 3;
 
     Eigen::VectorXd input_vertices(mesh_size);
     this->init_vertex_vector(mesh, input_vertices);
+    printf("done init vertex vector \n");
 
     Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
     this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    printf("done init mass matrix \n");
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
     this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+    printf("done init amc matrix \n");
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
-    A = mass_matrix + PrescribedMeanCurvature::TIME_STEP*amc_matrix;
+    A = mass_matrix + 10*PrescribedMeanCurvature::TIME_STEP*amc_matrix;
 
     Eigen::VectorXd b(mesh_size);
     b = mass_matrix*input_vertices;
@@ -180,6 +186,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     cholmoDec.compute(A);
     printf("start solving the equations \n");
     x = cholmoDec.solve(b);
+    printf("start updating the mesh \n");
 
     //convert the result back to vertex and update the mesh
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
