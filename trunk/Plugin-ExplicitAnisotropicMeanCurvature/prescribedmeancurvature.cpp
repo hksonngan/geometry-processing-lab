@@ -241,6 +241,8 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, 
 
         the_edge = qj - pi;
 
+        //in both cases, the vertex is pushed in the tangental direction
+        //without this flipping of normal, it will get worse
         if (dihedral < 0) the_edge *= -1;
 
         cross = Mat3x3(0, -the_edge[2], the_edge[1], the_edge[2], 0, -the_edge[0], -the_edge[1], the_edge[0], 0);
