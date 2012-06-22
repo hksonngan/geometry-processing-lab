@@ -1,4 +1,2 @@
 include (plugin)
-openflipper_plugin (INSTALLDATA Icons)
-
-include_directories (${OpenFlipper_SOURCE_DIR}/eigen3)
+openflipper_plugin (DEPS SUITESPARSE Eigen3 INSTALLDATA Icons)

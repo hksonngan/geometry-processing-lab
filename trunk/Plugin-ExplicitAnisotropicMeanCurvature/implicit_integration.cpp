@@ -175,7 +175,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     printf("done init amc matrix \n");
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
-    A = mass_matrix + 10*PrescribedMeanCurvature::TIME_STEP*amc_matrix;
+    A = mass_matrix + PrescribedMeanCurvature::TIME_STEP*amc_matrix;
 
     Eigen::VectorXd b(mesh_size);
     b = mass_matrix*input_vertices;
