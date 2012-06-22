@@ -6,16 +6,16 @@ Implicit_Integration::Implicit_Integration()
 
 
 void Implicit_Integration::
-init_vertex_vector(TriMesh *mesh, Eigen::VectorXd &vertices)
+init_vertex_vector(TriMesh *mesh, Eigen::VectorXd &vertices, const OpenMesh::VPropHandleT< int > & vertex_id)
 {
-    unsigned int id = 0;
+
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
+        unsigned int id = mesh->property(vertex_id, v_it);
         TriMesh::Point point = mesh->point(v_it);
         vertices[id*3] = point[0];
         vertices[id*3+1] = point[1];
         vertices[id*3+2] = point[2];
-        id++;
     }
 }
 
@@ -43,6 +43,8 @@ init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
         int qId = mesh->property(vertex_id, q);
 
         //it's safe to have assignment operator here
+        //each row corresponds to one vertex
+        //there are at most n-1 edges emanating from one vertex
         mass_dyn.coeffRef(pId*3, qId*3) = edge_area_star;
         mass_dyn.coeffRef(qId*3, pId*3) = edge_area_star;
 
@@ -164,7 +166,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     mesh_size *= 3;
 
     Eigen::VectorXd input_vertices(mesh_size);
-    this->init_vertex_vector(mesh, input_vertices);
+    this->init_vertex_vector(mesh, input_vertices, vertex_id);
     printf("done init vertex vector \n");
 
     Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);

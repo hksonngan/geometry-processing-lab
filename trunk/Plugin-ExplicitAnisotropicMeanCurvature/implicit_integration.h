@@ -51,7 +51,8 @@ private:
      * @param mesh
      * @param vertices  this has the length of 3*n where n is the number of vertices
      */
-    void init_vertex_vector(TriMesh * mesh, Eigen::VectorXd & vertices);
+    void init_vertex_vector(TriMesh * mesh, Eigen::VectorXd & vertices
+                            , const OpenMesh::VPropHandleT< int > & vertex_id);
 
     void init_mass_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
                           , const OpenMesh::VPropHandleT< double > & area_star
