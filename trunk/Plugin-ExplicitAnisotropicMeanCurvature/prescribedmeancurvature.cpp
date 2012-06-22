@@ -179,8 +179,8 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
 double PrescribedMeanCurvature::
-calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Scalar & normal_length
-                               , TriMesh::VertexHandle _vh, Mat3x3 & cross)
+calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, TriMesh::Scalar & normal_length
+                               , const TriMesh::VertexHandle & _vh, Mat3x3 & cross)
 {
 
 

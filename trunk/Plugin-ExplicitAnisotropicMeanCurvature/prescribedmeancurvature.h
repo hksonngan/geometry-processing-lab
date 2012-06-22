@@ -101,8 +101,9 @@ public:
 
     double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
 
-    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Scalar & normal_length
-                                   , TriMesh::VertexHandle _vh, Mat3x3 & cross);
+    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh
+                                          , TriMesh::Scalar & normal_length
+                                          , const TriMesh::VertexHandle & _vh, Mat3x3 & cross);
 
     double get_lambda()
     {
