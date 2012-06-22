@@ -50,7 +50,8 @@ public:
     //! for implicit method multiply by a factor of 10 or 100
     //! for fine scale noise multiply by a factor of 0.1
     //! for scan images time step = 0.001
-    static const double TIME_STEP = 0.00005;
+    static const double TIME_STEP = 0.00001;
+
 
     /**
      * @brief                       calculate face area.
@@ -108,7 +109,12 @@ public:
         return m_lambda;
     }
 
-    void updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< double >& areaStar);
+    void updateLineNode(TriMeshObject * _meshObject
+                        , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
+                        , const OpenMesh::VPropHandleT< double >& areaStar);
+
+    void updateLineNode(TriMeshObject * _meshObject
+                        , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
 
 private:
 

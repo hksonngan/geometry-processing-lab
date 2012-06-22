@@ -154,7 +154,8 @@ void Implicit_Integration::
 compute_semi_implicit_integration(TriMesh *mesh
                                   , unsigned int mesh_size
                                   , const OpenMesh::VPropHandleT< double > & area_star
-                                  , const OpenMesh::VPropHandleT< int > & vertex_id)
+                                  , const OpenMesh::VPropHandleT< int > & vertex_id
+                                  , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
 {
 
     printf("entering implicit step \n");
@@ -175,7 +176,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     printf("done init amc matrix \n");
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
-    A = mass_matrix + PrescribedMeanCurvature::TIME_STEP*amc_matrix;
+    A = mass_matrix + IMPLICIT_TIME_FACTOR*PrescribedMeanCurvature::TIME_STEP*amc_matrix;
 
     Eigen::VectorXd b(mesh_size);
     b = mass_matrix*input_vertices;
@@ -191,6 +192,10 @@ compute_semi_implicit_integration(TriMesh *mesh
     //convert the result back to vertex and update the mesh
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
+
+        TriMesh::Point old_point = mesh->point(v_it);
+        mesh->property(old_vertex, v_it) = old_point;
+
         TriMesh::Point point = TriMesh::Point(0,0,0);
         int idx = mesh->property(vertex_id, v_it);
 

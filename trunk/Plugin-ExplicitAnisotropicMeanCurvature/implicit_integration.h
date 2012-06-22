@@ -24,6 +24,10 @@ class Implicit_Integration
 public:
     Implicit_Integration();
 
+
+    static const double IMPLICIT_TIME_FACTOR = 10;
+
+
     /**
      * @brief establish the mass matrix and the matrix for calculating aniso. mean curvature Ka.
      *  solve the system of linear equations.
@@ -36,7 +40,8 @@ public:
     void compute_semi_implicit_integration(TriMesh * mesh
                                            , unsigned int mesh_size
                                            , const OpenMesh::VPropHandleT< double > & area_star
-                                           , const OpenMesh::VPropHandleT< int > & vertex_id);
+                                           , const OpenMesh::VPropHandleT< int > & vertex_id
+                                           , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
 
 private:
 

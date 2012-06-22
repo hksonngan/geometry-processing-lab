@@ -7,7 +7,7 @@
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {
-    m_lambda = 0.1;
+    m_lambda = 10;//0.1
 }
 
 
@@ -299,7 +299,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
       TriMesh* mesh = meshObject->mesh();
 
       // Property for the active mesh to store original point positions
-      //OpenMesh::VPropHandleT< Mat3x3 > amc_Ha_matrix;
+      OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
       OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
       //the smoothed_amc_Ha is for temporary use
       OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
@@ -313,7 +313,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
       // Add a property to the mesh to store mean curvature and area
       mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
-      //mesh->add_property( amc_Ha_matrix, "anisotropic_mean_curvature_Ha_matrix" );
+      mesh->add_property( old_vertex, "new_amc_vertex" );
       mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
       mesh->add_property( area_star, "area_star" );
       mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
@@ -361,11 +361,11 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
           for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
           {
-              //mesh->property(amc_Ha_matrix,v_it) = Mat3x3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+                mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
 //              mesh->property(amc_Ha,v_it).vectorize(0.0f);
 //              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
 //              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
-              mesh->property(area_star,v_it) = 0;
+                mesh->property(area_star,v_it) = 0;
 //              mesh->property(apmc_function_f,v_it) = 0;
 //              mesh->property(smoothed_apmc_function_f,v_it) = 0;
 //              mesh->property(is_feature,v_it) = false;
@@ -433,7 +433,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
 
           Implicit_Integration implicit_solver;
-          implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id);
+          implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
 
           mesh->update_normals();
 
@@ -442,7 +442,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
 
       mesh->update_normals();
-      updateLineNode(meshObject, amc_Ha, area_star);
+      updateLineNode(meshObject, old_vertex);
 
 
       // Remove the property
@@ -454,7 +454,7 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
       mesh->remove_property( smoothed_apmc_function_f );
       mesh->remove_property( apmc_function_f );
       mesh->remove_property( vertex_id );
-      //mesh->remove_property( vertex_one_ring );
+      mesh->remove_property( old_vertex );
 
 }
 
@@ -726,7 +726,9 @@ volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh
 
 void
 PrescribedMeanCurvature::
-updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature, OpenMesh::VPropHandleT< double >& areaStar)
+updateLineNode(TriMeshObject * _meshObject
+               , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
+               , const OpenMesh::VPropHandleT< double >& areaStar)
 {
   ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
   //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
@@ -743,6 +745,29 @@ updateLineNode(TriMeshObject * _meshObject, OpenMesh::VPropHandleT< TriMesh::Nor
     addLine(node, p, p+coefficient*n*50, Color(255,0,0) );
   }
 }
+
+
+void
+PrescribedMeanCurvature::
+updateLineNode(TriMeshObject * _meshObject
+               , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
+{
+  ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
+
+  node->clear();
+
+  for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
+                          vit != _meshObject->mesh()->vertices_end(); ++vit)
+  {
+    TriMesh::Point  p = _meshObject->mesh()->point(vit);
+    TriMesh::Point p_old = _meshObject->mesh()->property(old_vertex, vit);
+
+    TriMesh::Normal n = p_old - p;
+
+    addLine(node, p, p_old + n*100, Color(255,0,0) );
+  }
+}
+
 
 ACG::SceneGraph::LineNode *
 PrescribedMeanCurvature::
