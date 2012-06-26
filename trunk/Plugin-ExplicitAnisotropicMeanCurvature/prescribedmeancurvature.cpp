@@ -438,7 +438,8 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
           Implicit_Integration implicit_solver;
           //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
-          implicit_solver.compute_explicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+          //implicit_solver.compute_explicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+          implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex);
 
           mesh->update_normals();
 

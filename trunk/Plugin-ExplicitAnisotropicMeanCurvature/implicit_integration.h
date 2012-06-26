@@ -25,7 +25,8 @@ public:
     Implicit_Integration();
 
 
-    static const double IMPLICIT_TIME_FACTOR = 10;
+    static const double IMPLICIT_TIME_FACTOR = 0.0001;
+    static const double EXPLICIT_TIME_STEP = 0.01;
 
 
     /**
@@ -53,6 +54,14 @@ public:
 
 
 
+    void compute_explicit_integration_with_mass(TriMesh *mesh
+                                           , unsigned int mesh_size
+                                           , const OpenMesh::VPropHandleT< double > & area_star
+                                           , const OpenMesh::VPropHandleT< int > & vertex_id
+                                           , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
+
+
+
 private:
 
     /**
@@ -72,6 +81,22 @@ private:
     void init_amc_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
                          , const OpenMesh::VPropHandleT< int > & vertex_id
                          , Eigen::SparseMatrix<double> & amc_matrix);
+
+
+    void init_lumped_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
+                     , const OpenMesh::VPropHandleT< double > & area_star
+                     , const OpenMesh::VPropHandleT< int > & vertex_id
+                     , Eigen::SparseMatrix<double> & mass);
+
+
+
+
+
+    void init_lumped_mass_matrix_inverted(TriMesh *mesh , PrescribedMeanCurvature * pmc
+                     , const OpenMesh::VPropHandleT< double > & area_star
+                     , const OpenMesh::VPropHandleT< int > & vertex_id
+                     , Eigen::SparseMatrix<double> & mass);
+
 
 };
 

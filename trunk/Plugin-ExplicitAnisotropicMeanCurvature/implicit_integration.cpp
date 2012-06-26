@@ -77,6 +77,73 @@ init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
 
 
 void Implicit_Integration::
+init_lumped_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
+                 , const OpenMesh::VPropHandleT< double > & area_star
+                 , const OpenMesh::VPropHandleT< int > & vertex_id
+                 , Eigen::SparseMatrix<double> & mass)
+{
+
+    Eigen::DynamicSparseMatrix<double> mass_dyn(mass.rows(), mass.cols());
+
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        double vertex_area_star = (1.0/3.0)*mesh->property(area_star, v_it);
+
+        //printf("area star %f \n", vertex_area_star);
+
+        int pId = mesh->property(vertex_id, v_it.handle());
+
+        mass_dyn.coeffRef(pId*3, pId*3) = vertex_area_star;
+        mass_dyn.coeffRef(pId*3+1, pId*3+1) = vertex_area_star;
+        mass_dyn.coeffRef(pId*3+2, pId*3+2) = vertex_area_star;
+
+    }
+
+    mass = Eigen::SparseMatrix<double>(mass_dyn);
+
+}
+
+
+
+
+
+
+void Implicit_Integration::
+init_lumped_mass_matrix_inverted(TriMesh *mesh , PrescribedMeanCurvature * pmc
+                 , const OpenMesh::VPropHandleT< double > & area_star
+                 , const OpenMesh::VPropHandleT< int > & vertex_id
+                 , Eigen::SparseMatrix<double> & mass)
+{
+
+    Eigen::DynamicSparseMatrix<double> mass_dyn(mass.rows(), mass.cols());
+
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        double vertex_area_star = (3.0)/mesh->property(area_star, v_it);
+
+        //printf("area star %f \n", vertex_area_star);
+
+        int pId = mesh->property(vertex_id, v_it.handle());
+
+        mass_dyn.coeffRef(pId*3, pId*3) = vertex_area_star;
+        mass_dyn.coeffRef(pId*3+1, pId*3+1) = vertex_area_star;
+        mass_dyn.coeffRef(pId*3+2, pId*3+2) = vertex_area_star;
+
+    }
+
+    mass = Eigen::SparseMatrix<double>(mass_dyn);
+
+}
+
+
+
+
+
+
+
+void Implicit_Integration::
 init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
                 , const OpenMesh::VPropHandleT< int > &vertex_id
                 , Eigen::SparseMatrix<double> &amc_matrix)
@@ -170,7 +237,8 @@ compute_semi_implicit_integration(TriMesh *mesh
     printf("done init vertex vector \n");
 
     Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
-    this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    //this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    this->init_lumped_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
     printf("done init mass matrix \n");
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
@@ -178,7 +246,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     printf("done init amc matrix \n");
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
-    A = mass_matrix + IMPLICIT_TIME_FACTOR*PrescribedMeanCurvature::TIME_STEP*amc_matrix;
+    A = mass_matrix + IMPLICIT_TIME_FACTOR*amc_matrix;
 
     Eigen::VectorXd b(mesh_size);
     b = mass_matrix*input_vertices;
@@ -190,6 +258,8 @@ compute_semi_implicit_integration(TriMesh *mesh
     printf("start solving the equations \n");
     x = cholmoDec.solve(b);
     printf("start updating the mesh \n");
+
+    std::cout << "residual: " << (A * x - b).norm() << std::endl;
 
     //convert the result back to vertex and update the mesh
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -251,14 +321,78 @@ compute_explicit_integration(TriMesh *mesh
         TriMesh::Scalar area = mesh->property(area_star, v_it);
 
 
-        point[0] = old_point[0] - (3*PrescribedMeanCurvature::TIME_STEP*100/area)*b[idx*3];
-        point[1] = old_point[1] - (3*PrescribedMeanCurvature::TIME_STEP*100/area)*b[idx*3+1];
-        point[2] = old_point[2] - (3*PrescribedMeanCurvature::TIME_STEP*100/area)*b[idx*3+2];
+        point[0] = old_point[0] - (3*EXPLICIT_TIME_STEP/area)*b[idx*3];
+        point[1] = old_point[1] - (3*EXPLICIT_TIME_STEP/area)*b[idx*3+1];
+        point[2] = old_point[2] - (3*EXPLICIT_TIME_STEP/area)*b[idx*3+2];
 
         mesh->set_point(v_it, point);
     }
 
 }
+
+
+
+
+
+void Implicit_Integration::
+compute_explicit_integration_with_mass(TriMesh *mesh
+                                       , unsigned int mesh_size
+                                       , const OpenMesh::VPropHandleT< double > & area_star
+                                       , const OpenMesh::VPropHandleT< int > & vertex_id
+                                       , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
+{
+
+    printf("entering implicit step \n");
+
+    PrescribedMeanCurvature pmc;
+    mesh_size *= 3;
+
+    Eigen::VectorXd input_vertices(mesh_size);
+    this->init_vertex_vector(mesh, input_vertices, vertex_id);
+    printf("done init vertex vector \n");
+
+    Eigen::SparseMatrix<double> mass_matrix_inverted(mesh_size, mesh_size);
+    //this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix_inverted);
+    printf("done init mass matrix \n");
+
+    Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
+    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+    printf("done init amc matrix \n");
+
+    Eigen::VectorXd Ha(mesh_size);
+    Ha = amc_matrix*input_vertices;
+
+    Eigen::VectorXd b(mesh_size);
+    b = EXPLICIT_TIME_STEP*mass_matrix_inverted*Ha;
+
+
+
+    //convert the result back to vertex and update the mesh
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        TriMesh::Point old_point = mesh->point(v_it);
+        mesh->property(old_vertex, v_it) = old_point;
+
+        TriMesh::Point point = TriMesh::Point(0,0,0);
+        int idx = mesh->property(vertex_id, v_it);
+
+        //TriMesh::Scalar area = mesh->property(area_star, v_it);
+
+        point[0] = old_point[0] - b[idx*3];
+        point[1] = old_point[1] - b[idx*3+1];
+        point[2] = old_point[2] - b[idx*3+2];
+
+        mesh->set_point(v_it, point);
+    }
+
+}
+
+
+
+
+
 
 
 
