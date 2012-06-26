@@ -243,14 +243,16 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, 
 
         //in both cases, the vertex is pushed in the tangental direction
         //without this flipping of normal, it will get worse
-        if (dihedral < 0) the_edge *= -1;
+       if (dihedral < 0) the_edge *= -1;
 
-        cross = Mat3x3(0, -the_edge[2], the_edge[1], the_edge[2], 0, -the_edge[0], -the_edge[1], the_edge[0], 0);
+        cross = Mat3x3(0, -the_edge[2], the_edge[1],
+                       the_edge[2], 0, -the_edge[0],
+                       -the_edge[1], the_edge[0], 0);
 
     }
 
     double edgeLength = _mesh->calc_edge_length(_eh);
-    return 2*edgeLength*cos(dihedral/2.0);
+    return 2.0*edgeLength*cos(dihedral/2.0);
 
 }
 
@@ -435,7 +437,8 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
 
           Implicit_Integration implicit_solver;
-          implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+          //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+          implicit_solver.compute_explicit_integration(mesh, count, area_star, vertex_id, old_vertex);
 
           mesh->update_normals();
 
@@ -459,6 +462,18 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
       mesh->remove_property( old_vertex );
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -636,6 +651,8 @@ edge_mean_curvature_He_Ne(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Norm
 
         dihedral = _mesh->calc_dihedral_angle(_eh);
 
+       //std::cout << "dihedral: " << dihedral << std::endl;
+
         if (dihedral < 0) normal *= -1;
 
     }
@@ -758,6 +775,8 @@ updateLineNode(TriMeshObject * _meshObject
 
   node->clear();
 
+  double energy_error = 0;
+
   for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
                           vit != _meshObject->mesh()->vertices_end(); ++vit)
   {
@@ -766,8 +785,13 @@ updateLineNode(TriMeshObject * _meshObject
 
     TriMesh::Normal n = p_old - p;
 
+    energy_error += n.norm();
+
     addLine(node, p, p_old + n*100, Color(255,0,0) );
   }
+
+  printf("energy error: %f \n", energy_error);
+
 }
 
 

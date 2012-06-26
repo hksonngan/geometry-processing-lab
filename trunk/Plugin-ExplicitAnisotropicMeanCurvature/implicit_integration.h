@@ -43,6 +43,16 @@ public:
                                            , const OpenMesh::VPropHandleT< int > & vertex_id
                                            , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
 
+
+
+    void compute_explicit_integration(TriMesh *mesh
+                                      , unsigned int mesh_size
+                                      , const OpenMesh::VPropHandleT< double > & area_star
+                                      , const OpenMesh::VPropHandleT< int > & vertex_id
+                                      , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
+
+
+
 private:
 
     /**
