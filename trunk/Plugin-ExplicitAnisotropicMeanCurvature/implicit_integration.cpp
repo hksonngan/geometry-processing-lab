@@ -224,7 +224,8 @@ compute_semi_implicit_integration(TriMesh *mesh
                                   , unsigned int mesh_size
                                   , const OpenMesh::VPropHandleT< double > & area_star
                                   , const OpenMesh::VPropHandleT< int > & vertex_id
-                                  , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
+                                  , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
+                                  , bool is_lumped_mass)
 {
 
     printf("entering implicit step \n");
@@ -234,16 +235,19 @@ compute_semi_implicit_integration(TriMesh *mesh
 
     Eigen::VectorXd input_vertices(mesh_size);
     this->init_vertex_vector(mesh, input_vertices, vertex_id);
-    printf("done init vertex vector \n");
 
     Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
-    //this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
-    this->init_lumped_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
-    printf("done init mass matrix \n");
+
+    if (!is_lumped_mass)
+    {
+        this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    }else
+    {
+        this->init_lumped_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    }
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
     this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
-    printf("done init amc matrix \n");
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
     A = mass_matrix + IMPLICIT_TIME_FACTOR*amc_matrix;
@@ -253,11 +257,8 @@ compute_semi_implicit_integration(TriMesh *mesh
 
     Eigen::VectorXd x(mesh_size);
     Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
-    printf("start computing the matrix \n");
     cholmoDec.compute(A);
-    printf("start solving the equations \n");
     x = cholmoDec.solve(b);
-    printf("start updating the mesh \n");
 
     std::cout << "residual: " << (A * x - b).norm() << std::endl;
 
@@ -363,7 +364,7 @@ compute_explicit_integration_with_mass(TriMesh *mesh
     Eigen::VectorXd Ha(mesh_size);
     Ha = amc_matrix*input_vertices;
 
-    Eigen::SparseMatrix<double> mass_matrix_inverted(mesh_size, mesh_size);
+    //Eigen::SparseMatrix<double> mass_matrix_inverted(mesh_size, mesh_size);
     Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
 
     if (!is_lumped_mask)
@@ -375,8 +376,8 @@ compute_explicit_integration_with_mass(TriMesh *mesh
         b = EXPLICIT_TIME_STEP*x;
     }else
     {
-        this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix_inverted);
-        b = EXPLICIT_TIME_STEP*mass_matrix_inverted*Ha;
+        this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        b = EXPLICIT_TIME_STEP*mass_matrix*Ha;
     }
 
 
