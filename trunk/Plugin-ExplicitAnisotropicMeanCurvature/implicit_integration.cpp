@@ -339,7 +339,8 @@ compute_explicit_integration_with_mass(TriMesh *mesh
                                        , unsigned int mesh_size
                                        , const OpenMesh::VPropHandleT< double > & area_star
                                        , const OpenMesh::VPropHandleT< int > & vertex_id
-                                       , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
+                                       , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
+                                       , bool is_lumped_mask)
 {
 
     printf("entering implicit step \n");
@@ -351,10 +352,6 @@ compute_explicit_integration_with_mass(TriMesh *mesh
     this->init_vertex_vector(mesh, input_vertices, vertex_id);
     printf("done init vertex vector \n");
 
-    Eigen::SparseMatrix<double> mass_matrix_inverted(mesh_size, mesh_size);
-    //this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
-    this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix_inverted);
-    printf("done init mass matrix \n");
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
     this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
@@ -363,8 +360,31 @@ compute_explicit_integration_with_mass(TriMesh *mesh
     Eigen::VectorXd Ha(mesh_size);
     Ha = amc_matrix*input_vertices;
 
+    Eigen::SparseMatrix<double> mass_matrix_inverted(mesh_size, mesh_size);
+    Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
+
+    if (!is_lumped_mask)
+    {
+        this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    }else
+    {
+        this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix_inverted);
+    }
+
+    Eigen::VectorXd x(mesh_size);
     Eigen::VectorXd b(mesh_size);
-    b = EXPLICIT_TIME_STEP*mass_matrix_inverted*Ha;
+
+    if(!is_lumped_mask)
+    {
+        Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
+        cholmoDec.compute(mass_matrix);
+        x = cholmoDec.solve(Ha);
+        b = EXPLICIT_TIME_STEP*x;
+    }
+    else
+    {
+        b = EXPLICIT_TIME_STEP*mass_matrix_inverted*Ha;
+    }
 
 
 

@@ -55,10 +55,11 @@ public:
 
 
     void compute_explicit_integration_with_mass(TriMesh *mesh
-                                           , unsigned int mesh_size
-                                           , const OpenMesh::VPropHandleT< double > & area_star
-                                           , const OpenMesh::VPropHandleT< int > & vertex_id
-                                           , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
+                                                , unsigned int mesh_size
+                                                , const OpenMesh::VPropHandleT< double > & area_star
+                                                , const OpenMesh::VPropHandleT< int > & vertex_id
+                                                , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
+                                                , bool is_lumped_mass = false);
 
 
 
