@@ -348,6 +348,9 @@ compute_explicit_integration_with_mass(TriMesh *mesh
     PrescribedMeanCurvature pmc;
     mesh_size *= 3;
 
+    Eigen::VectorXd x(mesh_size);
+    Eigen::VectorXd b(mesh_size);
+
     Eigen::VectorXd input_vertices(mesh_size);
     this->init_vertex_vector(mesh, input_vertices, vertex_id);
     printf("done init vertex vector \n");
@@ -366,23 +369,13 @@ compute_explicit_integration_with_mass(TriMesh *mesh
     if (!is_lumped_mask)
     {
         this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
-    }else
-    {
-        this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix_inverted);
-    }
-
-    Eigen::VectorXd x(mesh_size);
-    Eigen::VectorXd b(mesh_size);
-
-    if(!is_lumped_mask)
-    {
         Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
         cholmoDec.compute(mass_matrix);
         x = cholmoDec.solve(Ha);
         b = EXPLICIT_TIME_STEP*x;
-    }
-    else
+    }else
     {
+        this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix_inverted);
         b = EXPLICIT_TIME_STEP*mass_matrix_inverted*Ha;
     }
 
