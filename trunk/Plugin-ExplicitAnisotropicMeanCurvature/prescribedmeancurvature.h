@@ -105,6 +105,13 @@ public:
                                           , TriMesh::Scalar & normal_length
                                           , const TriMesh::VertexHandle & _vh, Mat3x3 & cross);
 
+
+
+    double cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
+                                    , TriMesh::Scalar & normal_length
+                                    , std::vector<Mat3x3> & derivatives);
+
+
     double get_lambda()
     {
         return m_lambda;

@@ -178,6 +178,88 @@ void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject
 
 
 
+
+
+
+
+
+double PrescribedMeanCurvature::
+cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
+                         , TriMesh::Scalar & normal_length
+                         , std::vector<Mat3x3> & derivatives)
+{
+
+    double dihedral = _mesh->calc_dihedral_angle(hh1);
+
+    TriMesh::HalfedgeHandle  hh2;
+    TriMesh::FaceHandle    fh1, fh2;
+    TriMesh::Normal normal;
+    TriMesh::Point qj, pi, q_plus, q_minus;
+
+    hh2 = _mesh->opposite_halfedge_handle(hh1);
+    fh1 = _mesh->face_handle(hh1);
+    fh2 = _mesh->face_handle(hh2);
+
+    TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
+    TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
+    normal = (n1+n2);
+    normal_length = normal.norm();
+
+    qj = _mesh->point(_mesh->to_vertex_handle(hh1));
+    pi = _mesh->point(_mesh->from_vertex_handle(hh1));
+    q_plus = _mesh->point(_mesh->to_vertex_handle(_mesh->next_halfedge_handle(hh1)));
+    q_minus = _mesh->point(_mesh->from_vertex_handle(_mesh->prev_halfedge_handle( hh2 ) ) );
+
+    TriMesh::Point cross_A = q_plus - q_minus;
+    TriMesh::Point cross_B = qj - pi;
+
+    if (dihedral < 0)
+    {
+        cross_A *= -1;
+        cross_B *= -1;
+    }
+
+    TriMesh::Point edge_dev_pi = cross_A;
+    TriMesh::Point edge_dev_qj = -cross_A;
+    TriMesh::Point edge_dev_q_plus = cross_B;
+    TriMesh::Point edge_dev_q_minus = -cross_B;
+
+
+    derivatives.push_back(Mat3x3(0, -edge_dev_pi[2], edge_dev_pi[1],
+                                 edge_dev_pi[2], 0, -edge_dev_pi[0],
+                                 -edge_dev_pi[1], edge_dev_pi[0], 0
+                                ));
+
+    derivatives.push_back(Mat3x3(0, -edge_dev_q_minus[2], edge_dev_q_minus[1],
+                                 edge_dev_q_minus[2], 0, -edge_dev_q_minus[0],
+                                 -edge_dev_q_minus[1], edge_dev_q_minus[0], 0
+                                ));
+
+    derivatives.push_back(Mat3x3(0, -edge_dev_qj[2], edge_dev_qj[1],
+                                 edge_dev_qj[2], 0, -edge_dev_qj[0],
+                                 -edge_dev_qj[1], edge_dev_qj[0], 0
+                                ));
+
+    derivatives.push_back(Mat3x3(0, -edge_dev_q_plus[2], edge_dev_q_plus[1],
+                                 edge_dev_q_plus[2], 0, -edge_dev_q_plus[0],
+                                 -edge_dev_q_plus[1], edge_dev_q_plus[0], 0
+                                ));
+
+
+    double edgeLength = _mesh->calc_edge_length(hh1);
+    return 2.0*edgeLength*cos(dihedral/2.0);
+
+}
+
+
+
+
+
+
+
+
+
+
 double PrescribedMeanCurvature::
 calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, TriMesh::Scalar & normal_length
                                , const TriMesh::VertexHandle & _vh, Mat3x3 & cross)
