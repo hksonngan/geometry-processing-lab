@@ -63,6 +63,14 @@ public:
                                                 , bool is_lumped_mass = false);
 
 
+    void compute_taylor_semi_implicit(TriMesh *mesh
+                                      , unsigned int mesh_size
+                                      , const OpenMesh::VPropHandleT< double > & area_star
+                                      , const OpenMesh::VPropHandleT< int > & vertex_id
+                                      , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
+                                      , bool is_lumped_mass = false);
+
+
 
 private:
 

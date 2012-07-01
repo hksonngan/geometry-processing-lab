@@ -332,6 +332,76 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
 
 
 
+void Implicit_Integration::
+compute_taylor_semi_implicit(TriMesh *mesh
+                                  , unsigned int mesh_size
+                                  , const OpenMesh::VPropHandleT< double > & area_star
+                                  , const OpenMesh::VPropHandleT< int > & vertex_id
+                                  , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
+                                  , bool is_lumped_mass)
+{
+
+    printf("entering implicit step \n");
+
+    PrescribedMeanCurvature pmc;
+    mesh_size *= 3;
+
+    Eigen::VectorXd input_vertices(mesh_size);
+    this->init_vertex_vector(mesh, input_vertices, vertex_id);
+
+    Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
+
+    if (!is_lumped_mass)
+    {
+        this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    }else
+    {
+        this->init_lumped_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    }
+
+    Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
+    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+
+    Eigen::SparseMatrix<double> jacobian(mesh_size, mesh_size);
+    this->init_Jacobian(mesh, &pmc, vertex_id, jacobian);
+
+    Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
+    A = mass_matrix + IMPLICIT_TIME_FACTOR*jacobian;
+
+    Eigen::VectorXd b(mesh_size);
+    b = mass_matrix*input_vertices - IMPLICIT_TIME_FACTOR*amc_matrix*input_vertices
+            + IMPLICIT_TIME_FACTOR*jacobian*input_vertices;
+
+    Eigen::VectorXd x(mesh_size);
+    Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
+    cholmoDec.compute(A);
+    x = cholmoDec.solve(b);
+
+    //std::cout << "residual: " << (A * x - b).norm() << std::endl;
+
+    //convert the result back to vertex and update the mesh
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        TriMesh::Point old_point = mesh->point(v_it);
+        mesh->property(old_vertex, v_it) = old_point;
+
+        TriMesh::Point point = TriMesh::Point(0,0,0);
+        int idx = mesh->property(vertex_id, v_it);
+
+        point[0] = x[idx*3];
+        point[1] = x[idx*3+1];
+        point[2] = x[idx*3+2];
+
+        mesh->set_point(v_it, point);
+    }
+
+}
+
+
+
+
+
 
 
 void Implicit_Integration::
