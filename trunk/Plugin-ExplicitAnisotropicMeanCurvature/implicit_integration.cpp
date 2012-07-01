@@ -219,6 +219,121 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
 
 
 
+
+
+
+
+void Implicit_Integration::
+init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
+                , const OpenMesh::VPropHandleT< int > &vertex_id
+                , Eigen::SparseMatrix<double> &jacobian)
+{
+
+    Eigen::DynamicSparseMatrix<double> jacobian_dyn(jacobian.rows(), jacobian.cols());
+
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        for (TriMesh::VertexOHalfedgeIter voh_it=mesh->voh_iter(v_it.handle()); voh_it; ++voh_it)
+        {
+
+            TriMesh::Scalar normalLength;
+            std::vector<Mat3x3> derivatives;
+            TriMesh::Scalar meanCurvature = pmc->cal_edge_norm_deriv_qjpi(mesh, voh_it.handle()
+                                                                          , normalLength, derivatives);
+
+
+            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_lambda()
+                                                    , PrescribedMeanCurvature::R);
+
+            //the_cross *= ((0.5*meanCurvature*weight)/normalLength);
+            weight *= 0.5*meanCurvature/normalLength;
+
+            //identify the vertex qj+1 and qj-1
+            //be careful about the haldfedge directions or the normal will point inward
+            TriMesh::VertexHandle q_plus, q_minus, qj;
+
+            qj = mesh->to_vertex_handle(voh_it);
+            q_plus = mesh->to_vertex_handle(mesh->next_halfedge_handle(voh_it));
+            q_minus = mesh->from_vertex_handle(
+                        mesh->prev_halfedge_handle( mesh->opposite_halfedge_handle(voh_it) ) );
+
+            int q_plus_id = mesh->property(vertex_id, q_plus);
+            int q_minus_id = mesh->property(vertex_id, q_minus);
+            int p_id = mesh->property(vertex_id, v_it);
+            int qj_id = mesh->property(vertex_id, qj);
+
+            //put derivatives[0] at pi, derivatives[1] at q_minus, derivatives[2] at qj, derivatives[3] at q_plus
+            //remember to multiply them by the common weight and to accumulate the value at each entry
+
+            Mat3x3 the_cross;
+
+            the_cross = derivatives[0]*weight;
+            jacobian_dyn.coeffRef(p_id*3, p_id*3) += the_cross(0, 0);
+            jacobian_dyn.coeffRef(p_id*3, p_id*3+1) += the_cross(0, 1);
+            jacobian_dyn.coeffRef(p_id*3, p_id*3+2) += the_cross(0, 2);
+            jacobian_dyn.coeffRef(p_id*3+1, p_id*3) += the_cross(1, 0);
+            jacobian_dyn.coeffRef(p_id*3+1, p_id*3+1) += the_cross(1, 1);
+            jacobian_dyn.coeffRef(p_id*3+1, p_id*3+2) += the_cross(1, 2);
+            jacobian_dyn.coeffRef(p_id*3+2, p_id*3) += the_cross(2, 0);
+            jacobian_dyn.coeffRef(p_id*3+2, p_id*3+1) += the_cross(2, 1);
+            jacobian_dyn.coeffRef(p_id*3+2, p_id*3+2) += the_cross(2, 2);
+
+
+            the_cross = derivatives[1]*weight;
+            jacobian_dyn.coeffRef(p_id*3, q_minus_id*3) += the_cross(0, 0);
+            jacobian_dyn.coeffRef(p_id*3, q_minus_id*3+1) += the_cross(0, 1);
+            jacobian_dyn.coeffRef(p_id*3, q_minus_id*3+2) += the_cross(0, 2);
+            jacobian_dyn.coeffRef(p_id*3+1, q_minus_id*3) += the_cross(1, 0);
+            jacobian_dyn.coeffRef(p_id*3+1, q_minus_id*3+1) += the_cross(1, 1);
+            jacobian_dyn.coeffRef(p_id*3+1, q_minus_id*3+2) += the_cross(1, 2);
+            jacobian_dyn.coeffRef(p_id*3+2, q_minus_id*3) += the_cross(2, 0);
+            jacobian_dyn.coeffRef(p_id*3+2, q_minus_id*3+1) += the_cross(2, 1);
+            jacobian_dyn.coeffRef(p_id*3+2, q_minus_id*3+2) += the_cross(2, 2);
+
+
+            the_cross = derivatives[2]*weight;
+            jacobian_dyn.coeffRef(p_id*3, qj_id*3) += the_cross(0, 0);
+            jacobian_dyn.coeffRef(p_id*3, qj_id*3+1) += the_cross(0, 1);
+            jacobian_dyn.coeffRef(p_id*3, qj_id*3+2) += the_cross(0, 2);
+            jacobian_dyn.coeffRef(p_id*3+1, qj_id*3) += the_cross(1, 0);
+            jacobian_dyn.coeffRef(p_id*3+1, qj_id*3+1) += the_cross(1, 1);
+            jacobian_dyn.coeffRef(p_id*3+1, qj_id*3+2) += the_cross(1, 2);
+            jacobian_dyn.coeffRef(p_id*3+2, qj_id*3) += the_cross(2, 0);
+            jacobian_dyn.coeffRef(p_id*3+2, qj_id*3+1) += the_cross(2, 1);
+            jacobian_dyn.coeffRef(p_id*3+2, qj_id*3+2) += the_cross(2, 2);
+
+
+            the_cross = derivatives[3]*weight;
+            jacobian_dyn.coeffRef(p_id*3, q_plus_id*3) += the_cross(0, 0);
+            jacobian_dyn.coeffRef(p_id*3, q_plus_id*3+1) += the_cross(0, 1);
+            jacobian_dyn.coeffRef(p_id*3, q_plus_id*3+2) += the_cross(0, 2);
+            jacobian_dyn.coeffRef(p_id*3+1, q_plus_id*3) += the_cross(1, 0);
+            jacobian_dyn.coeffRef(p_id*3+1, q_plus_id*3+1) += the_cross(1, 1);
+            jacobian_dyn.coeffRef(p_id*3+1, q_plus_id*3+2) += the_cross(1, 2);
+            jacobian_dyn.coeffRef(p_id*3+2, q_plus_id*3) += the_cross(2, 0);
+            jacobian_dyn.coeffRef(p_id*3+2, q_plus_id*3+1) += the_cross(2, 1);
+            jacobian_dyn.coeffRef(p_id*3+2, q_plus_id*3+2) += the_cross(2, 2);
+
+
+
+        }
+
+    }
+
+    jacobian = Eigen::SparseMatrix<double>(jacobian_dyn);
+
+}
+
+
+
+
+
+
+
+
+
+
 void Implicit_Integration::
 compute_semi_implicit_integration(TriMesh *mesh
                                   , unsigned int mesh_size

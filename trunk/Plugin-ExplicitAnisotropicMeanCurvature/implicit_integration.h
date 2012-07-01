@@ -91,7 +91,9 @@ private:
                      , Eigen::SparseMatrix<double> & mass);
 
 
-
+    void init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
+                    , const OpenMesh::VPropHandleT< int > &vertex_id
+                    , Eigen::SparseMatrix<double> &jacobian);
 
 
     void init_lumped_mass_matrix_inverted(TriMesh *mesh , PrescribedMeanCurvature * pmc
