@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PMC_SmootherToolbox</class>
+ <widget class="QWidget" name="PMC_SmootherToolbox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>360</width>
+    <height>138</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox_integration_scheme">
+     <item>
+      <property name="text">
+       <string>Explicit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Implicit</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2">
+    <widget class="QComboBox" name="comboBox_weighting">
+     <item>
+      <property name="text">
+       <string>Anisotropic Mean Curvature</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Prescribed Mean Curvature</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Iterations:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QSpinBox" name="spinBox_iterations">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="pushButton_smooth">
+     <property name="text">
+      <string>Smooth</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QComboBox" name="comboBox">
+     <item>
+      <property name="text">
+       <string>Show update vector</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Color coding</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
