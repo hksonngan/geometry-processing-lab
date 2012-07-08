@@ -185,6 +185,8 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
     mesh->update_normals();
 
 
+
+
     //initialize vertex id and its neighbors
     int idx = 0;
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)

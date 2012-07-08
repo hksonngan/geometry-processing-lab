@@ -180,6 +180,8 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
 
             mesh->update_normals();
 
+            double threshold = pmc.get_feature_threshold(mesh);
+
             for ( int i = 0 ; i < _iterations ; ++i )
             {
 
@@ -200,7 +202,7 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
                         TriMesh::Normal edgeNormal;
                         TriMesh::Scalar meanCurvature = pmc.edge_mean_curvature_He_Ne(mesh, ve_it.handle()
                                                                                       , edgeNormal);
-                        double weight = pmc.anisotropic_weight(meanCurvature, pmc.get_feature_threshold(mesh)
+                        double weight = pmc.anisotropic_weight(meanCurvature, threshold
                                                                , PrescribedMeanCurvature::R);
 
                         mesh->property(smoothVector, v_it) += 0.5*meanCurvature*weight*edgeNormal;

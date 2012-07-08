@@ -149,6 +149,8 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
                 , Eigen::SparseMatrix<double> &amc_matrix)
 {
 
+    double threshold = pmc->get_feature_threshold(mesh);
+
     Eigen::DynamicSparseMatrix<double> amc_dyn(amc_matrix.rows(), amc_matrix.cols());
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -165,7 +167,7 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
                                                                            , v_it.handle(), the_cross);
 
 
-            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_feature_threshold(mesh)
+            double weight = pmc->anisotropic_weight(meanCurvature, threshold
                                                     , PrescribedMeanCurvature::R);
 
             the_cross *= ((0.5*meanCurvature*weight)/normalLength);
@@ -229,6 +231,8 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
                 , Eigen::SparseMatrix<double> &jacobian)
 {
 
+    double threshold = pmc->get_feature_threshold(mesh);
+
     Eigen::DynamicSparseMatrix<double> jacobian_dyn(jacobian.rows(), jacobian.cols());
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -243,7 +247,7 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
                                                                           , normalLength, derivatives);
 
 
-            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_feature_threshold(mesh)
+            double weight = pmc->anisotropic_weight(meanCurvature, threshold
                                                     , PrescribedMeanCurvature::R);
 
             //the_cross *= ((0.5*meanCurvature*weight)/normalLength);
