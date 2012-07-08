@@ -44,6 +44,7 @@
 
 #include "AnisotropicMeanCurvature.hh"
 #include "OpenFlipper/BasePlugin/PluginFunctions.hh"
+#include "ACG/Utils/ColorCoder.hh"
 
 
 AnisotropicMeanCurvature::AnisotropicMeanCurvature()
@@ -137,6 +138,23 @@ slotVisualizeChanged(int _idx)
             }else
             {
                 pmc.clearLineNode(meshObject);
+                if (visualize == PrescribedMeanCurvature::COLOR_CODING)
+                {
+                    TriMesh * mesh = meshObject->mesh();
+                    ColorCoder coder(0, 10, false);
+                    mesh->request_vertex_colors();
+
+                    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+                    {
+                        TriMesh::Point current = mesh->point(v_it);
+                        TriMesh::Point source = mesh->property(source_points, v_it);
+                        ACG::Vec3f color = coder.color_float(source|current)*255;
+                        mesh->set_color(v_it, TriMesh::Color(color[0], color[1], color[2], 1));
+                        printf("color %f %f %f \n", color[0], color[1], color[2]);
+                    }
+                    emit updatedObject( o_it->id(), UPDATE_COLOR );
+                }
+
             }
         }
     }
@@ -296,6 +314,20 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 
 
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
+            TriMesh* mesh = meshObject->mesh();
+
+            for ( PluginFunctions::ObjectIterator osrc_it(PluginFunctions::SOURCE_OBJECTS) ;
+                  osrc_it != PluginFunctions::objectsEnd(); ++osrc_it)
+            {
+                TriMeshObject * sourceObj = PluginFunctions::triMeshObject(osrc_it);
+                TriMesh * sourceMesh = sourceObj->mesh();
+                mesh->add_property( source_points, "source_points" );
+                for (TriMesh::VertexIter v_it=mesh->vertices_begin(), srcv_it=sourceMesh->vertices_begin();
+                     v_it!=mesh->vertices_end(); ++v_it, ++srcv_it)
+                {
+                    mesh->property(source_points,v_it) = sourceMesh->point(srcv_it);
+                }
+            }
 
             if (scheme == PrescribedMeanCurvature::EXPLICIT
                     && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
