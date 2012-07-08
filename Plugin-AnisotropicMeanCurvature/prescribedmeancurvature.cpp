@@ -219,13 +219,13 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
 
         Implicit_Integration implicit_solver;
         //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
-        //implicit_solver.compute_explicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+
         if (scheme == EXPLICIT
                 && smooth_type == ANISO_MEAN_CURVATURE)
         {
             implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex);
         }
-        //implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex, true);
+
         if (scheme == IMPLICIT
                 && smooth_type == ANISO_MEAN_CURVATURE)
         {

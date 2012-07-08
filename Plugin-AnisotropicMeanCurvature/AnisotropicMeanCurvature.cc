@@ -273,6 +273,10 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
                     && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
             {
                 pmc.smooth_explicit_pmc(_iterations, meshObject, visualize);
+            }else if (scheme == PrescribedMeanCurvature::IMPLICIT
+                      && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
+            {
+                return;
             }else
             {
                 pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize);

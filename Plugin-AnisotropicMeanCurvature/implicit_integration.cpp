@@ -470,51 +470,7 @@ compute_semi_implicit_integration(TriMesh *mesh
 
 
 
-void Implicit_Integration::
-compute_explicit_integration(TriMesh *mesh
-                                  , unsigned int mesh_size
-                                  , const OpenMesh::VPropHandleT< double > & area_star
-                                  , const OpenMesh::VPropHandleT< int > & vertex_id
-                                  , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
-{
 
-    printf("entering implicit step \n");
-
-    PrescribedMeanCurvature pmc;
-    mesh_size *= 3;
-
-    Eigen::VectorXd input_vertices(mesh_size);
-    this->init_vertex_vector(mesh, input_vertices, vertex_id);
-    printf("done init vertex vector \n");
-
-    Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
-    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
-    printf("done init amc matrix \n");
-
-    Eigen::VectorXd b(mesh_size);
-    b = amc_matrix*input_vertices;
-
-    //convert the result back to vertex and update the mesh
-    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-    {
-
-        TriMesh::Point old_point = mesh->point(v_it);
-        mesh->property(old_vertex, v_it) = old_point;
-
-        TriMesh::Point point = TriMesh::Point(0,0,0);
-        int idx = mesh->property(vertex_id, v_it);
-
-        TriMesh::Scalar area = mesh->property(area_star, v_it);
-
-
-        point[0] = old_point[0] - (3*EXPLICIT_TIME_STEP/area)*b[idx*3];
-        point[1] = old_point[1] - (3*EXPLICIT_TIME_STEP/area)*b[idx*3+1];
-        point[2] = old_point[2] - (3*EXPLICIT_TIME_STEP/area)*b[idx*3+2];
-
-        mesh->set_point(v_it, point);
-    }
-
-}
 
 
 
