@@ -165,7 +165,7 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
                                                                            , v_it.handle(), the_cross);
 
 
-            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_lambda()
+            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_feature_threshold(mesh)
                                                     , PrescribedMeanCurvature::R);
 
             the_cross *= ((0.5*meanCurvature*weight)/normalLength);
@@ -243,7 +243,7 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
                                                                           , normalLength, derivatives);
 
 
-            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_lambda()
+            double weight = pmc->anisotropic_weight(meanCurvature, pmc->get_feature_threshold(mesh)
                                                     , PrescribedMeanCurvature::R);
 
             //the_cross *= ((0.5*meanCurvature*weight)/normalLength);
