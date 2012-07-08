@@ -56,7 +56,7 @@ public:
 
     enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE };
     enum IntegrationScheme { EXPLICIT, IMPLICIT };
-    enum VisualizeMode {UPDATE_VECTOR, COLOR_CODING};
+    enum VisualizeMode {NONE, UPDATE_VECTOR, COLOR_CODING};
 
 
 
@@ -141,6 +141,10 @@ public:
 
     void updateLineNode(TriMeshObject * _meshObject
                         , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
+
+    void clearLineNode(TriMeshObject * _meshObject);
+
+    void showLineNode(TriMeshObject * _meshObject);
 
 private:
 
