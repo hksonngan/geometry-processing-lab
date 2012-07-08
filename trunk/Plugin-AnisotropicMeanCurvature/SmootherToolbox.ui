@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
+    <width>383</width>
     <height>138</height>
    </rect>
   </property>
@@ -29,7 +29,7 @@
     </widget>
    </item>
    <item row="0" column="2" colspan="2">
-    <widget class="QComboBox" name="comboBox_weighting">
+    <widget class="QComboBox" name="comboBox_smooth_type">
      <item>
       <property name="text">
        <string>Anisotropic Mean Curvature</string>
@@ -64,7 +64,7 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="comboBox_visualize">
      <item>
       <property name="text">
        <string>Show update vector</string>
