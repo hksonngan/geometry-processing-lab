@@ -105,10 +105,10 @@ public:
     void smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
                              , VisualizeMode visualize);
 
-    void smooth(int _iterations, TriMeshObject * meshObject
-                , SmoothingMode smooth_type
-                , IntegrationScheme scheme
-                , VisualizeMode visualize);
+    void smooth_aniso(int _iterations, TriMeshObject * meshObject
+                      , SmoothingMode smooth_type
+                      , IntegrationScheme scheme
+                      , VisualizeMode visualize);
 
     double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
 

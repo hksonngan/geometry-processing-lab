@@ -85,12 +85,12 @@ void AnisotropicMeanCurvature::pluginsInitialized() {
 void AnisotropicMeanCurvature::
 slotModeChanged(int _idx)
 {
-  int type = gui_->comboBox_smooth_type->currentIndex();
+    int type = gui_->comboBox_smooth_type->currentIndex();
 
-  if (type == 0)
-    smooth_type = PrescribedMeanCurvature::ANISO_MEAN_CURVATURE;
-  else if (type == 1)
-    smooth_type = PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE;
+    if (type == 0)
+        smooth_type = PrescribedMeanCurvature::ANISO_MEAN_CURVATURE;
+    else if (type == 1)
+        smooth_type = PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE;
 
 }
 
@@ -98,12 +98,12 @@ slotModeChanged(int _idx)
 void AnisotropicMeanCurvature::
 slotSchemeChanged(int _idx)
 {
-  int type = gui_->comboBox_integration_scheme->currentIndex();
+    int type = gui_->comboBox_integration_scheme->currentIndex();
 
-  if (type == 0)
-    scheme = PrescribedMeanCurvature::EXPLICIT;
-  else if (type == 1)
-    scheme = PrescribedMeanCurvature::IMPLICIT;
+    if (type == 0)
+        scheme = PrescribedMeanCurvature::EXPLICIT;
+    else if (type == 1)
+        scheme = PrescribedMeanCurvature::IMPLICIT;
 
 }
 
@@ -111,12 +111,12 @@ slotSchemeChanged(int _idx)
 void AnisotropicMeanCurvature::
 slotVisualizeChanged(int _idx)
 {
-  int type = gui_->comboBox_visualize->currentIndex();
+    int type = gui_->comboBox_visualize->currentIndex();
 
-  if (type == 0)
-    visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
-  else if (type == 1)
-    visualize = PrescribedMeanCurvature::COLOR_CODING;
+    if (type == 0)
+        visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
+    else if (type == 1)
+        visualize = PrescribedMeanCurvature::COLOR_CODING;
 
 }
 
@@ -269,12 +269,13 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
 
-            if (scheme == PrescribedMeanCurvature::EXPLICIT && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
+            if (scheme == PrescribedMeanCurvature::EXPLICIT
+                    && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
             {
                 pmc.smooth_explicit_pmc(_iterations, meshObject, visualize);
             }else
             {
-                pmc.smooth(_iterations, meshObject, smooth_type, scheme, visualize);
+                pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize);
             }
 
             emit updatedObject( o_it->id(), UPDATE_ALL );
