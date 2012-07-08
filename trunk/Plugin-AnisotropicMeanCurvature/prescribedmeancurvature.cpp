@@ -12,165 +12,168 @@ PrescribedMeanCurvature::PrescribedMeanCurvature()
 
 
 
-void PrescribedMeanCurvature::smooth(int _iterations, TriMeshObject * meshObject)
+void PrescribedMeanCurvature::
+smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
+                    , VisualizeMode visualize)
 {
 
 
     bool selectionExists = false;
 
 
-        TriMesh* mesh = meshObject->mesh();
+    TriMesh* mesh = meshObject->mesh();
 
-      // Property for the active mesh to store original point positions
-      OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
-      //the smoothed_amc_Ha is for temporary use
-      OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
-      OpenMesh::VPropHandleT< double > area_star;
-      OpenMesh::VPropHandleT< double > apmc_function_f;
-      OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
-      OpenMesh::VPropHandleT< bool > is_feature;
-      OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
-//      OpenMesh::VPropHandleT< int > vertex_id;
-//      OpenMesh::VPropHandleT < std::vector<int> > vertex_one_ring;
+    // Property for the active mesh to store original point positions
+    OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
+    //the smoothed_amc_Ha is for temporary use
+    OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
+    OpenMesh::VPropHandleT< double > area_star;
+    OpenMesh::VPropHandleT< double > apmc_function_f;
+    OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
+    OpenMesh::VPropHandleT< bool > is_feature;
+    OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
+    //      OpenMesh::VPropHandleT< int > vertex_id;
+    //      OpenMesh::VPropHandleT < std::vector<int> > vertex_one_ring;
 
-      // Add a property to the mesh to store mean curvature and area
-      mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
-      mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
-      mesh->add_property( area_star, "area_star" );
-      mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
-      mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
-      mesh->add_property( is_feature, "is_feature" );
-      mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
-//      mesh->add_property( vertex_id, "vertex_id" );
-//      mesh->add_property( vertex_one_ring, "vertex_one_ring" );
+    // Add a property to the mesh to store mean curvature and area
+    mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
+    mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
+    mesh->add_property( area_star, "area_star" );
+    mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
+    mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
+    mesh->add_property( is_feature, "is_feature" );
+    mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
+    //      mesh->add_property( vertex_id, "vertex_id" );
+    //      mesh->add_property( vertex_one_ring, "vertex_one_ring" );
 
-      mesh->request_vertex_normals();
-      mesh->request_vertex_colors();
-      mesh->request_face_normals();
+    mesh->request_vertex_normals();
+    mesh->request_vertex_colors();
+    mesh->request_face_normals();
 
-      unsigned int count(meshObject->mesh()->n_vertices());
-
-
-      mesh->update_normals();
+    unsigned int count(meshObject->mesh()->n_vertices());
 
 
-      //initialize vertex id and its neighbors
-//      int idx = 0;
-//      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-//      {
-//          mesh->property(vertex_id, v_it) = idx;
-//          idx++;
-//      }
-
-//      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-//      {
-
-//          for (TriMesh::VertexVertexIter vv_it=mesh->vv_iter(v_it.handle()); vv_it; ++vv_it)
-//          {
-//              mesh->property(vertex_one_ring, v_it).push_back( mesh->property(vertex_id, vv_it) );
-//          }
-
-//      }
+    mesh->update_normals();
 
 
+    //initialize vertex id and its neighbors
+    //      int idx = 0;
+    //      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    //      {
+    //          mesh->property(vertex_id, v_it) = idx;
+    //          idx++;
+    //      }
+
+    //      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    //      {
+
+    //          for (TriMesh::VertexVertexIter vv_it=mesh->vv_iter(v_it.handle()); vv_it; ++vv_it)
+    //          {
+    //              mesh->property(vertex_one_ring, v_it).push_back( mesh->property(vertex_id, vv_it) );
+    //          }
+
+    //      }
 
 
-      for ( int i = 0 ; i < _iterations ; ++i )
-      {
-
-          unsigned int noFeatureVertices = 0;
-
-          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-          {
-              mesh->property(amc_Ha,v_it).vectorize(0.0f);
-              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
-              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
-              mesh->property(area_star,v_it) = 0;
-              mesh->property(apmc_function_f,v_it) = 0;
-              mesh->property(smoothed_apmc_function_f,v_it) = 0;
-              mesh->property(is_feature,v_it) = false;
-              selectionExists |= mesh->status(v_it).selected();
-          }
 
 
-          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-          {
-              TriMesh::Normal isotropic;
-              isotropic.vectorize(0);
+    for ( int i = 0 ; i < _iterations ; ++i )
+    {
 
-              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
-              {
+        unsigned int noFeatureVertices = 0;
 
-                  TriMesh::Normal edgeNormal;
-                  TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
-                  double weight = anisotropic_weight(meanCurvature, m_lambda, R);
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            mesh->property(amc_Ha,v_it).vectorize(0.0f);
+            mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
+            mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+            mesh->property(area_star,v_it) = 0;
+            mesh->property(apmc_function_f,v_it) = 0;
+            mesh->property(smoothed_apmc_function_f,v_it) = 0;
+            mesh->property(is_feature,v_it) = false;
+            selectionExists |= mesh->status(v_it).selected();
+        }
 
-                  mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
-                  isotropic += 0.5*meanCurvature*edgeNormal;
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            TriMesh::Normal isotropic;
+            isotropic.vectorize(0);
 
-              }
+            for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
+            {
 
-              if (mesh->property(amc_Ha, v_it) != isotropic)
-              {
-                  mesh->property(is_feature,v_it) = true;
-                  noFeatureVertices++;
-              }
+                TriMesh::Normal edgeNormal;
+                TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+                double weight = anisotropic_weight(meanCurvature, m_lambda, R);
 
-              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
-              {
+                mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
-                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
-                  //volume gradient
-                  TriMesh::Normal volGrad;
-                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
-                  mesh->property(volume_gradient_Va, v_it) += volGrad;
-              }
+                isotropic += 0.5*meanCurvature*edgeNormal;
 
-          }
+            }
 
-          smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
+            if (mesh->property(amc_Ha, v_it) != isotropic)
+            {
+                mesh->property(is_feature,v_it) = true;
+                noFeatureVertices++;
+            }
 
-          compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
-                                  , is_feature, apmc_function_f, smoothed_apmc_function_f);
+            for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
+            {
 
-          printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
+                mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
+                //volume gradient
+                TriMesh::Normal volGrad;
+                volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
+                mesh->property(volume_gradient_Va, v_it) += volGrad;
+            }
 
-          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-          {
-              if(mesh->is_boundary(v_it.handle())) {
+        }
+
+        smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
+
+        compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
+                                , is_feature, apmc_function_f, smoothed_apmc_function_f);
+
+        printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
+
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            if(mesh->is_boundary(v_it.handle())) {
                 continue;
-              }
+            }
 
-              TriMesh::Scalar area = mesh->property(area_star, v_it);
-              TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
+            TriMesh::Scalar area = mesh->property(area_star, v_it);
+            TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
 
-              TriMesh::Normal result = updateVector -
-                      mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
+            TriMesh::Normal result = updateVector -
+                    mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
 
-              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
-          }
+            mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
+        }
 
-          mesh->update_normals();
-
-
-      }// Iterations end
+        mesh->update_normals();
 
 
-      mesh->update_normals();
-      updateLineNode(meshObject, amc_Ha, area_star);
+    }// Iterations end
 
 
-      // Remove the property
-      mesh->remove_property( amc_Ha );
-      mesh->remove_property( area_star );
-      mesh->remove_property( is_feature );
-      mesh->remove_property( volume_gradient_Va );
-      mesh->remove_property( smoothed_amc_Ha );
-      mesh->remove_property( smoothed_apmc_function_f );
-      mesh->remove_property( apmc_function_f );
-//      mesh->remove_property( vertex_id );
-//      mesh->remove_property( vertex_one_ring );
+    mesh->update_normals();
+
+    if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, amc_Ha, area_star);
+
+
+    // Remove the property
+    mesh->remove_property( amc_Ha );
+    mesh->remove_property( area_star );
+    mesh->remove_property( is_feature );
+    mesh->remove_property( volume_gradient_Va );
+    mesh->remove_property( smoothed_amc_Ha );
+    mesh->remove_property( smoothed_apmc_function_f );
+    mesh->remove_property( apmc_function_f );
+    //      mesh->remove_property( vertex_id );
+    //      mesh->remove_property( vertex_one_ring );
 
 }
 
@@ -228,22 +231,22 @@ cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
     derivatives.push_back(Mat3x3(0, -edge_dev_pi[2], edge_dev_pi[1],
                                  edge_dev_pi[2], 0, -edge_dev_pi[0],
                                  -edge_dev_pi[1], edge_dev_pi[0], 0
-                                ));
+                                 ));
 
     derivatives.push_back(Mat3x3(0, -edge_dev_q_minus[2], edge_dev_q_minus[1],
                                  edge_dev_q_minus[2], 0, -edge_dev_q_minus[0],
                                  -edge_dev_q_minus[1], edge_dev_q_minus[0], 0
-                                ));
+                                 ));
 
     derivatives.push_back(Mat3x3(0, -edge_dev_qj[2], edge_dev_qj[1],
                                  edge_dev_qj[2], 0, -edge_dev_qj[0],
                                  -edge_dev_qj[1], edge_dev_qj[0], 0
-                                ));
+                                 ));
 
     derivatives.push_back(Mat3x3(0, -edge_dev_q_plus[2], edge_dev_q_plus[1],
                                  edge_dev_q_plus[2], 0, -edge_dev_q_plus[0],
                                  -edge_dev_q_plus[1], edge_dev_q_plus[0], 0
-                                ));
+                                 ));
 
 
     double edgeLength = _mesh->calc_edge_length(hh1);
@@ -325,7 +328,7 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, 
 
         //in both cases, the vertex is pushed in the tangental direction
         //without this flipping of normal, it will get worse
-       if (dihedral < 0) the_edge *= -1;
+        if (dihedral < 0) the_edge *= -1;
 
         cross = Mat3x3(0, -the_edge[2], the_edge[1],
                        the_edge[2], 0, -the_edge[0],
@@ -373,7 +376,11 @@ double PrescribedMeanCurvature::area_star_edge(TriMesh *_mesh, TriMesh::EdgeHand
 
 
 
-void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * meshObject)
+void PrescribedMeanCurvature::
+smooth(int _iterations, TriMeshObject * meshObject
+            , SmoothingMode smooth_type
+            , IntegrationScheme scheme
+            , VisualizeMode visualize)
 {
 
 
@@ -382,169 +389,177 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
 
 
-      TriMesh* mesh = meshObject->mesh();
+    TriMesh* mesh = meshObject->mesh();
 
-      // Property for the active mesh to store original point positions
-      OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
-      OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
-      //the smoothed_amc_Ha is for temporary use
-      OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
-      OpenMesh::VPropHandleT< double > area_star;
-      OpenMesh::VPropHandleT< double > apmc_function_f;
-      OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
-      OpenMesh::VPropHandleT< bool > is_feature;
-      OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
-      OpenMesh::VPropHandleT< int > vertex_id;
-      //OpenMesh::VPropHandleT < std::vector<int> > vertex_one_ring;
+    // Property for the active mesh to store original point positions
+    OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
+    OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
+    //the smoothed_amc_Ha is for temporary use
+    OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
+    OpenMesh::VPropHandleT< double > area_star;
+    OpenMesh::VPropHandleT< double > apmc_function_f;
+    OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
+    OpenMesh::VPropHandleT< bool > is_feature;
+    OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
+    OpenMesh::VPropHandleT< int > vertex_id;
+    //OpenMesh::VPropHandleT < std::vector<int> > vertex_one_ring;
 
-      // Add a property to the mesh to store mean curvature and area
-      mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
-      mesh->add_property( old_vertex, "new_amc_vertex" );
-      mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
-      mesh->add_property( area_star, "area_star" );
-      mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
-      mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
-      mesh->add_property( is_feature, "is_feature" );
-      mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
-      mesh->add_property( vertex_id, "vertex_id" );
-      //mesh->add_property( vertex_one_ring, "vertex_one_ring" );
+    // Add a property to the mesh to store mean curvature and area
+    mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
+    mesh->add_property( old_vertex, "new_amc_vertex" );
+    mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
+    mesh->add_property( area_star, "area_star" );
+    mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
+    mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
+    mesh->add_property( is_feature, "is_feature" );
+    mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
+    mesh->add_property( vertex_id, "vertex_id" );
+    //mesh->add_property( vertex_one_ring, "vertex_one_ring" );
 
-      mesh->request_vertex_normals();
-      mesh->request_vertex_colors();
-      mesh->request_face_normals();
+    mesh->request_vertex_normals();
+    mesh->request_vertex_colors();
+    mesh->request_face_normals();
 
-      unsigned int count(meshObject->mesh()->n_vertices());
-
-
-      mesh->update_normals();
+    unsigned int count(meshObject->mesh()->n_vertices());
 
 
-      //initialize vertex id and its neighbors
-      int idx = 0;
-      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-      {
-          mesh->property(vertex_id, v_it) = idx;
-          idx++;
-      }
-
-//      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-//      {
-
-//          for (TriMesh::VertexVertexIter vv_it=mesh->vv_iter(v_it.handle()); vv_it; ++vv_it)
-//          {
-//              mesh->property(vertex_one_ring, v_it).push_back( mesh->property(vertex_id, vv_it) );
-//          }
-
-//      }
+    mesh->update_normals();
 
 
+    //initialize vertex id and its neighbors
+    int idx = 0;
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+        mesh->property(vertex_id, v_it) = idx;
+        idx++;
+    }
+
+    //      for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    //      {
+
+    //          for (TriMesh::VertexVertexIter vv_it=mesh->vv_iter(v_it.handle()); vv_it; ++vv_it)
+    //          {
+    //              mesh->property(vertex_one_ring, v_it).push_back( mesh->property(vertex_id, vv_it) );
+    //          }
+
+    //      }
 
 
-      for ( int i = 0 ; i < _iterations ; ++i )
-      {
-
-          //unsigned int noFeatureVertices = 0;
-
-          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-          {
-                mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
-//              mesh->property(amc_Ha,v_it).vectorize(0.0f);
-//              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
-//              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
-                mesh->property(area_star,v_it) = 0;
-//              mesh->property(apmc_function_f,v_it) = 0;
-//              mesh->property(smoothed_apmc_function_f,v_it) = 0;
-//              mesh->property(is_feature,v_it) = false;
-//              selectionExists |= mesh->status(v_it).selected();
-          }
 
 
-          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-          {
-              //TriMesh::Normal isotropic;
-              //isotropic.vectorize(0);
+    for ( int i = 0 ; i < _iterations ; ++i )
+    {
 
-//              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
-//              {
+        //unsigned int noFeatureVertices = 0;
 
-//              TriMesh::Normal edgeNormal;
-//              TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
-//              double weight = anisotropic_weight(meanCurvature, m_lambda, R);
-
-//              mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
-
-//              isotropic += 0.5*meanCurvature*edgeNormal;
-
-//              }
-
-//              if (mesh->property(amc_Ha, v_it) != isotropic)
-//              {
-//                  mesh->property(is_feature,v_it) = true;
-//                  noFeatureVertices++;
-//              }
-
-              for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
-              {
-
-                  mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
-//                  //volume gradient
-//                  TriMesh::Normal volGrad;
-//                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
-//                  mesh->property(volume_gradient_Va, v_it) += volGrad;
-              }
-
-          }
-
-//          smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
-
-//          compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
-//                                  , is_feature, apmc_function_f, smoothed_apmc_function_f);
-
-//          //printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
-
-//          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-//          {
-//              if(mesh->is_boundary(v_it.handle())) {
-//                continue;
-//              }
-
-//              TriMesh::Scalar area = mesh->property(area_star, v_it);
-//              TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
-
-//              TriMesh::Normal result = updateVector -
-//                      mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
-
-//              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
-//          }
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
+            //              mesh->property(amc_Ha,v_it).vectorize(0.0f);
+            //              mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
+            //              mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+            mesh->property(area_star,v_it) = 0;
+            //              mesh->property(apmc_function_f,v_it) = 0;
+            //              mesh->property(smoothed_apmc_function_f,v_it) = 0;
+            //              mesh->property(is_feature,v_it) = false;
+            //              selectionExists |= mesh->status(v_it).selected();
+        }
 
 
-          Implicit_Integration implicit_solver;
-          //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
-          //implicit_solver.compute_explicit_integration(mesh, count, area_star, vertex_id, old_vertex);
-          implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex);
-          //implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex, true);
-          implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex);
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            //TriMesh::Normal isotropic;
+            //isotropic.vectorize(0);
 
-          mesh->update_normals();
+            //              for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
+            //              {
+
+            //              TriMesh::Normal edgeNormal;
+            //              TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+            //              double weight = anisotropic_weight(meanCurvature, m_lambda, R);
+
+            //              mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
+
+            //              isotropic += 0.5*meanCurvature*edgeNormal;
+
+            //              }
+
+            //              if (mesh->property(amc_Ha, v_it) != isotropic)
+            //              {
+            //                  mesh->property(is_feature,v_it) = true;
+            //                  noFeatureVertices++;
+            //              }
+
+            for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
+            {
+
+                mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
+                //                  //volume gradient
+                //                  TriMesh::Normal volGrad;
+                //                  volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
+                //                  mesh->property(volume_gradient_Va, v_it) += volGrad;
+            }
+
+        }
+
+        //          smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
+
+        //          compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
+        //                                  , is_feature, apmc_function_f, smoothed_apmc_function_f);
+
+        //          //printf("number of feature vertices: %d in total %d \n", noFeatureVertices, count);
+
+        //          for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        //          {
+        //              if(mesh->is_boundary(v_it.handle())) {
+        //                continue;
+        //              }
+
+        //              TriMesh::Scalar area = mesh->property(area_star, v_it);
+        //              TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
+
+        //              TriMesh::Normal result = updateVector -
+        //                      mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
+
+        //              mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
+        //          }
 
 
-      }// Iterations end
+        Implicit_Integration implicit_solver;
+        //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+        //implicit_solver.compute_explicit_integration(mesh, count, area_star, vertex_id, old_vertex);
+        if (scheme == EXPLICIT
+                && smooth_type == ANISO_MEAN_CURVATURE)
+        {
+            implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex);
+        }
+        //implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex, true);
+        if (scheme == IMPLICIT
+                && smooth_type == ANISO_MEAN_CURVATURE)
+        {
+            implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex);
+        }
+
+        mesh->update_normals();
 
 
-      mesh->update_normals();
-      updateLineNode(meshObject, old_vertex);
+    }// Iterations end
 
 
-      // Remove the property
-      mesh->remove_property( amc_Ha );
-      mesh->remove_property( area_star );
-      mesh->remove_property( is_feature );
-      mesh->remove_property( volume_gradient_Va );
-      mesh->remove_property( smoothed_amc_Ha );
-      mesh->remove_property( smoothed_apmc_function_f );
-      mesh->remove_property( apmc_function_f );
-      mesh->remove_property( vertex_id );
-      mesh->remove_property( old_vertex );
+    mesh->update_normals();
+    if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, old_vertex);
+
+
+    // Remove the property
+    mesh->remove_property( amc_Ha );
+    mesh->remove_property( area_star );
+    mesh->remove_property( is_feature );
+    mesh->remove_property( volume_gradient_Va );
+    mesh->remove_property( smoothed_amc_Ha );
+    mesh->remove_property( smoothed_apmc_function_f );
+    mesh->remove_property( apmc_function_f );
+    mesh->remove_property( vertex_id );
+    mesh->remove_property( old_vertex );
 
 }
 
@@ -567,11 +582,11 @@ void PrescribedMeanCurvature::smooth_implicit(int _iterations, TriMeshObject * m
 
 void PrescribedMeanCurvature::
 compute_apmc_function_f(TriMesh *_mesh
-                   , const OpenMesh::VPropHandleT< TriMesh::Normal > & amc_Ha
-                   , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
-                   , const OpenMesh::VPropHandleT< bool > & is_feature
-                   , const OpenMesh::VPropHandleT< double > & apmc_function_f
-                   , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f)
+                        , const OpenMesh::VPropHandleT< TriMesh::Normal > & amc_Ha
+                        , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
+                        , const OpenMesh::VPropHandleT< bool > & is_feature
+                        , const OpenMesh::VPropHandleT< double > & apmc_function_f
+                        , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f)
 {
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
@@ -736,7 +751,7 @@ edge_mean_curvature_He_Ne(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Norm
 
         dihedral = _mesh->calc_dihedral_angle(_eh);
 
-       //std::cout << "dihedral: " << dihedral << std::endl;
+        //std::cout << "dihedral: " << dihedral << std::endl;
 
         if (dihedral < 0) normal *= -1;
 
@@ -834,20 +849,20 @@ updateLineNode(TriMeshObject * _meshObject
                , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
                , const OpenMesh::VPropHandleT< double >& areaStar)
 {
-  ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
-  //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
+    ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
+    //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
 
-  node->clear();
+    node->clear();
 
-  for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
-                          vit != _meshObject->mesh()->vertices_end(); ++vit)
-  {
-    TriMesh::Point  p = _meshObject->mesh()->point(vit);
-    TriMesh::Normal n = _meshObject->mesh()->property(anisoMeanCurvature, vit);
-    TriMesh::Scalar coefficient = _meshObject->mesh()->property(areaStar, vit);
-    coefficient = 3*TIME_STEP/coefficient;
-    addLine(node, p, p+coefficient*n*50, Color(255,0,0) );
-  }
+    for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
+         vit != _meshObject->mesh()->vertices_end(); ++vit)
+    {
+        TriMesh::Point  p = _meshObject->mesh()->point(vit);
+        TriMesh::Normal n = _meshObject->mesh()->property(anisoMeanCurvature, vit);
+        TriMesh::Scalar coefficient = _meshObject->mesh()->property(areaStar, vit);
+        coefficient = 3*TIME_STEP/coefficient;
+        addLine(node, p, p+coefficient*n*50, Color(255,0,0) );
+    }
 }
 
 
@@ -856,26 +871,26 @@ PrescribedMeanCurvature::
 updateLineNode(TriMeshObject * _meshObject
                , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex)
 {
-  ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
+    ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
 
-  node->clear();
+    node->clear();
 
-  double energy_error = 0;
+    double energy_error = 0;
 
-  for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
-                          vit != _meshObject->mesh()->vertices_end(); ++vit)
-  {
-    TriMesh::Point  p = _meshObject->mesh()->point(vit);
-    TriMesh::Point p_old = _meshObject->mesh()->property(old_vertex, vit);
+    for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
+         vit != _meshObject->mesh()->vertices_end(); ++vit)
+    {
+        TriMesh::Point  p = _meshObject->mesh()->point(vit);
+        TriMesh::Point p_old = _meshObject->mesh()->property(old_vertex, vit);
 
-    TriMesh::Normal n = p_old - p;
+        TriMesh::Normal n = p_old - p;
 
-    energy_error += n.norm();
+        energy_error += n.norm();
 
-    addLine(node, p, p_old + n*100, Color(255,0,0) );
-  }
+        addLine(node, p, p_old + n*100, Color(255,0,0) );
+    }
 
-  printf("energy error: %f \n", energy_error);
+    printf("energy error: %f \n", energy_error);
 
 }
 
@@ -884,33 +899,33 @@ ACG::SceneGraph::LineNode *
 PrescribedMeanCurvature::
 getLineNode(TriMeshObject * _meshObject)
 {
-  ACG::SceneGraph::LineNode * line_node = 0;
+    ACG::SceneGraph::LineNode * line_node = 0;
 
-  // get or add line node
-  if( !_meshObject->hasAdditionalNode( "NormalEstimationPlugin", "LineNode" ) )
-  {
-    line_node = new ACG::SceneGraph::LineNode( ACG::SceneGraph::LineNode::LineSegmentsMode, _meshObject->manipulatorNode() );
-
-    if( !_meshObject->addAdditionalNode(line_node, QString("NormalEstimationPlugin"), QString("LineNode") ) )
+    // get or add line node
+    if( !_meshObject->hasAdditionalNode( "NormalEstimationPlugin", "LineNode" ) )
     {
-      std::cerr << "NormalEstimationPlugin::getLineNode(): could not add line node.\n";
-      return 0;
-    }
-    line_node->clear();
-    line_node->set_line_width(1.0);
-    line_node->set_base_color( ACG::Vec4f(255,0,255,255) );
-    line_node->show();
-  }
-  else
-    _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
+        line_node = new ACG::SceneGraph::LineNode( ACG::SceneGraph::LineNode::LineSegmentsMode, _meshObject->manipulatorNode() );
 
-  return line_node;
+        if( !_meshObject->addAdditionalNode(line_node, QString("NormalEstimationPlugin"), QString("LineNode") ) )
+        {
+            std::cerr << "NormalEstimationPlugin::getLineNode(): could not add line node.\n";
+            return 0;
+        }
+        line_node->clear();
+        line_node->set_line_width(1.0);
+        line_node->set_base_color( ACG::Vec4f(255,0,255,255) );
+        line_node->show();
+    }
+    else
+        _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
+
+    return line_node;
 }
 
 void
 PrescribedMeanCurvature::
 addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color )
 {
-  _line_node->add_line( _p0, _p1 );
-  _line_node->add_color(_color);
+    _line_node->add_line( _p0, _p1 );
+    _line_node->add_color(_color);
 }

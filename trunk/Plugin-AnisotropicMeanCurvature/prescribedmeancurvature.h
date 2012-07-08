@@ -7,7 +7,7 @@
 #include <ACG/Scenegraph/LineNode.hh>
 #include <ACG/Math/VectorT.hh>
 #include "Mat3x3.hh"
-
+//#include "AnisotropicMeanCurvature.hh"
 
 
 
@@ -53,6 +53,13 @@ public:
     static const double TIME_STEP = 0.00001;
 
 
+
+    enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE };
+    enum IntegrationScheme { EXPLICIT, IMPLICIT };
+    enum VisualizeMode {UPDATE_VECTOR, COLOR_CODING};
+
+
+
     /**
      * @brief                       calculate face area.
      *
@@ -95,9 +102,13 @@ public:
      */
     double anisotropic_weight(double curvature, double lambda, double r);
 
-    void smooth(int _iterations, TriMeshObject * meshObject);
+    void smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
+                             , VisualizeMode visualize);
 
-    void smooth_implicit(int _iterations, TriMeshObject * meshObject);
+    void smooth(int _iterations, TriMeshObject * meshObject
+                , SmoothingMode smooth_type
+                , IntegrationScheme scheme
+                , VisualizeMode visualize);
 
     double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
 
