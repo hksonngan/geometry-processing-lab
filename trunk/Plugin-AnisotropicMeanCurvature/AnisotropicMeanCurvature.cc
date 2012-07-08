@@ -117,9 +117,30 @@ slotVisualizeChanged(int _idx)
     int type = gui_->comboBox_visualize->currentIndex();
 
     if (type == 0)
-        visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
+        visualize = PrescribedMeanCurvature::NONE;
     else if (type == 1)
+        visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
+    else if (type == 2)
         visualize = PrescribedMeanCurvature::COLOR_CODING;
+
+
+    for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ;
+          o_it != PluginFunctions::objectsEnd(); ++o_it)
+    {
+
+        if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
+        {
+            TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
+            if (visualize == PrescribedMeanCurvature::UPDATE_VECTOR)
+            {
+                pmc.showLineNode(meshObject);
+            }else
+            {
+                pmc.clearLineNode(meshObject);
+            }
+        }
+    }
+
 
 }
 

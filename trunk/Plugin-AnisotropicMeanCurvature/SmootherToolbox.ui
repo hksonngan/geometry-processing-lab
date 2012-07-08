@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>383</width>
+    <width>389</width>
     <height>138</height>
    </rect>
   </property>
@@ -30,6 +30,11 @@
    </item>
    <item row="4" column="0">
     <widget class="QComboBox" name="comboBox_visualize">
+     <item>
+      <property name="text">
+       <string>None</string>
+      </property>
+     </item>
      <item>
       <property name="text">
        <string>Show update vector</string>

@@ -137,7 +137,9 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
     mesh->update_normals();
 
-    if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, amc_Ha, area_star);
+    //if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, amc_Ha, area_star);
+    updateLineNode(meshObject, amc_Ha, area_star);
+    if (visualize != UPDATE_VECTOR) this->clearLineNode(meshObject);
 
 
     // Remove the property
@@ -242,7 +244,9 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
 
 
     mesh->update_normals();
-    if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, old_vertex);
+    //if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, old_vertex);
+    updateLineNode(meshObject, old_vertex);
+    if (visualize != UPDATE_VECTOR) this->clearLineNode(meshObject);
 
 
     // Remove the property
@@ -828,3 +832,53 @@ addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _co
     _line_node->add_line( _p0, _p1 );
     _line_node->add_color(_color);
 }
+
+
+
+
+
+void
+PrescribedMeanCurvature::
+clearLineNode(TriMeshObject * _meshObject)
+{
+    ACG::SceneGraph::LineNode * line_node = 0;
+
+    // get line node
+    if( _meshObject->hasAdditionalNode( "NormalEstimationPlugin", "LineNode" ) )
+    {
+        _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
+
+        //line_node->clear();
+//        line_node->show();
+
+        line_node->hide();
+
+    }
+
+}
+
+
+
+
+void
+PrescribedMeanCurvature::
+showLineNode(TriMeshObject * _meshObject)
+{
+    ACG::SceneGraph::LineNode * line_node = 0;
+
+    // get line node
+    if( _meshObject->hasAdditionalNode( "NormalEstimationPlugin", "LineNode" ) )
+    {
+        _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
+
+
+        line_node->show();
+
+
+
+    }
+
+}
+
+
+
