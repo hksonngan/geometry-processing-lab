@@ -98,8 +98,9 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
 
 
 
-
-
+    enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE };
+    enum IntegrationScheme { EXPLICIT, IMPLICIT };
+    enum VisualizeMode {UPDATE_VECTOR, COLOR_CODING};
 
 
    private:
@@ -110,13 +111,21 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
     SmootherToolboxWidget * gui_;
 
 
-
+    SmoothingMode smooth_type;
+    IntegrationScheme scheme;
+    VisualizeMode visualize;
 
     PrescribedMeanCurvature pmc;
 
 
    private slots:
     void smooth();
+
+    void slotModeChanged(int);
+
+    void slotSchemeChanged(int _idx);
+
+    void slotVisualizeChanged(int);
     
     void initializePlugin(); // BaseInterface
     
