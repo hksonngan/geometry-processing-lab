@@ -341,7 +341,7 @@ compute_taylor_semi_implicit(TriMesh *mesh
                                   , bool is_lumped_mass)
 {
 
-    printf("entering implicit step \n");
+    printf("entering implicit taylor step \n");
 
     PrescribedMeanCurvature pmc;
     mesh_size *= 3;
@@ -529,7 +529,7 @@ compute_explicit_integration_with_mass(TriMesh *mesh
                                        , bool is_lumped_mask)
 {
 
-    printf("entering implicit step \n");
+    printf("entering explicit step \n");
 
     PrescribedMeanCurvature pmc;
     mesh_size *= 3;
