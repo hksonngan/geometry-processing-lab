@@ -60,19 +60,19 @@
 class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
         , LoggingInterface, ScriptInterface, BackupInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(BaseInterface)
-  Q_INTERFACES(ToolboxInterface)
-  Q_INTERFACES(LoggingInterface)
-  Q_INTERFACES(ScriptInterface)
-  Q_INTERFACES(BackupInterface)
+    Q_OBJECT
+    Q_INTERFACES(BaseInterface)
+    Q_INTERFACES(ToolboxInterface)
+    Q_INTERFACES(LoggingInterface)
+    Q_INTERFACES(ScriptInterface)
+    Q_INTERFACES(BackupInterface)
 
-  signals:
+signals:
     //BaseInterface
     void updateView();
     void updatedObject(int _id, const UpdateType& _type);
     void setSlotDescription(QString     _slotName,   QString     _slotDescription,
-                          QStringList _parameters, QStringList _descriptions);
+                            QStringList _parameters, QStringList _descriptions);
 
     //LoggingInterface
     void log(Logtype _type, QString _message);
@@ -87,7 +87,7 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
     // BackupInterface
     void createBackup( int _id , QString _name, UpdateType _type = UPDATE_ALL );
 
-  public:
+public:
 
     AnisotropicMeanCurvature();
     ~AnisotropicMeanCurvature();
@@ -101,7 +101,7 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
 
 
 
-   private:
+private:
 
 
 
@@ -116,7 +116,7 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
     PrescribedMeanCurvature pmc;
 
 
-   private slots:
+private slots:
     void smooth();
 
     void slotModeChanged(int);
@@ -130,12 +130,12 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
     void pluginsInitialized(); // BaseInterface
     
     // Scriptable functions
-   public slots:
+public slots:
 
     void smooth(int _iterations);
 
     void prescribedMeanCurvature(int _iterations);
-       
+
     QString version() { return QString("1.0"); };
 };
 
