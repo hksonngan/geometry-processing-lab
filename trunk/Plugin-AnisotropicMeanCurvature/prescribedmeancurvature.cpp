@@ -7,7 +7,7 @@
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {
-    m_lambda = 10;//0.1
+    m_lambda = 0.8;
 }
 
 
@@ -50,6 +50,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
     mesh->update_normals();
 
+    double threshold = get_feature_threshold(mesh);
 
 
     for ( int i = 0 ; i < _iterations ; ++i )
@@ -80,7 +81,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
                 TriMesh::Normal edgeNormal;
                 TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
-                double weight = anisotropic_weight(meanCurvature, m_lambda, R);
+                double weight = anisotropic_weight(meanCurvature, threshold, R);
 
                 mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
@@ -250,6 +251,20 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
 }
 
 
+
+
+double PrescribedMeanCurvature::get_feature_threshold(TriMesh *mesh)
+{
+    double count = 0;
+    double threshold = 0;
+    for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
+    {
+        threshold += mesh->calc_edge_length(e_it);
+        count++;
+    }
+    threshold = threshold*m_lambda*2/count;
+    return threshold;
+}
 
 
 

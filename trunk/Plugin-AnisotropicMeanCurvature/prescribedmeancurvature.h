@@ -128,6 +128,13 @@ public:
         return m_lambda;
     }
 
+    void set_lambda(double lambda)
+    {
+        m_lambda = lambda;
+    }
+
+    double get_feature_threshold(TriMesh * mesh);
+
     void updateLineNode(TriMeshObject * _meshObject
                         , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
                         , const OpenMesh::VPropHandleT< double >& areaStar);

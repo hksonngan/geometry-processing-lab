@@ -51,6 +51,7 @@ AnisotropicMeanCurvature::AnisotropicMeanCurvature()
     smooth_type = PrescribedMeanCurvature::ANISO_MEAN_CURVATURE;
     scheme = PrescribedMeanCurvature::EXPLICIT;
     visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
+    pmc.set_lambda(0.8);
 }
 
 AnisotropicMeanCurvature::~AnisotropicMeanCurvature()
@@ -64,6 +65,8 @@ void AnisotropicMeanCurvature::initializePlugin()
     gui_ = new SmootherToolboxWidget();
     QSize size(100, 100);
     gui_->resize(size);
+
+    //gui_->lineEdit_lambda.
 
     connect(gui_->pushButton_smooth, SIGNAL(clicked()), this, SLOT(smooth()));
     connect(gui_->comboBox_smooth_type, SIGNAL(currentIndexChanged(int)), this, SLOT(slotModeChanged(int)));
@@ -134,6 +137,8 @@ void AnisotropicMeanCurvature::smooth() {
         iterations = gui_->spinBox_iterations->value();
     }
 
+    pmc.set_lambda(gui_->doubleSpinBox->value());
+
     prescribedMeanCurvature(iterations);
 }
 
@@ -151,8 +156,6 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
     {
 
         bool selectionExists = false;
-
-        double lambda = 0.31;
 
         if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
         {
@@ -195,8 +198,10 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
                     {
 
                         TriMesh::Normal edgeNormal;
-                        TriMesh::Scalar meanCurvature = pmc.edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
-                        double weight = pmc.anisotropic_weight(meanCurvature, lambda, PrescribedMeanCurvature::R);
+                        TriMesh::Scalar meanCurvature = pmc.edge_mean_curvature_He_Ne(mesh, ve_it.handle()
+                                                                                      , edgeNormal);
+                        double weight = pmc.anisotropic_weight(meanCurvature, pmc.get_feature_threshold(mesh)
+                                                               , PrescribedMeanCurvature::R);
 
                         mesh->property(smoothVector, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
