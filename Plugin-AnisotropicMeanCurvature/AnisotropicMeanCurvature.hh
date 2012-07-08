@@ -103,7 +103,7 @@ public:
 
 private:
 
-
+    OpenMesh::VPropHandleT< TriMesh::Point > source_points;
 
     /// Widget for Toolbox
     SmootherToolboxWidget * gui_;
