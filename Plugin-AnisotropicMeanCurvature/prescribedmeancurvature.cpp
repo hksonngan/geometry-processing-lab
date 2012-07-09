@@ -764,7 +764,7 @@ updateLineNode(TriMeshObject * _meshObject
         TriMesh::Normal n = _meshObject->mesh()->property(anisoMeanCurvature, vit);
         TriMesh::Scalar coefficient = _meshObject->mesh()->property(areaStar, vit);
         coefficient = 3*TIME_STEP/coefficient;
-        addLine(node, p, p+coefficient*n*50, Color(255,0,0) );
+        addLine(node, p, p+coefficient*n*1000, Color(255,0,0) );
     }
 }
 
@@ -790,7 +790,7 @@ updateLineNode(TriMeshObject * _meshObject
 
         energy_error += n.norm();
 
-        addLine(node, p, p_old + n*100, Color(255,0,0) );
+        addLine(node, p, p_old + n*50, Color(255,0,0) );
     }
 
     printf("energy error: %f \n", energy_error);

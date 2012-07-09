@@ -53,6 +53,8 @@ AnisotropicMeanCurvature::AnisotropicMeanCurvature()
     scheme = PrescribedMeanCurvature::EXPLICIT;
     visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
     pmc.set_lambda(0.8);
+    color_range = 1;
+
 }
 
 AnisotropicMeanCurvature::~AnisotropicMeanCurvature()
@@ -140,18 +142,7 @@ slotVisualizeChanged(int _idx)
                 pmc.clearLineNode(meshObject);
                 if (visualize == PrescribedMeanCurvature::COLOR_CODING)
                 {
-                    TriMesh * mesh = meshObject->mesh();
-                    ColorCoder coder(0, 10, false);
-                    mesh->request_vertex_colors();
-
-                    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-                    {
-                        TriMesh::Point current = mesh->point(v_it);
-                        TriMesh::Point source = mesh->property(source_points, v_it);
-                        ACG::Vec3f color = coder.color_float(source|current)*255;
-                        mesh->set_color(v_it, TriMesh::Color(color[0], color[1], color[2], 1));
-                        printf("color %f %f %f \n", color[0], color[1], color[2]);
-                    }
+                    recompute_color(meshObject);
                     emit updatedObject( o_it->id(), UPDATE_COLOR );
                 }
 
@@ -288,7 +279,7 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
             emit updatedObject( o_it->id(), UPDATE_ALL );
 
             // Create backup
-            emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_ALL );
+            emit createBackup(o_it->id(), "AnisotropicMeanCurvature Smoothing", UPDATE_ALL );
 
 
         } else {
@@ -312,22 +303,9 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
         if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
         {
 
-
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
-            TriMesh* mesh = meshObject->mesh();
 
-            for ( PluginFunctions::ObjectIterator osrc_it(PluginFunctions::SOURCE_OBJECTS) ;
-                  osrc_it != PluginFunctions::objectsEnd(); ++osrc_it)
-            {
-                TriMeshObject * sourceObj = PluginFunctions::triMeshObject(osrc_it);
-                TriMesh * sourceMesh = sourceObj->mesh();
-                mesh->add_property( source_points, "source_points" );
-                for (TriMesh::VertexIter v_it=mesh->vertices_begin(), srcv_it=sourceMesh->vertices_begin();
-                     v_it!=mesh->vertices_end(); ++v_it, ++srcv_it)
-                {
-                    mesh->property(source_points,v_it) = sourceMesh->point(srcv_it);
-                }
-            }
+
 
             if (scheme == PrescribedMeanCurvature::EXPLICIT
                     && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
@@ -341,6 +319,8 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
             {
                 pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize);
             }
+
+            recompute_color(meshObject);
 
             emit updatedObject( o_it->id(), UPDATE_ALL );
 
@@ -359,6 +339,68 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
     emit updateView();
 }
 
+
+
+
+
+void AnisotropicMeanCurvature::recompute_color(TriMeshObject * meshObject)
+{
+    bool prop_exist = meshObject->mesh()->get_property_handle(source_points, "source_points");
+    if (!prop_exist) attach_source(meshObject);
+    if (prop_exist)
+    {
+        TriMesh * mesh = meshObject->mesh();
+        ColorCoder coder(0, color_range, false);
+        printf("color range %f \n", color_range);
+        mesh->request_vertex_colors();
+
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            TriMesh::Point current = mesh->point(v_it);
+            TriMesh::Point source = mesh->property(source_points, v_it);
+            TriMesh::Scalar distance = (source-current).norm();
+            ACG::Vec3f color = coder.color_float(distance);
+            mesh->set_color(v_it, TriMesh::Color(color[0], color[1], color[2], 1));
+        }
+
+
+    }
+}
+
+
+
+
+
+bool AnisotropicMeanCurvature::attach_source(TriMeshObject * meshObject)
+{
+    TriMesh* mesh = meshObject->mesh();
+    int source = 0;
+    for ( PluginFunctions::ObjectIterator osrc_it(PluginFunctions::SOURCE_OBJECTS) ;
+          osrc_it != PluginFunctions::objectsEnd(); ++osrc_it)
+    {
+        TriMeshObject * sourceObj = PluginFunctions::triMeshObject(osrc_it);
+        TriMesh * sourceMesh = sourceObj->mesh();
+        //double meanDist = 0;
+        double maxDist = -1;
+        mesh->add_property( source_points, "source_points" );
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(), srcv_it=sourceMesh->vertices_begin();
+             v_it!=mesh->vertices_end(); ++v_it, ++srcv_it)
+        {
+            mesh->property(source_points,v_it) = sourceMesh->point(srcv_it);
+            double distance = (sourceMesh->point(srcv_it) - mesh->point(v_it)).norm();
+            if (distance > maxDist) maxDist = distance;
+            //meanDist += distance;
+        }
+        //unsigned int count(mesh->n_vertices());
+        //meanDist /= count;
+        this->color_range = maxDist;
+
+        //color_range /= 10;
+
+        source++;
+    }
+    return source == 1;
+}
 
 
 
