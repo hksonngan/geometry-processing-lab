@@ -56,6 +56,7 @@
 #include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
 #include "prescribedmeancurvature.h"
 #include "SmootherToolboxWidget.hh"
+#include "implicit_integration.h"
 
 class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
         , LoggingInterface, ScriptInterface, BackupInterface
@@ -108,6 +109,8 @@ private:
     /// Widget for Toolbox
     SmootherToolboxWidget * gui_;
 
+    double color_range;
+    bool has_source_attached;
 
     PrescribedMeanCurvature::SmoothingMode smooth_type;
     PrescribedMeanCurvature::IntegrationScheme scheme;
@@ -115,6 +118,8 @@ private:
 
     PrescribedMeanCurvature pmc;
 
+    bool attach_source(TriMeshObject * meshObject);
+    void recompute_color(TriMeshObject * meshObject);
 
 private slots:
     void smooth();

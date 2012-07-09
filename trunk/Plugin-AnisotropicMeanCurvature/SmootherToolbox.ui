@@ -59,6 +59,9 @@
      <property name="minimum">
       <number>1</number>
      </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
     </widget>
    </item>
    <item row="0" column="0">
@@ -91,6 +94,9 @@
    </item>
    <item row="2" column="3">
     <widget class="QDoubleSpinBox" name="doubleSpinBox">
+     <property name="toolTip">
+      <string>the lower the more feature sensitive</string>
+     </property>
      <property name="maximum">
       <double>1.000000000000000</double>
      </property>
