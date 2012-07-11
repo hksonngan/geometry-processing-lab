@@ -97,6 +97,8 @@ slotModeChanged(int _idx)
         smooth_type = PrescribedMeanCurvature::ANISO_MEAN_CURVATURE;
     else if (type == 1)
         smooth_type = PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE;
+    else if (type == 2)
+        smooth_type = PrescribedMeanCurvature::MASSIVE_ANISO_MEAN_CURVATURE;
 
 }
 
@@ -117,6 +119,7 @@ slotSchemeChanged(int _idx)
 void AnisotropicMeanCurvature::
 slotVisualizeChanged(int _idx)
 {
+
     int type = gui_->comboBox_visualize->currentIndex();
 
     if (type == 0)
@@ -134,17 +137,20 @@ slotVisualizeChanged(int _idx)
         if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
         {
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
+
+            recompute_color(meshObject, o_it->id());
+
             if (visualize == PrescribedMeanCurvature::UPDATE_VECTOR)
             {
                 pmc.showLineNode(meshObject);
             }else
             {
                 pmc.clearLineNode(meshObject);
-                if (visualize == PrescribedMeanCurvature::COLOR_CODING)
-                {
-                    recompute_color(meshObject);
-                    emit updatedObject( o_it->id(), UPDATE_COLOR );
-                }
+//                if (visualize == PrescribedMeanCurvature::COLOR_CODING)
+//                {
+//                    recompute_color(meshObject);
+//                    emit updatedObject( o_it->id(), UPDATE_COLOR );
+//                }
 
             }
         }
@@ -199,6 +205,9 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
             OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
             OpenMesh::VPropHandleT< double > areaStar;
 
+            OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
+            mesh->add_property( old_vertex, "new_amc_vertex" );
+
             // Add a property to the mesh to store mean curvature and area
             mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
             mesh->add_property( areaStar, "areaStar" );
@@ -218,6 +227,7 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
                 for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
                 {
                     mesh->property(smoothVector,v_it).vectorize(0.0f);
+                    mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
                     mesh->property(areaStar,v_it) = 0;
                     selectionExists |= mesh->status(v_it).selected();
                 }
@@ -253,6 +263,8 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
                         continue;
                     }
 
+                    mesh->property(old_vertex, v_it) = mesh->point(v_it);
+
                     TriMesh::Scalar area = mesh->property(areaStar, v_it);
                     TriMesh::Normal updateVector = mesh->property(smoothVector, v_it);
 
@@ -269,7 +281,8 @@ void AnisotropicMeanCurvature::smooth(int _iterations) {
 
 
 
-            pmc.updateLineNode(meshObject, smoothVector, areaStar);
+            pmc.updateLineNode(meshObject, old_vertex);
+            if (visualize != PrescribedMeanCurvature::UPDATE_VECTOR) pmc.clearLineNode(meshObject);
 
             // Remove the property
             mesh->remove_property( smoothVector );
@@ -305,27 +318,32 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
 
+            if (scheme == PrescribedMeanCurvature::EXPLICIT)
+            {
 
+                if (smooth_type == PrescribedMeanCurvature::ANISO_MEAN_CURVATURE)
+                {
+                    this->smooth(_iterations);
+                }
 
-            if (scheme == PrescribedMeanCurvature::EXPLICIT
-                    && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
-            {
-                pmc.smooth_explicit_pmc(_iterations, meshObject, visualize);
-            }else if (scheme == PrescribedMeanCurvature::IMPLICIT
-                      && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
-            {
-                return;
-            }else
-            {
-                pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize);
+                if (smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
+                {
+                    pmc.smooth_explicit_pmc(_iterations, meshObject, visualize);
+                }
+
+                if (smooth_type == PrescribedMeanCurvature::MASSIVE_ANISO_MEAN_CURVATURE)
+                {
+                    pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize);
+                }
+
             }
 
-            recompute_color(meshObject);
+            recompute_color(meshObject, o_it->id());
 
             emit updatedObject( o_it->id(), UPDATE_ALL );
 
             // Create backup
-            emit createBackup(o_it->id(), "ExplicitAnisotropicMeanCurvature Smoothing", UPDATE_ALL );
+            emit createBackup(o_it->id(), "AnisotropicMeanCurvature Smoothing", UPDATE_ALL );
 
         }
         else
@@ -343,7 +361,7 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 
 
 
-void AnisotropicMeanCurvature::recompute_color(TriMeshObject * meshObject)
+void AnisotropicMeanCurvature::recompute_color(TriMeshObject * meshObject, int object_id)
 {
     bool prop_exist = meshObject->mesh()->get_property_handle(source_points, "source_points");
     if (!prop_exist) attach_source(meshObject);
@@ -362,9 +380,8 @@ void AnisotropicMeanCurvature::recompute_color(TriMeshObject * meshObject)
             ACG::Vec3f color = coder.color_float(distance);
             mesh->set_color(v_it, TriMesh::Color(color[0], color[1], color[2], 1));
         }
-
-
     }
+    emit updatedObject( object_id, UPDATE_COLOR );
 }
 
 

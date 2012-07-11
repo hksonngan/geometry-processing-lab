@@ -119,7 +119,7 @@ private:
     PrescribedMeanCurvature pmc;
 
     bool attach_source(TriMeshObject * meshObject);
-    void recompute_color(TriMeshObject * meshObject);
+    void recompute_color(TriMeshObject * meshObject, int object_id);
 
 private slots:
     void smooth();
