@@ -33,6 +33,9 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     OpenMesh::VPropHandleT< bool > is_feature;
     OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
 
+    OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
+    mesh->add_property( old_vertex, "new_amc_vertex" );
+
     // Add a property to the mesh to store mean curvature and area
     mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
     mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
@@ -63,6 +66,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
             mesh->property(amc_Ha,v_it).vectorize(0.0f);
             mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
             mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+            mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
             mesh->property(area_star,v_it) = 0;
             mesh->property(apmc_function_f,v_it) = 0;
             mesh->property(smoothed_apmc_function_f,v_it) = 0;
@@ -120,6 +124,8 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
                 continue;
             }
 
+            mesh->property(old_vertex, v_it) = mesh->point(v_it);
+
             TriMesh::Scalar area = mesh->property(area_star, v_it);
             TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
 
@@ -138,7 +144,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     mesh->update_normals();
 
     //if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, amc_Ha, area_star);
-    updateLineNode(meshObject, amc_Ha, area_star);
+    updateLineNode(meshObject, old_vertex);
     if (visualize != UPDATE_VECTOR) this->clearLineNode(meshObject);
 
 
@@ -226,7 +232,7 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
         //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
 
         if (scheme == EXPLICIT
-                && smooth_type == ANISO_MEAN_CURVATURE)
+                && smooth_type == MASSIVE_ANISO_MEAN_CURVATURE)
         {
             implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex);
         }
@@ -261,15 +267,27 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
 
 double PrescribedMeanCurvature::get_feature_threshold(TriMesh *mesh)
 {
-    double count = 0;
-    double threshold = 0;
+    double max_edge_length = -1;
     for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
     {
-        threshold += mesh->calc_edge_length(e_it);
-        count++;
+        double edge_length = mesh->calc_edge_length(e_it);
+        if(max_edge_length < edge_length) max_edge_length = edge_length;
     }
-    threshold = threshold*m_lambda*2/count;
-    return threshold;
+    return max_edge_length*m_lambda*2;
+}
+
+
+
+
+double PrescribedMeanCurvature::get_edge_length(TriMesh *mesh)
+{
+    double max_edge_length = -1;
+    for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
+    {
+        double edge_length = mesh->calc_edge_length(e_it);
+        if(max_edge_length < edge_length) max_edge_length = edge_length;
+    }
+    return max_edge_length;
 }
 
 
@@ -746,27 +764,7 @@ volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh
 }
 
 
-void
-PrescribedMeanCurvature::
-updateLineNode(TriMeshObject * _meshObject
-               , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
-               , const OpenMesh::VPropHandleT< double >& areaStar)
-{
-    ACG::SceneGraph::LineNode * node = getLineNode(_meshObject);
-    //OpenMesh::VPropHandleT< TriMesh::Normal > smoothVector;
 
-    node->clear();
-
-    for (TriMesh::VertexIter vit = _meshObject->mesh()->vertices_begin();
-         vit != _meshObject->mesh()->vertices_end(); ++vit)
-    {
-        TriMesh::Point  p = _meshObject->mesh()->point(vit);
-        TriMesh::Normal n = _meshObject->mesh()->property(anisoMeanCurvature, vit);
-        TriMesh::Scalar coefficient = _meshObject->mesh()->property(areaStar, vit);
-        coefficient = 3*TIME_STEP/coefficient;
-        addLine(node, p, p+coefficient*n*1000, Color(255,0,0) );
-    }
-}
 
 
 void
@@ -790,7 +788,13 @@ updateLineNode(TriMeshObject * _meshObject
 
         energy_error += n.norm();
 
-        addLine(node, p, p_old + n*50, Color(255,0,0) );
+        addLine(node, p, p_old + n*40, Color(255,0,0) );
+
+//        ACG::Vec3d bbMin, bbMax;
+//        _meshObject->boundingBox(bbMin, bbMax);
+//        double diagonal_length = (bbMax - bbMin).norm();
+//        addLine(node, p, p_old + n*diagonal_length*10, Color(255,0,0) );
+
     }
 
     printf("energy error: %f \n", energy_error);

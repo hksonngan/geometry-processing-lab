@@ -54,7 +54,7 @@ public:
 
 
 
-    enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE };
+    enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE, MASSIVE_ANISO_MEAN_CURVATURE };
     enum IntegrationScheme { EXPLICIT, IMPLICIT };
     enum VisualizeMode {NONE, UPDATE_VECTOR, COLOR_CODING};
 
@@ -134,6 +134,8 @@ public:
     }
 
     double get_feature_threshold(TriMesh * mesh);
+
+    double get_edge_length(TriMesh * mesh);
 
     void updateLineNode(TriMeshObject * _meshObject
                         , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
