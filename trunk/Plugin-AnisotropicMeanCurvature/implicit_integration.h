@@ -26,7 +26,7 @@ public:
 
 
     static const double IMPLICIT_TIME_FACTOR = 0.0001;
-    static const double EXPLICIT_TIME_STEP = 0.01;
+    static const double EXPLICIT_TIME_STEP = 0.001;
 
 
     /**
