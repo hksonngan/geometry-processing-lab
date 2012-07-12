@@ -72,6 +72,7 @@ void AnisotropicMeanCurvature::initializePlugin()
     //gui_->lineEdit_lambda.
 
     connect(gui_->pushButton_smooth, SIGNAL(clicked()), this, SLOT(smooth()));
+    connect(gui_->pushButton_generate_noise, SIGNAL(clicked()), this, SLOT(slot_add_noise()));
     connect(gui_->comboBox_smooth_type, SIGNAL(currentIndexChanged(int)), this, SLOT(slotModeChanged(int)));
     connect(gui_->comboBox_integration_scheme, SIGNAL(currentIndexChanged(int)), this, SLOT(slotSchemeChanged(int)));
     connect(gui_->comboBox_visualize, SIGNAL(currentIndexChanged(int)), this, SLOT(slotVisualizeChanged(int)));
@@ -364,7 +365,8 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations)
 void AnisotropicMeanCurvature::recompute_color(TriMeshObject * meshObject, int object_id)
 {
     bool prop_exist = meshObject->mesh()->get_property_handle(source_points, "source_points");
-    if (!prop_exist) attach_source(meshObject);
+    if (!prop_exist) prop_exist = attach_source(meshObject);
+    //if (!prop_exist) prop_exist = add_noise(meshObject->mesh());
     if (prop_exist)
     {
         TriMesh * mesh = meshObject->mesh();
@@ -382,8 +384,76 @@ void AnisotropicMeanCurvature::recompute_color(TriMeshObject * meshObject, int o
         }
     }
     emit updatedObject( object_id, UPDATE_COLOR );
+
 }
 
+
+
+
+void AnisotropicMeanCurvature::slot_add_noise()
+{
+    for ( PluginFunctions::ObjectIterator o_it(PluginFunctions::TARGET_OBJECTS) ;
+          o_it != PluginFunctions::objectsEnd(); ++o_it)
+    {
+        if ( o_it->dataType( DATA_TRIANGLE_MESH ) )
+        {
+            TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
+            add_noise(meshObject->mesh());
+            // update normals
+            meshObject->mesh()->update_face_normals();
+            meshObject->mesh()->update_vertex_normals();
+            emit updatedObject( o_it->id(), UPDATE_ALL );
+        }
+    }
+    //emit updateView();
+}
+
+
+
+bool AnisotropicMeanCurvature::add_noise(TriMesh *mesh)
+{
+    double range = pmc.get_edge_length(mesh);
+    bool prop_exist = mesh->get_property_handle(source_points, "source_points");
+    if (!prop_exist) mesh->add_property( source_points, "source_points" );
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+        if (!prop_exist) mesh->property(source_points,v_it) = mesh->point(v_it);
+
+        TriMesh::Point point = mesh->point(v_it);
+        TriMesh::Normal normal;
+        mesh->calc_vertex_normal_fast(v_it, normal);
+        add_noise(point, normal, range);
+        mesh->set_point(v_it, point);
+    }
+    color_range = range;
+    return true;
+}
+
+
+
+void AnisotropicMeanCurvature::add_noise(TriMesh::Point & point, const TriMesh::Normal & normal, double range)
+{
+
+    TriMesh::Point noise;
+
+    noise[0] = (range * rand() / RAND_MAX) *
+                (((rand() & 0x1) == 0x1) ? -1.0 : 1.0);
+
+    noise[1] = (range * rand() / RAND_MAX) *
+                (((rand() & 0x1) == 0x1) ? -1.0 : 1.0);
+
+    noise[2] = (range * rand() / RAND_MAX) *
+                (((rand() & 0x1) == 0x1) ? -1.0 : 1.0);
+
+//    noise[1] = (((range * rand() / RAND_MAX) + (rand() / RAND_MAX)) *
+//                (((rand() & 0x1) == 0x1) ? -1.0 : 1.0));
+
+//    noise[2] = (((range * rand() / RAND_MAX) + (rand() / RAND_MAX)) *
+//                (((rand() & 0x1) == 0x1) ? -1.0 : 1.0));
+
+    //point += normal*noise*0.1;
+    point += noise*0.1;
+}
 
 
 

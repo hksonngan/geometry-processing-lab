@@ -110,7 +110,7 @@ private:
     SmootherToolboxWidget * gui_;
 
     double color_range;
-    bool has_source_attached;
+
 
     PrescribedMeanCurvature::SmoothingMode smooth_type;
     PrescribedMeanCurvature::IntegrationScheme scheme;
@@ -120,6 +120,8 @@ private:
 
     bool attach_source(TriMeshObject * meshObject);
     void recompute_color(TriMeshObject * meshObject, int object_id);
+    void add_noise(TriMesh::Point & point, const TriMesh::Normal & normal, double range);
+    bool add_noise(TriMesh* mesh);
 
 private slots:
     void smooth();
@@ -127,6 +129,8 @@ private slots:
     void slotModeChanged(int);
 
     void slotSchemeChanged(int _idx);
+
+    void slot_add_noise();
 
     void slotVisualizeChanged(int);
     

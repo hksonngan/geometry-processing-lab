@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>138</height>
+    <width>438</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,32 +25,6 @@
     <widget class="QLabel" name="label_feature_detection">
      <property name="text">
       <string>Feature detection [0, 1]: </string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QComboBox" name="comboBox_visualize">
-     <item>
-      <property name="text">
-       <string>None</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Show update vector</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Color coding</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="4" column="3">
-    <widget class="QPushButton" name="pushButton_smooth">
-     <property name="text">
-      <string>Smooth</string>
      </property>
     </widget>
    </item>
@@ -102,6 +76,9 @@
      <property name="toolTip">
       <string>the lower the more feature sensitive</string>
      </property>
+     <property name="whatsThis">
+      <string>the lower the more feature sensitive</string>
+     </property>
      <property name="maximum">
       <double>1.000000000000000</double>
      </property>
@@ -110,6 +87,62 @@
      </property>
      <property name="value">
       <double>0.800000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QComboBox" name="comboBox_visualize">
+     <item>
+      <property name="text">
+       <string>None</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Show update vector</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Color coding</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="3">
+    <widget class="QPushButton" name="pushButton_smooth">
+     <property name="text">
+      <string>Smooth</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Time step:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_time">
+     <property name="decimals">
+      <number>5</number>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.001000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.000100000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="pushButton_generate_noise">
+     <property name="text">
+      <string>Generate Noise</string>
      </property>
     </widget>
    </item>
