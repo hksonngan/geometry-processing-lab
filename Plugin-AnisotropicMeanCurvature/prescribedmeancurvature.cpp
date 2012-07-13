@@ -14,7 +14,7 @@ PrescribedMeanCurvature::PrescribedMeanCurvature()
 
 void PrescribedMeanCurvature::
 smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
-                    , VisualizeMode visualize)
+                    , VisualizeMode visualize, double time_step)
 {
 
 
@@ -132,7 +132,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
             TriMesh::Normal result = updateVector -
                     mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
 
-            mesh->set_point(v_it, mesh->point(v_it) - (3*TIME_STEP/area)*result);
+            mesh->set_point(v_it, mesh->point(v_it) - (3*time_step/area)*result);
         }
 
         mesh->update_normals();
@@ -167,7 +167,8 @@ void PrescribedMeanCurvature::
 smooth_aniso(int _iterations, TriMeshObject * meshObject
             , SmoothingMode smooth_type
             , IntegrationScheme scheme
-            , VisualizeMode visualize)
+            , VisualizeMode visualize
+            , double time_step)
 {
 
     TriMesh* mesh = meshObject->mesh();
@@ -234,13 +235,14 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
         if (scheme == EXPLICIT
                 && smooth_type == MASSIVE_ANISO_MEAN_CURVATURE)
         {
-            implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex);
+            implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star
+                                                                   , vertex_id, old_vertex, time_step);
         }
 
         if (scheme == IMPLICIT
                 && smooth_type == ANISO_MEAN_CURVATURE)
         {
-            implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex);
+            implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex, time_step);
         }
 
         mesh->update_normals();
@@ -788,7 +790,7 @@ updateLineNode(TriMeshObject * _meshObject
 
         energy_error += n.norm();
 
-        addLine(node, p, p_old + n*40, Color(255,0,0) );
+        addLine(node, p, p_old + n*100, Color(255,0,0) );
 
 //        ACG::Vec3d bbMin, bbMax;
 //        _meshObject->boundingBox(bbMin, bbMax);

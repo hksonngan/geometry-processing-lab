@@ -50,7 +50,7 @@ public:
     //! for implicit method multiply by a factor of 10 or 100
     //! for fine scale noise multiply by a factor of 0.1
     //! for scan images time step = 0.001
-    static const double TIME_STEP = 0.00001;
+    //static const double time_step = 0.00001;
 
 
 
@@ -103,12 +103,12 @@ public:
     double anisotropic_weight(double curvature, double lambda, double r);
 
     void smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
-                             , VisualizeMode visualize);
+                             , VisualizeMode visualize, double time_step);
 
     void smooth_aniso(int _iterations, TriMeshObject * meshObject
                       , SmoothingMode smooth_type
                       , IntegrationScheme scheme
-                      , VisualizeMode visualize);
+                      , VisualizeMode visualize, double time_step);
 
     double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
 
