@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  13 JUL 2012 18:29
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  13 JUL 2012 21:10
 entering extended mode
 **gp_lab_presentation.tex
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.tex"
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.tex"
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -750,7 +750,7 @@ File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
 ))
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.aux"
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux"
 
 LaTeX Warning: Label `fig:prescribed' multiply defined.
 
@@ -840,9 +840,9 @@ LaTeX Info: Redefining \pageref on input line 114.
 LaTeX Info: Redefining \nameref on input line 114.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.out")
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.out")
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.out")
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.out")
 \@outlinefile=\write5
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 114.
@@ -914,7 +914,7 @@ Dictionary: translator-theorem-dictionary, Language: English
 LaTeX Info: Redefining \includegraphics on input line 114.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.nav")
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.nav")
 LaTeX Font Info:    Try loading font information for U+msa on input line 118.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
@@ -938,7 +938,7 @@ ig/pdftex.map}
 
 ]
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.toc") [2
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.toc") [2
 
 ]
 <kitten_pipeline.jpg, id=115, 569.87906pt x 266.49562pt>
@@ -952,8 +952,8 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10.95> not available
  [3
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/kitten_pipeline.jpg>]
-<ddg_heat_equation.png, id=150, 443.256pt x 106.799pt>
+eometry-processing-lab/gp_lab_presentation/kitten_pipeline.jpg>] <ddg_heat_equa
+tion.png, id=150, 443.256pt x 106.799pt>
 File: ddg_heat_equation.png Graphic file (type png)
 
 <use ddg_heat_equation.png>
@@ -972,8 +972,9 @@ Overfull \vbox (5.49043pt too high) detected at line 185
 [4
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/ddg_heat_equation.png> <E:/Media Informatics/courses/second 
-semester/geometry processing lab/GP lab/gp_lab_presentation/motivation.PNG>]
+eometry-processing-lab/gp_lab_presentation/ddg_heat_equation.png> <E:/Media Inf
+ormatics/courses/second semester/geometry processing lab/GP lab/geometry-proces
+sing-lab/gp_lab_presentation/motivation.PNG>]
 <principal_curvature.png, id=185, 1003.75pt x 684.5575pt>
 File: principal_curvature.png Graphic file (type png)
 
@@ -989,130 +990,124 @@ Package pdftex.def Info: cotangent.png used on input line 216.
  [5
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/principal_curvature.png> <E:/Media Informatics/courses/secon
-d semester/geometry processing lab/GP lab/gp_lab_presentation/cotangent.png>] <
-Dihedral_angle.png, id=228, 401.5pt x 328.22626pt>
+eometry-processing-lab/gp_lab_presentation/principal_curvature.png> <E:/Media I
+nformatics/courses/second semester/geometry processing lab/GP lab/geometry-proc
+essing-lab/gp_lab_presentation/cotangent.png>]
+<Dihedral_angle.png, id=228, 401.5pt x 328.22626pt>
 File: Dihedral_angle.png Graphic file (type png)
-
-<use Dihedral_angle.png>
+ <use Dihedral_angle.png>
 Package pdftex.def Info: Dihedral_angle.png used on input line 231.
 (pdftex.def)             Requested size: 76.82246pt x 62.79935pt.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10> not available
 (Font)              Font shape `T1/phv/m/sl' tried instead on input line 231.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <7> not available
 (Font)              Font shape `T1/phv/m/sl' tried instead on input line 231.
- [6
+
+[6
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/Dihedral_angle.png>] [7
+eometry-processing-lab/gp_lab_presentation/Dihedral_angle.png>] [7
+
+] [8
 
 ]
-<aniso_cube.PNG, id=294, 1027.84pt x 576.1525pt>
-File: aniso_cube.PNG Graphic file (type png)
- <use aniso_cube.PNG>
-Package pdftex.def Info: aniso_cube.PNG used on input line 265.
-(pdftex.def)             Requested size: 122.91406pt x 68.89793pt.
- [8
-
- <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/aniso_cube.PNG>]
-<aniso_bunny_100it.PNG, id=326, 626.34pt x 482.80376pt>
+<aniso_bunny_100it.PNG, id=324, 626.34pt x 482.80376pt>
 File: aniso_bunny_100it.PNG Graphic file (type png)
 
 <use aniso_bunny_100it.PNG>
-Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 278.
+Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 282.
 (pdftex.def)             Requested size: 122.91406pt x 94.7394pt.
  [9
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/aniso_bunny_100it.PNG>]
-[10
+eometry-processing-lab/gp_lab_presentation/aniso_bunny_100it.PNG>] [10
 
-] <bunnies_1_10_30_raw.PNG, id=386, 1270.7475pt x 1226.5825pt>
+]
+<bunnies_1_10_30_raw.PNG, id=384, 1270.7475pt x 1226.5825pt>
 File: bunnies_1_10_30_raw.PNG Graphic file (type png)
 
 <use bunnies_1_10_30_raw.PNG>
-Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 307.
+Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 311.
 (pdftex.def)             Requested size: 169.01036pt x 163.12968pt.
 
-Overfull \vbox (6.39798pt too high) detected at line 307
+Overfull \vbox (6.39798pt too high) detected at line 311
  []
 
 [11
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/bunnies_1_10_30_raw.PNG>]
-<bunny100.PNG, id=419, 632.3625pt x 632.3625pt>
+eometry-processing-lab/gp_lab_presentation/bunnies_1_10_30_raw.PNG>]
+<bunny100.PNG, id=417, 632.3625pt x 632.3625pt>
 File: bunny100.PNG Graphic file (type png)
  <use bunny100.PNG>
-Package pdftex.def Info: bunny100.PNG used on input line 316.
+Package pdftex.def Info: bunny100.PNG used on input line 320.
 (pdftex.def)             Requested size: 153.64493pt x 153.64201pt.
  [12
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/bunny100.PNG>] <kitten0_5_10_100.PNG, id=451, 1220.56pt x 13
-89.19pt>
+eometry-processing-lab/gp_lab_presentation/bunny100.PNG>]
+<kitten0_5_10_100.PNG, id=449, 1220.56pt x 1389.19pt>
 File: kitten0_5_10_100.PNG Graphic file (type png)
 
 <use kitten0_5_10_100.PNG>
-Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 325.
+Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 329.
 (pdftex.def)             Requested size: 138.2795pt x 157.36879pt.
 pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
 d}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.325 \end{frame}
+l.329 \end{frame}
                  
-Overfull \vbox (0.63708pt too high) detected at line 325
+Overfull \vbox (0.63708pt too high) detected at line 329
  []
 
 [13
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/kitten0_5_10_100.PNG>]
-<gun_raw_20it.PNG, id=482, 704.6325pt x 923.45pt>
+eometry-processing-lab/gp_lab_presentation/kitten0_5_10_100.PNG>]
+<gun_raw_20it.PNG, id=480, 704.6325pt x 923.45pt>
 File: gun_raw_20it.PNG Graphic file (type png)
  <use gun_raw_20it.PNG>
-Package pdftex.def Info: gun_raw_20it.PNG used on input line 334.
+Package pdftex.def Info: gun_raw_20it.PNG used on input line 338.
 (pdftex.def)             Requested size: 122.91406pt x 161.08481pt.
 pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
 d}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.334 \end{frame}
+l.338 \end{frame}
                  
-Overfull \vbox (4.3531pt too high) detected at line 334
+Overfull \vbox (4.3531pt too high) detected at line 338
  []
 
 [14
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-p_lab_presentation/gun_raw_20it.PNG>] [15
+eometry-processing-lab/gp_lab_presentation/gun_raw_20it.PNG>] [15
 
 ]
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 392.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 392.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 396.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 396.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-p_lab_presentation\gp_lab_presentation.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 392.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 392.
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 396.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 396.
 Package rerunfilecheck Info: File `gp_lab_presentation.out' has not changed.
 (rerunfilecheck)             Checksum: F8A2989B9E03393A3CC55BA9997F4ADB;221.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 392.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 396.
  ) 
 Here is how much of TeX's memory you used:
- 16185 strings out of 494049
- 302602 string characters out of 3148420
- 374720 words of memory out of 3000000
- 19001 multiletter control sequences out of 15000+200000
+ 16178 strings out of 494049
+ 302843 string characters out of 3148420
+ 375659 words of memory out of 3000000
+ 18996 multiletter control sequences out of 15000+200000
  50020 words of font info for 70 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  49i,19n,62p,409b,640s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1126,9 +1121,9 @@ m/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.
 pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Progra
 m Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX
  2.9/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on gp_lab_presentation.pdf (15 pages, 5619908 bytes).
+Output written on gp_lab_presentation.pdf (15 pages, 5504699 bytes).
 PDF statistics:
- 589 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 500000)
- 183 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 587 PDF objects out of 1000 (max. 8388607)
+ 44 named destinations out of 1000 (max. 500000)
+ 178 words of extra memory for PDF output out of 10000 (max. 10000000)
 
