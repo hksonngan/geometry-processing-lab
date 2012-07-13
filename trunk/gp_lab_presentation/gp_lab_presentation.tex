@@ -255,13 +255,17 @@ p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}\vec{H_A}(p^j)
 \end{equation*}
 \begin{itemize}
 \item s controls the speed of an integration step
+\item Matrix form:
 \end{itemize}
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.4\textwidth]{aniso_cube.PNG}
-\caption{AMC after 100 iterations}
-\label{fig:aniso_cube}
-\end{figure}
+\begin{equation*}
+\mathcal{P}^{j+1} = \mathcal{P}^j -sM^{-1}\vec{H_A}(\mathcal{P}^j)
+\end{equation*}
+\begin{equation*}
+M_{pq} = 
+\begin{cases} \dfrac{1}{6}area(star p), & \mbox{if } p=q \\ 
+\dfrac{1}{12}area(star e), & \mbox{if there is an edge } e=(p, q) \\
+0, & \mbox{otherwise} \end{cases}
+\end{equation*}
 \end{frame}
 
 \begin{frame}{Drawback of Anisotropic mean curvature}
