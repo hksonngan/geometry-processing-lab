@@ -126,7 +126,7 @@
    <item row="4" column="3">
     <widget class="QDoubleSpinBox" name="doubleSpinBox_time">
      <property name="decimals">
-      <number>5</number>
+      <number>6</number>
      </property>
      <property name="maximum">
       <double>1.000000000000000</double>
@@ -135,7 +135,7 @@
       <double>0.001000000000000</double>
      </property>
      <property name="value">
-      <double>0.000100000000000</double>
+      <double>0.000010000000000</double>
      </property>
     </widget>
    </item>
