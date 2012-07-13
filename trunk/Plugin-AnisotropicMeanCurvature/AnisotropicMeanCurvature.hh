@@ -57,6 +57,9 @@
 #include "prescribedmeancurvature.h"
 #include "SmootherToolboxWidget.hh"
 #include "implicit_integration.h"
+#include <limits>
+
+using namespace std;
 
 class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
         , LoggingInterface, ScriptInterface, BackupInterface

@@ -53,7 +53,7 @@ AnisotropicMeanCurvature::AnisotropicMeanCurvature()
     scheme = PrescribedMeanCurvature::EXPLICIT;
     visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
     pmc.set_lambda(0.8);
-    color_range = 1;
+    color_range = -1;
 
 }
 
@@ -404,6 +404,9 @@ void AnisotropicMeanCurvature::slot_add_noise()
             // update normals
             meshObject->mesh()->update_face_normals();
             meshObject->mesh()->update_vertex_normals();
+
+            recompute_color(meshObject, o_it->id());
+
             emit updatedObject( o_it->id(), UPDATE_ALL );
         }
     }
@@ -414,9 +417,9 @@ void AnisotropicMeanCurvature::slot_add_noise()
 
 bool AnisotropicMeanCurvature::add_noise(TriMesh *mesh)
 {
-    double range = pmc.get_edge_length(mesh);
     bool prop_exist = mesh->get_property_handle(source_points, "source_points");
     if (!prop_exist) mesh->add_property( source_points, "source_points" );
+
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
         if (!prop_exist) mesh->property(source_points,v_it) = mesh->point(v_it);
@@ -424,10 +427,22 @@ bool AnisotropicMeanCurvature::add_noise(TriMesh *mesh)
         TriMesh::Point point = mesh->point(v_it);
         TriMesh::Normal normal;
         mesh->calc_vertex_normal_fast(v_it, normal);
+
+        double range = numeric_limits<double>::max();
+
+        for (TriMesh::VertexOHalfedgeIter voh_it=mesh->voh_iter(v_it.handle()); voh_it; ++voh_it)
+        {
+            double edge_length = mesh->calc_edge_length(voh_it);
+            if (edge_length < range) range = edge_length;
+        }
+
         add_noise(point, normal, range);
         mesh->set_point(v_it, point);
+
+        double dist = (mesh->property(source_points, v_it) - mesh->point(v_it)).norm();
+        if (dist > color_range) color_range = dist;
     }
-    color_range = range;
+
     return true;
 }
 
@@ -453,8 +468,9 @@ void AnisotropicMeanCurvature::add_noise(TriMesh::Point & point, const TriMesh::
 //    noise[2] = (((range * rand() / RAND_MAX) + (rand() / RAND_MAX)) *
 //                (((rand() & 0x1) == 0x1) ? -1.0 : 1.0));
 
-    //point += normal*noise*0.1;
-    point += noise*0.07;
+    point += normal*noise[0]*0.1;
+    point += noise*0.05;
+
 }
 
 
