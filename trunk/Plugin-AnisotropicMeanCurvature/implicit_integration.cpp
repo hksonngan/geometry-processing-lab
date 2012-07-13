@@ -338,11 +338,13 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
 
 void Implicit_Integration::
 compute_taylor_semi_implicit(TriMesh *mesh
-                                  , unsigned int mesh_size
-                                  , const OpenMesh::VPropHandleT< double > & area_star
-                                  , const OpenMesh::VPropHandleT< int > & vertex_id
-                                  , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
-                                  , bool is_lumped_mass)
+                             , unsigned int mesh_size
+                             , const OpenMesh::VPropHandleT< double > & area_star
+                             , const OpenMesh::VPropHandleT< int > & vertex_id
+                             , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
+                             , double time_step
+                             , bool is_lumped_mass
+                             )
 {
 
     printf("entering implicit taylor step \n");
@@ -370,11 +372,11 @@ compute_taylor_semi_implicit(TriMesh *mesh
     this->init_Jacobian(mesh, &pmc, vertex_id, jacobian);
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
-    A = mass_matrix + IMPLICIT_TIME_FACTOR*jacobian;
+    A = mass_matrix + time_step*jacobian;
 
     Eigen::VectorXd b(mesh_size);
-    b = mass_matrix*input_vertices - IMPLICIT_TIME_FACTOR*amc_matrix*input_vertices
-            + IMPLICIT_TIME_FACTOR*jacobian*input_vertices;
+    b = mass_matrix*input_vertices - time_step*amc_matrix*input_vertices
+            + time_step*jacobian*input_vertices;
 
     Eigen::VectorXd x(mesh_size);
     Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
@@ -414,7 +416,9 @@ compute_semi_implicit_integration(TriMesh *mesh
                                   , const OpenMesh::VPropHandleT< double > & area_star
                                   , const OpenMesh::VPropHandleT< int > & vertex_id
                                   , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
-                                  , bool is_lumped_mass)
+                                  , double time_step
+                                  , bool is_lumped_mass
+                                  )
 {
 
     printf("entering implicit step \n");
@@ -439,7 +443,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
-    A = mass_matrix + IMPLICIT_TIME_FACTOR*amc_matrix;
+    A = mass_matrix + time_step*amc_matrix;
 
     Eigen::VectorXd b(mesh_size);
     b = mass_matrix*input_vertices;
@@ -486,7 +490,9 @@ compute_explicit_integration_with_mass(TriMesh *mesh
                                        , const OpenMesh::VPropHandleT< double > & area_star
                                        , const OpenMesh::VPropHandleT< int > & vertex_id
                                        , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
-                                       , bool is_lumped_mask)
+                                       , double time_step
+                                       , bool is_lumped_mask
+                                       )
 {
 
     printf("entering explicit step \n");
@@ -518,11 +524,11 @@ compute_explicit_integration_with_mass(TriMesh *mesh
         Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
         cholmoDec.compute(mass_matrix);
         x = cholmoDec.solve(Ha);
-        b = EXPLICIT_TIME_STEP*x;
+        b = time_step*x;
     }else
     {
         this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix);
-        b = EXPLICIT_TIME_STEP*mass_matrix*Ha;
+        b = time_step*mass_matrix*Ha;
     }
 
 

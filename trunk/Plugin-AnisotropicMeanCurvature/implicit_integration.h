@@ -25,8 +25,8 @@ public:
     Implicit_Integration();
 
 
-    static const double IMPLICIT_TIME_FACTOR = 0.0001;
-    static const double EXPLICIT_TIME_STEP = 0.001;
+//    static const double time_step = 0.0001;
+//    static const double time_step = 0.001;
 
 
     /**
@@ -43,7 +43,9 @@ public:
                                            , const OpenMesh::VPropHandleT< double > & area_star
                                            , const OpenMesh::VPropHandleT< int > & vertex_id
                                            , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
-                                           , bool is_lumped_mass = false);
+                                           , double time_step
+                                           , bool is_lumped_mass = false
+                                           );
 
 
 
@@ -56,7 +58,9 @@ public:
                                                 , const OpenMesh::VPropHandleT< double > & area_star
                                                 , const OpenMesh::VPropHandleT< int > & vertex_id
                                                 , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
-                                                , bool is_lumped_mass = false);
+                                                , double time_step
+                                                , bool is_lumped_mass = false
+                                                );
 
 
     void compute_taylor_semi_implicit(TriMesh *mesh
@@ -64,7 +68,9 @@ public:
                                       , const OpenMesh::VPropHandleT< double > & area_star
                                       , const OpenMesh::VPropHandleT< int > & vertex_id
                                       , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex
-                                      , bool is_lumped_mass = false);
+                                      , double time_step
+                                      , bool is_lumped_mass = false
+                                      );
 
 
 

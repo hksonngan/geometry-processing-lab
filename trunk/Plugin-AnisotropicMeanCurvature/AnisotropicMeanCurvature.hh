@@ -141,9 +141,9 @@ private slots:
     // Scriptable functions
 public slots:
 
-    void smooth(int _iterations);
+    void smooth(int _iterations, double time_step);
 
-    void prescribedMeanCurvature(int _iterations);
+    void prescribedMeanCurvature(int _iterations, double time_step);
 
     QString version() { return QString("1.0"); };
 };
