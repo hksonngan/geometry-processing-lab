@@ -10,11 +10,11 @@
 \headcommand {\beamer@framepages {3}{3}}
 \headcommand {\slideentry {1}{0}{4}{4/4}{}{0}}
 \headcommand {\beamer@framepages {4}{4}}
-\headcommand {\sectionentry {2}{Anisotropic Prescribed Mean Curvature}{5}{Anisotropic Prescribed Mean Curvature}{0}}
-\headcommand {\beamer@sectionpages {3}{4}}
-\headcommand {\beamer@subsectionpages {3}{4}}
-\headcommand {\slideentry {2}{0}{5}{5/5}{}{0}}
+\headcommand {\slideentry {1}{0}{5}{5/5}{}{0}}
 \headcommand {\beamer@framepages {5}{5}}
+\headcommand {\sectionentry {2}{Anisotropic Prescribed Mean Curvature}{6}{Anisotropic Prescribed Mean Curvature}{0}}
+\headcommand {\beamer@sectionpages {3}{5}}
+\headcommand {\beamer@subsectionpages {3}{5}}
 \headcommand {\slideentry {2}{0}{6}{6/6}{}{0}}
 \headcommand {\beamer@framepages {6}{6}}
 \headcommand {\slideentry {2}{0}{7}{7/7}{}{0}}
@@ -29,9 +29,9 @@
 \headcommand {\beamer@framepages {11}{11}}
 \headcommand {\slideentry {2}{0}{12}{12/12}{}{0}}
 \headcommand {\beamer@framepages {12}{12}}
-\headcommand {\sectionentry {3}{Results}{13}{Results}{0}}
-\headcommand {\beamer@sectionpages {5}{12}}
-\headcommand {\beamer@subsectionpages {5}{12}}
+\headcommand {\sectionentry {3}{Evaluation and Results}{13}{Evaluation and Results}{0}}
+\headcommand {\beamer@sectionpages {6}{12}}
+\headcommand {\beamer@subsectionpages {6}{12}}
 \headcommand {\slideentry {3}{0}{13}{13/13}{}{0}}
 \headcommand {\beamer@framepages {13}{13}}
 \headcommand {\slideentry {3}{0}{14}{14/14}{}{0}}
@@ -40,13 +40,8 @@
 \headcommand {\beamer@framepages {15}{15}}
 \headcommand {\slideentry {3}{0}{16}{16/16}{}{0}}
 \headcommand {\beamer@framepages {16}{16}}
-\headcommand {\sectionentry {4}{Summary and Future work}{17}{Summary and Future work}{0}}
-\headcommand {\beamer@sectionpages {13}{16}}
+\headcommand {\beamer@partpages {1}{16}}
 \headcommand {\beamer@subsectionpages {13}{16}}
-\headcommand {\slideentry {4}{0}{17}{17/17}{}{0}}
-\headcommand {\beamer@framepages {17}{17}}
-\headcommand {\beamer@partpages {1}{17}}
-\headcommand {\beamer@subsectionpages {17}{17}}
-\headcommand {\beamer@sectionpages {17}{17}}
-\headcommand {\beamer@documentpages {17}}
-\headcommand {\def \inserttotalframenumber {17}}
+\headcommand {\beamer@sectionpages {13}{16}}
+\headcommand {\beamer@documentpages {16}}
+\headcommand {\def \inserttotalframenumber {16}}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  14 JUL 2012 12:31
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  14 JUL 2012 22:39
 entering extended mode
 **gp_lab_presentation.tex
 
@@ -750,14 +750,7 @@ File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
 ))
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
-eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux"
-
-LaTeX Warning: Label `fig:prescribed' multiply defined.
-
-
-LaTeX Warning: Label `fig:prescribed' multiply defined.
-
-)
+eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 114.
 LaTeX Font Info:    ... okay on input line 114.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 114.
@@ -773,7 +766,8 @@ LaTeX Font Info:    ... okay on input line 114.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 114.
 LaTeX Font Info:    ... okay on input line 114.
 LaTeX Font Info:    Try loading font information for T1+phv on input line 114.
- ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\t1phv.fd"
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\t1phv.fd"
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 *geometry* driver: auto-detecting
@@ -941,7 +935,7 @@ ig/pdftex.map}
 eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.toc") [2
 
 ]
-<kitten_pipeline.jpg, id=115, 569.87906pt x 266.49562pt>
+<kitten_pipeline.jpg, id=107, 569.87906pt x 266.49562pt>
 File: kitten_pipeline.jpg Graphic file (type jpg)
 
 <use kitten_pipeline.jpg>
@@ -953,21 +947,18 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10.95> not available
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/kitten_pipeline.jpg>] <ddg_heat_equa
-tion.png, id=150, 443.256pt x 106.799pt>
+tion.png, id=142, 443.256pt x 106.799pt>
 File: ddg_heat_equation.png Graphic file (type png)
 
 <use ddg_heat_equation.png>
-Package pdftex.def Info: ddg_heat_equation.png used on input line 185.
+Package pdftex.def Info: ddg_heat_equation.png used on input line 182.
 (pdftex.def)             Requested size: 245.83282pt x 59.23177pt.
 
-<motivation.PNG, id=152, 1808.7575pt x 745.78625pt>
+<motivation.PNG, id=144, 1808.7575pt x 745.78625pt>
 File: motivation.PNG Graphic file (type png)
  <use motivation.PNG>
-Package pdftex.def Info: motivation.PNG used on input line 185.
-(pdftex.def)             Requested size: 122.91406pt x 50.6741pt.
-
-Overfull \vbox (5.49043pt too high) detected at line 185
- []
+Package pdftex.def Info: motivation.PNG used on input line 182.
+(pdftex.def)             Requested size: 153.64493pt x 63.33978pt.
 
 [4
 
@@ -975,171 +966,127 @@ Overfull \vbox (5.49043pt too high) detected at line 185
 eometry-processing-lab/gp_lab_presentation/ddg_heat_equation.png> <E:/Media Inf
 ormatics/courses/second semester/geometry processing lab/GP lab/geometry-proces
 sing-lab/gp_lab_presentation/motivation.PNG>]
-<principal_curvature.png, id=185, 1003.75pt x 684.5575pt>
+<reason.png, id=176, 806.01125pt x 989.6975pt>
+File: reason.png Graphic file (type png)
+ <use reason.png>
+Package pdftex.def Info: reason.png used on input line 200.
+(pdftex.def)             Requested size: 153.64493pt x 188.64853pt.
+ [5
+
+ <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
+eometry-processing-lab/gp_lab_presentation/reason.png>]
+<principal_curvature.png, id=206, 1003.75pt x 684.5575pt>
 File: principal_curvature.png Graphic file (type png)
 
 <use principal_curvature.png>
-Package pdftex.def Info: principal_curvature.png used on input line 216.
+Package pdftex.def Info: principal_curvature.png used on input line 231.
 (pdftex.def)             Requested size: 122.91406pt x 83.82507pt.
- <cotangent.png, id=186, 642.4pt x 652.4375pt>
+ <cotangent.png, id=207, 642.4pt x 652.4375pt>
 File: cotangent.png Graphic file (type png)
 
 <use cotangent.png>
-Package pdftex.def Info: cotangent.png used on input line 216.
+Package pdftex.def Info: cotangent.png used on input line 231.
 (pdftex.def)             Requested size: 73.74918pt x 74.89433pt.
- [5
+ [6
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/principal_curvature.png> <E:/Media I
 nformatics/courses/second semester/geometry processing lab/GP lab/geometry-proc
 essing-lab/gp_lab_presentation/cotangent.png>]
-<Dihedral_angle.png, id=228, 401.5pt x 328.22626pt>
+<Dihedral_angle.png, id=248, 401.5pt x 328.22626pt>
 File: Dihedral_angle.png Graphic file (type png)
  <use Dihedral_angle.png>
-Package pdftex.def Info: Dihedral_angle.png used on input line 231.
+Package pdftex.def Info: Dihedral_angle.png used on input line 246.
 (pdftex.def)             Requested size: 76.82246pt x 62.79935pt.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 231.
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 246.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <7> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 231.
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 246.
 
-[6
+[7
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/Dihedral_angle.png>] [7
+eometry-processing-lab/gp_lab_presentation/Dihedral_angle.png>] [8
 
-] [8
+] [9
 
 ]
-<edge_normal.png, id=324, 400.49625pt x 265.99374pt>
+<edge_normal.png, id=341, 400.49625pt x 265.99374pt>
 File: edge_normal.png Graphic file (type png)
  <use edge_normal.png>
-Package pdftex.def Info: edge_normal.png used on input line 287.
+Package pdftex.def Info: edge_normal.png used on input line 302.
 (pdftex.def)             Requested size: 107.55333pt x 71.42963pt.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 287.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 302.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <7> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 287.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 302.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <5> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 287.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 302.
 
-Overfull \hbox (15.2349pt too wide) detected at line 287
+Overfull \hbox (15.2349pt too wide) detected at line 302
 []
- []
-
-[9
-
- <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/edge_normal.png>]
-LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <8> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 307.
-LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <6> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 307.
-
-Overfull \hbox (2.98466pt too wide) detected at line 307
-[]\OT1/cmss/m/n/10.95 (\OMS/cmsy/m/n/10.95 P[]\OT1/cmss/m/n/10.95 ) = [][] \OMS
-/cmsy/m/n/10.95  [][]
  []
 
 [10
 
-] <aniso_bunny_100it.PNG, id=387, 626.34pt x 482.80376pt>
-File: aniso_bunny_100it.PNG Graphic file (type png)
-
-<use aniso_bunny_100it.PNG>
-Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 320.
-(pdftex.def)             Requested size: 122.91406pt x 94.7394pt.
- [11
-
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/aniso_bunny_100it.PNG>] [12
+eometry-processing-lab/gp_lab_presentation/edge_normal.png>]
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <8> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 322.
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <6> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 322.
 
-]
-<bunnies_1_10_30_raw.PNG, id=447, 1270.7475pt x 1226.5825pt>
-File: bunnies_1_10_30_raw.PNG Graphic file (type png)
-
-<use bunnies_1_10_30_raw.PNG>
-Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 349.
-(pdftex.def)             Requested size: 169.01036pt x 163.12968pt.
-
-Overfull \vbox (6.39798pt too high) detected at line 349
+Overfull \hbox (2.98466pt too wide) detected at line 322
+[]\OT1/cmss/m/n/10.95 (\OMS/cmsy/m/n/10.95 P[]\OT1/cmss/m/n/10.95 ) = [][] \OMS
+/cmsy/m/n/10.95  [][]
  []
+
+[11
+
+] [12
+
+] <amc_pmc.png, id=429, 981.6675pt x 562.1pt>
+File: amc_pmc.png Graphic file (type png)
+ <use amc_pmc.png>
+Package pdftex.def Info: amc_pmc.png used on input line 355.
+(pdftex.def)             Requested size: 153.64493pt x 87.97371pt.
 
 [13
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/bunnies_1_10_30_raw.PNG>]
-<bunny100.PNG, id=481, 632.3625pt x 632.3625pt>
-File: bunny100.PNG Graphic file (type png)
- <use bunny100.PNG>
-Package pdftex.def Info: bunny100.PNG used on input line 358.
-(pdftex.def)             Requested size: 153.64493pt x 153.64201pt.
+eometry-processing-lab/gp_lab_presentation/amc_pmc.png>]
+<results.png, id=461, 1430.34375pt x 643.40375pt>
+File: results.png Graphic file (type png)
+ <use results.png>
+Package pdftex.def Info: results.png used on input line 364.
+(pdftex.def)             Requested size: 276.559pt x 124.39801pt.
  [14
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/bunny100.PNG>]
-<kitten0_5_10_100.PNG, id=513, 1220.56pt x 1389.19pt>
-File: kitten0_5_10_100.PNG Graphic file (type png)
+eometry-processing-lab/gp_lab_presentation/results.png>] [15
 
-<use kitten0_5_10_100.PNG>
-Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 367.
-(pdftex.def)             Requested size: 138.2795pt x 157.36879pt.
-pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
-d}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.367 \end{frame}
-                 
-Overfull \vbox (0.63708pt too high) detected at line 367
- []
-
-[15
-
- <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/kitten0_5_10_100.PNG>]
-<gun_raw_20it.PNG, id=543, 704.6325pt x 923.45pt>
-File: gun_raw_20it.PNG Graphic file (type png)
- <use gun_raw_20it.PNG>
-Package pdftex.def Info: gun_raw_20it.PNG used on input line 376.
-(pdftex.def)             Requested size: 122.91406pt x 161.08481pt.
-pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
-d}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.376 \end{frame}
-                 
-Overfull \vbox (4.3531pt too high) detected at line 376
- []
-
-[16
-
- <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
-eometry-processing-lab/gp_lab_presentation/gun_raw_20it.PNG>] [17
+] [16
 
 ]
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 433.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 433.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 406.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 406.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
 eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 433.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 433.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 406.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 406.
 Package rerunfilecheck Info: File `gp_lab_presentation.out' has not changed.
-(rerunfilecheck)             Checksum: F8A2989B9E03393A3CC55BA9997F4ADB;221.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 433.
+(rerunfilecheck)             Checksum: 991D098D996980916F7EC1BFA38D23F2;177.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 406.
  ) 
 Here is how much of TeX's memory you used:
- 16207 strings out of 494049
- 303182 string characters out of 3148420
- 376721 words of memory out of 3000000
- 19015 multiletter control sequences out of 15000+200000
+ 16155 strings out of 494049
+ 301716 string characters out of 3148420
+ 376687 words of memory out of 3000000
+ 18968 multiletter control sequences out of 15000+200000
  62870 words of font info for 79 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  49i,19n,62p,409b,640s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1154,9 +1101,9 @@ pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/P
 rogram Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files/M
 iKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/urw/helvetic/uhvro8a.pfb>
-Output written on gp_lab_presentation.pdf (17 pages, 5535872 bytes).
+Output written on gp_lab_presentation.pdf (16 pages, 3775279 bytes).
 PDF statistics:
- 654 PDF objects out of 1000 (max. 8388607)
- 49 named destinations out of 1000 (max. 500000)
- 183 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 597 PDF objects out of 1000 (max. 8388607)
+ 46 named destinations out of 1000 (max. 500000)
+ 159 words of extra memory for PDF output out of 10000 (max. 10000000)
 
