@@ -17,9 +17,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
                     , VisualizeMode visualize, double time_step)
 {
 
-
     bool selectionExists = false;
-
 
     TriMesh* mesh = meshObject->mesh();
 
@@ -54,7 +52,6 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     mesh->update_normals();
 
     double threshold = get_feature_threshold(mesh);
-
 
     for ( int i = 0 ; i < _iterations ; ++i )
     {
@@ -156,6 +153,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     mesh->remove_property( smoothed_amc_Ha );
     mesh->remove_property( smoothed_apmc_function_f );
     mesh->remove_property( apmc_function_f );
+    mesh->remove_property( old_vertex );
 
 
 }
@@ -184,6 +182,24 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
     mesh->add_property( vertex_id, "vertex_id" );
 
 
+    // Property for the active mesh to store original point positions
+    OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
+    //the smoothed_amc_Ha is for temporary use
+    OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
+    OpenMesh::VPropHandleT< double > apmc_function_f;
+    OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
+    OpenMesh::VPropHandleT< bool > is_feature;
+    OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
+
+    // Add a property to the mesh to store mean curvature and area
+    mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
+    mesh->add_property( smoothed_amc_Ha, "smoothed_anisotropic_mean_curvature_Ha" );
+    mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
+    mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
+    mesh->add_property( is_feature, "is_feature" );
+    mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
+
+
     mesh->request_vertex_normals();
     mesh->request_vertex_colors();
     mesh->request_face_normals();
@@ -193,8 +209,7 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
 
     mesh->update_normals();
 
-
-
+    double threshold = get_feature_threshold(mesh);
 
     //initialize vertex id and its neighbors
     int idx = 0;
@@ -211,39 +226,79 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
         for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
         {
             mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
-
             mesh->property(area_star,v_it) = 0;
+
+            mesh->property(amc_Ha,v_it).vectorize(0.0f);
+            mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
+            mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+            mesh->property(apmc_function_f,v_it) = 0;
+            mesh->property(smoothed_apmc_function_f,v_it) = 0;
+            mesh->property(is_feature,v_it) = false;
+
 
         }
 
         for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
         {
 
+            TriMesh::Normal isotropic;
+            isotropic.vectorize(0);
+
+            for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
+            {
+
+                TriMesh::Normal edgeNormal;
+                TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+                double weight = anisotropic_weight(meanCurvature, threshold, R);
+
+                mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
+
+                isotropic += 0.5*meanCurvature*edgeNormal;
+
+            }
+
+            if (mesh->property(amc_Ha, v_it) != isotropic)
+            {
+                mesh->property(is_feature,v_it) = true;
+                //noFeatureVertices++;
+            }
 
             for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
             {
 
                 mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
 
+                //volume gradient
+                TriMesh::Normal volGrad;
+                volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
+                mesh->property(volume_gradient_Va, v_it) += volGrad;
+
             }
 
         }
 
+        smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
+
+        compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
+                                , is_feature, apmc_function_f, smoothed_apmc_function_f);
+
         Implicit_Integration implicit_solver;
         //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
 
-        if (scheme == EXPLICIT
-                && smooth_type == MASSIVE_ANISO_MEAN_CURVATURE)
+        if (scheme == BATCH_UPDATE
+                && smooth_type == ANISO_MEAN_CURVATURE)
         {
             implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star
                                                                    , vertex_id, old_vertex, time_step);
         }
 
-        if (scheme == IMPLICIT
-                && smooth_type == ANISO_MEAN_CURVATURE)
+        if(scheme == BATCH_UPDATE && smooth_type == PRESCRIBED_MEAN_CURVATURE)
         {
-            implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex, time_step);
+            implicit_solver.compute_pmc(mesh, time_step);
         }
+
+
+        //implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex, time_step);
 
         mesh->update_normals();
 
@@ -261,6 +316,13 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
     mesh->remove_property( area_star );
     mesh->remove_property( vertex_id );
     mesh->remove_property( old_vertex );
+
+    mesh->remove_property( amc_Ha );
+    mesh->remove_property( is_feature );
+    mesh->remove_property( volume_gradient_Va );
+    mesh->remove_property( smoothed_amc_Ha );
+    mesh->remove_property( smoothed_apmc_function_f );
+    mesh->remove_property( apmc_function_f );
 
 }
 

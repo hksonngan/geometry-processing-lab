@@ -50,7 +50,7 @@
 AnisotropicMeanCurvature::AnisotropicMeanCurvature()
 {
     smooth_type = PrescribedMeanCurvature::ANISO_MEAN_CURVATURE;
-    scheme = PrescribedMeanCurvature::EXPLICIT;
+    scheme = PrescribedMeanCurvature::INDIVIDUAL_UPDATE;
     visualize = PrescribedMeanCurvature::UPDATE_VECTOR;
     pmc.set_lambda(0.8);
     color_range = -1;
@@ -98,8 +98,6 @@ slotModeChanged(int _idx)
         smooth_type = PrescribedMeanCurvature::ANISO_MEAN_CURVATURE;
     else if (type == 1)
         smooth_type = PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE;
-    else if (type == 2)
-        smooth_type = PrescribedMeanCurvature::MASSIVE_ANISO_MEAN_CURVATURE;
 
 }
 
@@ -110,9 +108,9 @@ slotSchemeChanged(int _idx)
     int type = gui_->comboBox_integration_scheme->currentIndex();
 
     if (type == 0)
-        scheme = PrescribedMeanCurvature::EXPLICIT;
+        scheme = PrescribedMeanCurvature::INDIVIDUAL_UPDATE;
     else if (type == 1)
-        scheme = PrescribedMeanCurvature::IMPLICIT;
+        scheme = PrescribedMeanCurvature::BATCH_UPDATE;
 
 }
 
@@ -321,25 +319,26 @@ void AnisotropicMeanCurvature::prescribedMeanCurvature(int _iterations, double t
 
             TriMeshObject * meshObject = PluginFunctions::triMeshObject(o_it);
 
-            if (scheme == PrescribedMeanCurvature::EXPLICIT)
+
+
+            if (scheme == PrescribedMeanCurvature::INDIVIDUAL_UPDATE &&
+                    smooth_type == PrescribedMeanCurvature::ANISO_MEAN_CURVATURE)
             {
-
-                if (smooth_type == PrescribedMeanCurvature::ANISO_MEAN_CURVATURE)
-                {
-                    this->smooth(_iterations, time_step);
-                }
-
-                if (smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
-                {
-                    pmc.smooth_explicit_pmc(_iterations, meshObject, visualize, time_step);
-                }
-
-                if (smooth_type == PrescribedMeanCurvature::MASSIVE_ANISO_MEAN_CURVATURE)
-                {
-                    pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize, time_step);
-                }
-
+                this->smooth(_iterations, time_step);
             }
+
+            if (scheme == PrescribedMeanCurvature::INDIVIDUAL_UPDATE
+                    && smooth_type == PrescribedMeanCurvature::PRESCRIBED_MEAN_CURVATURE)
+            {
+                pmc.smooth_explicit_pmc(_iterations, meshObject, visualize, time_step);
+            }
+
+            if (scheme == PrescribedMeanCurvature::BATCH_UPDATE)
+            {
+                pmc.smooth_aniso(_iterations, meshObject, smooth_type, scheme, visualize, time_step);
+            }
+
+
 
             recompute_color(meshObject, o_it->id());
 

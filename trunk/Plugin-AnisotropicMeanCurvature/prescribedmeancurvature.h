@@ -54,8 +54,8 @@ public:
 
 
 
-    enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE, MASSIVE_ANISO_MEAN_CURVATURE };
-    enum IntegrationScheme { EXPLICIT, IMPLICIT };
+    enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE };
+    enum IntegrationScheme { INDIVIDUAL_UPDATE, BATCH_UPDATE };
     enum VisualizeMode {NONE, UPDATE_VECTOR, COLOR_CODING};
 
 

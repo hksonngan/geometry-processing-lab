@@ -560,6 +560,123 @@ compute_explicit_integration_with_mass(TriMesh *mesh
 
 
 
+void Implicit_Integration::init_pmc(TriMesh * mesh
+              , const OpenMesh::VPropHandleT< int > & vertex_id
+              , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f
+              , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
+              , Eigen::VectorXd & pmc_vector)
+{
+
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+        unsigned int id = mesh->property(vertex_id, v_it);
+
+        TriMesh::Normal volumeGrad = mesh->property(smoothed_apmc_function_f, v_it)
+                *mesh->property(volume_gradient_Va, v_it);
+
+        pmc_vector[id*3] = volumeGrad[0];
+        pmc_vector[id*3+1] = volumeGrad[1];
+        pmc_vector[id*3+2] = volumeGrad[2];
+    }
+
+}
+
+
+
+
+
+
+
+void Implicit_Integration::
+compute_pmc(TriMesh *mesh, double time_step)
+{
+
+    /*
+    mesh->property(old_vertex, v_it) = mesh->point(v_it);
+
+    TriMesh::Scalar area = mesh->property(area_star, v_it);
+    TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
+
+    TriMesh::Normal result = updateVector -
+            mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
+
+    mesh->set_point(v_it, mesh->point(v_it) - (3*time_step/area)*result);
+
+    //*/
+
+    OpenMesh::VPropHandleT< double > area_star;
+    OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
+    OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
+    OpenMesh::VPropHandleT< int > vertex_id;
+    OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
+
+    unsigned int mesh_size = mesh->n_vertices();
+    mesh->get_property_handle(area_star, "area_star");
+    mesh->get_property_handle(smoothed_apmc_function_f, "smoothed_apmc_function_f");
+    mesh->get_property_handle(volume_gradient_Va, "volume_gradient_Va");
+    mesh->get_property_handle( vertex_id, "vertex_id" );
+    mesh->get_property_handle( old_vertex, "old_amc_vertex" );
+
+
+    PrescribedMeanCurvature pmc;
+    mesh_size *= 3;
+
+    Eigen::VectorXd x(mesh_size);
+    Eigen::VectorXd b(mesh_size);
+
+    Eigen::VectorXd input_vertices(mesh_size);
+    this->init_vertex_vector(mesh, input_vertices, vertex_id);
+
+    Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
+    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+
+    Eigen::VectorXd fVa(mesh_size);
+    this->init_pmc(mesh, vertex_id, smoothed_apmc_function_f, volume_gradient_Va, fVa);
+
+    Eigen::VectorXd Ha(mesh_size);
+    Ha = (amc_matrix*input_vertices) - fVa*MODULATOR;
+
+    Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
+
+    this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
+    cholmoDec.compute(mass_matrix);
+    x = cholmoDec.solve(Ha);
+    b = time_step*x;
+
+
+
+
+    //convert the result back to vertex and update the mesh
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+
+        TriMesh::Point old_point = mesh->point(v_it);
+        mesh->property(old_vertex, v_it) = old_point;
+
+        TriMesh::Point point = TriMesh::Point(0,0,0);
+        int idx = mesh->property(vertex_id, v_it);
+
+        //TriMesh::Scalar area = mesh->property(area_star, v_it);
+
+        point[0] = old_point[0] - b[idx*3];
+        point[1] = old_point[1] - b[idx*3+1];
+        point[2] = old_point[2] - b[idx*3+2];
+
+        mesh->set_point(v_it, point);
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
