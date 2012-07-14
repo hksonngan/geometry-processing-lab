@@ -25,8 +25,8 @@ public:
     Implicit_Integration();
 
 
-//    static const double time_step = 0.0001;
-//    static const double time_step = 0.001;
+
+    static const double MODULATOR = 0.001;//0.001
 
 
     /**
@@ -73,6 +73,9 @@ public:
                                       );
 
 
+    void compute_pmc(TriMesh *mesh, double time_step);
+
+
 
 private:
 
@@ -111,6 +114,12 @@ private:
                      , const OpenMesh::VPropHandleT< int > & vertex_id
                      , Eigen::SparseMatrix<double> & mass);
 
+
+    void init_pmc(TriMesh * mesh
+                  , const OpenMesh::VPropHandleT< int > & vertex_id
+                  , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f
+                  , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
+                  , Eigen::VectorXd & pmc_vector);
 
 };
 
