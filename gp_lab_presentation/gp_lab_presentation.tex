@@ -269,11 +269,18 @@ M_{pq} =
 \end{frame}
 
 \begin{frame}{Anisotropic mean curvature - Matrix form}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.35\textwidth]{edge_normal.png}
+\label{fig:normal}
+\end{figure}
 {\small
 \begin{equation*}
 \begin{array} {lcl} 
 \vec{H_A}(p^i) & = & 1/2\sum\limits_{q_j^i \in N(p^i)}{w(H_{e_j})H_{e_j}\dfrac{1}{\|\mathbf{n}+\mathbf{m}\|}}(\mathbf{n}+\mathbf{m}) \\ 
 			   & = & \sum\limits_{q_j^i \in N(p^i)}{w_j\left[ (q_j^i-p^i)\times (q^i_{j+1} - p^i) + (q^i_{j-1}-p^i) \times (q^i_j-p^i) \right] } \\
+			   & = & \sum\limits_{q_j^i \in N(p^i)}{w_j\left[ (q_j^i-p^i)\times (q^i_{j+1} - q^i_{j-1}) \right] } \\
+			   & = & \sum\limits_{q_j^i \in N(p^i)}{w_j\left[ A_{\times} \cdot q^i_{j+1} - A_{\times} \cdot q^i_{j-1} \right] } \\
 \end{array}
 \end{equation*}
 }

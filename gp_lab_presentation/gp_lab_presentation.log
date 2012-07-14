@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  13 JUL 2012 23:13
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  14 JUL 2012 10:03
 entering extended mode
 **gp_lab_presentation.tex
 
@@ -1011,86 +1011,97 @@ eometry-processing-lab/gp_lab_presentation/Dihedral_angle.png>] [7
 ] [8
 
 ]
+<edge_normal.png, id=324, 400.49625pt x 265.99374pt>
+File: edge_normal.png Graphic file (type png)
+ <use edge_normal.png>
+Package pdftex.def Info: edge_normal.png used on input line 287.
+(pdftex.def)             Requested size: 107.55333pt x 71.42963pt.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 280.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 287.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <7> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 280.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 287.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <5> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 280.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 287.
+
+Overfull \hbox (15.2349pt too wide) detected at line 287
+[]
+ []
 
 [9
 
-] <aniso_bunny_100it.PNG, id=355, 626.34pt x 482.80376pt>
+ <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
+eometry-processing-lab/gp_lab_presentation/edge_normal.png>]
+<aniso_bunny_100it.PNG, id=357, 626.34pt x 482.80376pt>
 File: aniso_bunny_100it.PNG Graphic file (type png)
 
 <use aniso_bunny_100it.PNG>
-Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 293.
+Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 300.
 (pdftex.def)             Requested size: 122.91406pt x 94.7394pt.
  [10
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/aniso_bunny_100it.PNG>]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <8> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 306.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 313.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <6> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 306.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 313.
  [11
 
 ]
-<bunnies_1_10_30_raw.PNG, id=415, 1270.7475pt x 1226.5825pt>
+<bunnies_1_10_30_raw.PNG, id=417, 1270.7475pt x 1226.5825pt>
 File: bunnies_1_10_30_raw.PNG Graphic file (type png)
 
 <use bunnies_1_10_30_raw.PNG>
-Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 322.
+Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 329.
 (pdftex.def)             Requested size: 169.01036pt x 163.12968pt.
 
-Overfull \vbox (6.39798pt too high) detected at line 322
+Overfull \vbox (6.39798pt too high) detected at line 329
  []
 
 [12
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/bunnies_1_10_30_raw.PNG>]
-<bunny100.PNG, id=448, 632.3625pt x 632.3625pt>
+<bunny100.PNG, id=450, 632.3625pt x 632.3625pt>
 File: bunny100.PNG Graphic file (type png)
  <use bunny100.PNG>
-Package pdftex.def Info: bunny100.PNG used on input line 331.
+Package pdftex.def Info: bunny100.PNG used on input line 338.
 (pdftex.def)             Requested size: 153.64493pt x 153.64201pt.
  [13
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/bunny100.PNG>]
-<kitten0_5_10_100.PNG, id=481, 1220.56pt x 1389.19pt>
+<kitten0_5_10_100.PNG, id=483, 1220.56pt x 1389.19pt>
 File: kitten0_5_10_100.PNG Graphic file (type png)
 
 <use kitten0_5_10_100.PNG>
-Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 340.
+Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 347.
 (pdftex.def)             Requested size: 138.2795pt x 157.36879pt.
 pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
 d}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.340 \end{frame}
+l.347 \end{frame}
                  
-Overfull \vbox (0.63708pt too high) detected at line 340
+Overfull \vbox (0.63708pt too high) detected at line 347
  []
 
 [14
 
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/kitten0_5_10_100.PNG>]
-<gun_raw_20it.PNG, id=511, 704.6325pt x 923.45pt>
+<gun_raw_20it.PNG, id=513, 704.6325pt x 923.45pt>
 File: gun_raw_20it.PNG Graphic file (type png)
  <use gun_raw_20it.PNG>
-Package pdftex.def Info: gun_raw_20it.PNG used on input line 349.
+Package pdftex.def Info: gun_raw_20it.PNG used on input line 356.
 (pdftex.def)             Requested size: 122.91406pt x 161.08481pt.
 pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
 d}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.349 \end{frame}
+l.356 \end{frame}
                  
-Overfull \vbox (4.3531pt too high) detected at line 349
+Overfull \vbox (4.3531pt too high) detected at line 356
  []
 
 [15
@@ -1102,27 +1113,27 @@ eometry-processing-lab/gp_lab_presentation/gun_raw_20it.PNG>] [16
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 407.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 407.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 414.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 414.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
 eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 407.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 407.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 414.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 414.
 Package rerunfilecheck Info: File `gp_lab_presentation.out' has not changed.
 (rerunfilecheck)             Checksum: F8A2989B9E03393A3CC55BA9997F4ADB;221.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 407.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 414.
  ) 
 Here is how much of TeX's memory you used:
- 16205 strings out of 494049
- 303260 string characters out of 3148420
- 375660 words of memory out of 3000000
- 19017 multiletter control sequences out of 15000+200000
- 64606 words of font info for 80 fonts, out of 3000000 for 9000
+ 16203 strings out of 494049
+ 303147 string characters out of 3148420
+ 376721 words of memory out of 3000000
+ 19013 multiletter control sequences out of 15000+200000
+ 62870 words of font info for 79 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  49i,19n,62p,409b,640s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program File
@@ -1136,9 +1147,9 @@ pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/P
 rogram Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files/M
 iKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/urw/helvetic/uhvro8a.pfb>
-Output written on gp_lab_presentation.pdf (16 pages, 5520549 bytes).
+Output written on gp_lab_presentation.pdf (16 pages, 5527734 bytes).
 PDF statistics:
- 621 PDF objects out of 1000 (max. 8388607)
- 46 named destinations out of 1000 (max. 500000)
- 178 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 623 PDF objects out of 1000 (max. 8388607)
+ 47 named destinations out of 1000 (max. 500000)
+ 183 words of extra memory for PDF output out of 10000 (max. 10000000)
 
