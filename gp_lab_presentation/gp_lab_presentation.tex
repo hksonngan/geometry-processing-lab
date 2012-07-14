@@ -262,8 +262,8 @@ p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}\vec{H_A}(p^j)
 \end{equation*}
 \begin{equation*}
 M_{pq} = 
-\begin{cases} \dfrac{1}{6}area(star p), & \mbox{if } p=q \\ 
-\dfrac{1}{12}area(star e), & \mbox{if there is an edge } e=(p, q) \\
+\begin{cases} \dfrac{1}{6}area(star\ p), & \mbox{if } p=q \\ 
+\dfrac{1}{12}area(star\ e), & \mbox{if there is an edge } e=(p, q) \\
 0, & \mbox{otherwise} \end{cases}
 \end{equation*}
 \end{frame}
@@ -293,12 +293,16 @@ M_{pq} =
 \item column index corresponds to a one-ring neighbor $q^i_j$
 \end{itemize}
 \begin{equation*}
-H_A( \mathcal{P}^i ) = 
+\vec{H_A}( \mathcal{P}^i ) = 
 \begin{bmatrix} 
  \cdots & \cdots & \cdots \\
  \sum\limits_{q_j^i \in N(p^i)}{w_j A_{\times}} & \cdots & -\sum\limits_{q_j^i \in N(p^i)}{w_j A_{\times}} \\
  \cdots & \cdots & \cdots 
-\end{bmatrix}_{3n \times 3n}
+\end{bmatrix}_{3n \times 3n} \cdot
+\left[ \begin{array}{c} 
+q^i_{j+1} \\ 
+\vdots \\ 
+q^i_{j-1} \end{array} \right]_{3n}
 \end{equation*}
 \end{frame}
 
@@ -317,7 +321,7 @@ H_A( \mathcal{P}^i ) =
 
 \begin{frame}{Prescribed Mean Curvature}
 \begin{itemize}
-\item AMC: $\vec{H_A}(p) \rightarrow 0$, APMC: $\vec{H_A}(p) \rightarrow H\vec{V_A}(p)$, where $H$ is some constant mean curvature
+\item Energy minimization. AMC: $\vec{H_A}(p) \rightarrow 0$, APMC: $\vec{H_A}(p) \rightarrow H\vec{V_A}(p)$, where $H$ is some constant mean curvature
 \item compute mean curvature ($H$), smooth this scalar field
 \item evolve the surface towards a surface having this smoothed mean curvature
 \begin{equation*}
@@ -391,7 +395,6 @@ p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}(\vec{H_A}(p^j) - f(p^j)\vec{V_A}(p
     Future work
     \begin{itemize}
     \item Implement implicit integration methods
-    \item Color coding
     \item Extend to process boundaries
     \end{itemize}
   \end{itemize}
