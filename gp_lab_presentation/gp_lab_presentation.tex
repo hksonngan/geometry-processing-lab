@@ -167,6 +167,7 @@ Phan-Anh Nguyen\inst{1}
   %   for anyone how does not follow everything on the slide itself.
 \begin{itemize}
 \item Idea: Diffuse high curvature region by averaging over its neighborhood.
+\item Problem: Remove noise without removing sharp features
 \end{itemize}
 \begin{figure}[htb]
 \centering
@@ -175,13 +176,27 @@ Phan-Anh Nguyen\inst{1}
 \end{figure}
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.4\textwidth]{motivation.PNG}
+\includegraphics[width=0.5\textwidth]{motivation.PNG}
 \label{fig:motivation}
 \end{figure}
+\end{frame}
+
+\begin{frame}{Why Anisotropic?}
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item Isotropic e.g. Laplacian: sharp features not preserved
-\item Anisotropic mean curvature: preserves sharp features
+\item Isotropic mean curvature e.g. squared Laplacian with cotangent weight: low pass filter, sharp features not preserved. (bottom left)
+\item Anisotropic mean curvature: feature detection and avoid smoothing sharp features. (bottom right)
 \end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{reason.png}
+\label{fig:reason}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 \section{Anisotropic Prescribed Mean Curvature}
@@ -306,19 +321,6 @@ q^i_{j-1} \end{array} \right]_{3n}
 \end{equation*}
 \end{frame}
 
-\begin{frame}{Drawback of Anisotropic mean curvature}
-\begin{itemize}
-\item slow down the smoothing process in regions with high curvature. 
-\item cause deformations of the surface
-\end{itemize}
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.4\textwidth]{aniso_bunny_100it.PNG}
-\caption{anisotropic mean curvature after 100 iterations}
-\label{fig:deform}
-\end{figure}
-\end{frame}
-
 \begin{frame}{Prescribed Mean Curvature}
 \begin{itemize}
 \item Energy minimization. AMC: $\vec{H_A}(p) \rightarrow 0$, APMC: $\vec{H_A}(p) \rightarrow H\vec{V_A}(p)$, where $H$ is some constant mean curvature
@@ -337,67 +339,38 @@ p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}(\vec{H_A}(p^j) - f(p^j)\vec{V_A}(p
 %\end{itemize}
 %\end{frame}
 
-\section{Results}
+\section{Evaluation and Results}
 
-\begin{frame}{Results}
+\begin{frame}{Evaluation}
+\begin{itemize}
+\item Anisotropic Mean Curvature: slow down the smoothing process in regions with high curvature, causing deformations of the surface (left)
+\item Prescribed mean curvature: evolve the surface to the precomputed, smoothed mean curvature (right)
+\item Matrix forms converge faster and give best results.
+\end{itemize}
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.55\textwidth]{bunnies_1_10_30_raw.PNG}
-\caption{bunny after 0, 5, 10, 30 iterations}
-\label{fig:bunny0_1_10_30}
+\includegraphics[width=0.5\textwidth]{amc_pmc.png}
+\label{fig:amc_pmc}
 \end{figure}
 \end{frame}
 
 \begin{frame}{Results}
 \begin{figure}[htb]
 \centering
-\includegraphics[width=0.5\textwidth]{bunny100.PNG}
-\caption{after 100 iterations}
-\label{fig:prescribed}
+\includegraphics[width=0.9\textwidth]{results.png}
+\caption{individual vertex update, batch update, color coding}
+\label{fig:results}
 \end{figure}
 \end{frame}
 
-\begin{frame}{Results}
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.45\textwidth]{kitten0_5_10_100.PNG}
-\caption{after 0, 5, 10, 100 iterations}
-\label{fig:prescribed}
-\end{figure}
+\begin{frame}{Future work}
+\begin{itemize}
+	\item Implement implicit integration methods
+	\item Extend to process boundaries
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Results}
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.4\textwidth]{gun_raw_20it.PNG}
-\caption{after 0, 20 iterations}
-\label{fig:prescribed}
-\end{figure}
-\end{frame}
-
-\section{Summary and Future work}
-
-\begin{frame}{Summary}
-  % Keep the summary *very short*.
-  \begin{itemize}
-  \item
-    Anisotropic mean curvature: reduce smoothing in high curvature regions
-    \begin{itemize}
-    \item Preserve linear features but leads to deformation of curves
-    \end{itemize}
-  \item
-    Anisotropic prescribed mean curvature: evolve the surface to the precomputed, smoothed mean curvature
-  \end{itemize}
-  % The following outlook is optional.
-  \vskip0pt plus.5fill
-  \begin{itemize}
-  \item
-    Future work
-    \begin{itemize}
-    \item Implement implicit integration methods
-    \item Extend to process boundaries
-    \end{itemize}
-  \end{itemize}
+\begin{frame}{Demo}
 \end{frame}
 
 % All of the following is optional and typically not needed. 
