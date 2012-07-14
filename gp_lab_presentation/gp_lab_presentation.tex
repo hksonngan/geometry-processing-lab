@@ -286,6 +286,22 @@ M_{pq} =
 }
 \end{frame}
 
+\begin{frame}{Put them all togehter}
+\begin{itemize}
+\item sparse global matrix containing blocks of $3 \times 3$ cross matrices
+\item row index corresponds to each one-ring center $p^i$
+\item column index corresponds to a one-ring neighbor $q^i_j$
+\end{itemize}
+\begin{equation*}
+H_A( \mathcal{P}^i ) = 
+\begin{bmatrix} 
+ \cdots & \cdots & \cdots \\
+ \sum\limits_{q_j^i \in N(p^i)}{w_j A_{\times}} & \cdots & -\sum\limits_{q_j^i \in N(p^i)}{w_j A_{\times}} \\
+ \cdots & \cdots & \cdots 
+\end{bmatrix}_{3n \times 3n}
+\end{equation*}
+\end{frame}
+
 \begin{frame}{Drawback of Anisotropic mean curvature}
 \begin{itemize}
 \item slow down the smoothing process in regions with high curvature. 
