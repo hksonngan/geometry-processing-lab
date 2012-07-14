@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  14 JUL 2012 11:29
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.5.19)  14 JUL 2012 12:31
 entering extended mode
 **gp_lab_presentation.tex
 
@@ -1032,17 +1032,22 @@ Overfull \hbox (15.2349pt too wide) detected at line 287
  <E:/Media Informatics/courses/second semester/geometry processing lab/GP lab/g
 eometry-processing-lab/gp_lab_presentation/edge_normal.png>]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <8> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 303.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 307.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <6> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 303.
- [10
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 307.
 
-]
-<aniso_bunny_100it.PNG, id=387, 626.34pt x 482.80376pt>
+Overfull \hbox (2.98466pt too wide) detected at line 307
+[]\OT1/cmss/m/n/10.95 (\OMS/cmsy/m/n/10.95 P[]\OT1/cmss/m/n/10.95 ) = [][] \OMS
+/cmsy/m/n/10.95  [][]
+ []
+
+[10
+
+] <aniso_bunny_100it.PNG, id=387, 626.34pt x 482.80376pt>
 File: aniso_bunny_100it.PNG Graphic file (type png)
 
 <use aniso_bunny_100it.PNG>
-Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 316.
+Package pdftex.def Info: aniso_bunny_100it.PNG used on input line 320.
 (pdftex.def)             Requested size: 122.91406pt x 94.7394pt.
  [11
 
@@ -1054,10 +1059,10 @@ eometry-processing-lab/gp_lab_presentation/aniso_bunny_100it.PNG>] [12
 File: bunnies_1_10_30_raw.PNG Graphic file (type png)
 
 <use bunnies_1_10_30_raw.PNG>
-Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 345.
+Package pdftex.def Info: bunnies_1_10_30_raw.PNG used on input line 349.
 (pdftex.def)             Requested size: 169.01036pt x 163.12968pt.
 
-Overfull \vbox (6.39798pt too high) detected at line 345
+Overfull \vbox (6.39798pt too high) detected at line 349
  []
 
 [13
@@ -1067,7 +1072,7 @@ eometry-processing-lab/gp_lab_presentation/bunnies_1_10_30_raw.PNG>]
 <bunny100.PNG, id=481, 632.3625pt x 632.3625pt>
 File: bunny100.PNG Graphic file (type png)
  <use bunny100.PNG>
-Package pdftex.def Info: bunny100.PNG used on input line 354.
+Package pdftex.def Info: bunny100.PNG used on input line 358.
 (pdftex.def)             Requested size: 153.64493pt x 153.64201pt.
  [14
 
@@ -1077,15 +1082,15 @@ eometry-processing-lab/gp_lab_presentation/bunny100.PNG>]
 File: kitten0_5_10_100.PNG Graphic file (type png)
 
 <use kitten0_5_10_100.PNG>
-Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 363.
+Package pdftex.def Info: kitten0_5_10_100.PNG used on input line 367.
 (pdftex.def)             Requested size: 138.2795pt x 157.36879pt.
 pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
 d}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.363 \end{frame}
+l.367 \end{frame}
                  
-Overfull \vbox (0.63708pt too high) detected at line 363
+Overfull \vbox (0.63708pt too high) detected at line 367
  []
 
 [15
@@ -1095,15 +1100,15 @@ eometry-processing-lab/gp_lab_presentation/kitten0_5_10_100.PNG>]
 <gun_raw_20it.PNG, id=543, 704.6325pt x 923.45pt>
 File: gun_raw_20it.PNG Graphic file (type png)
  <use gun_raw_20it.PNG>
-Package pdftex.def Info: gun_raw_20it.PNG used on input line 372.
+Package pdftex.def Info: gun_raw_20it.PNG used on input line 376.
 (pdftex.def)             Requested size: 122.91406pt x 161.08481pt.
 pdfTeX warning (ext4): destination with the same identifier (name{fig:prescribe
 d}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.372 \end{frame}
+l.376 \end{frame}
                  
-Overfull \vbox (4.3531pt too high) detected at line 372
+Overfull \vbox (4.3531pt too high) detected at line 376
  []
 
 [16
@@ -1115,20 +1120,20 @@ eometry-processing-lab/gp_lab_presentation/gun_raw_20it.PNG>] [17
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 430.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 430.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 433.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 433.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\GP lab\g
 eometry-processing-lab\gp_lab_presentation\gp_lab_presentation.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 430.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 430.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 433.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 433.
 Package rerunfilecheck Info: File `gp_lab_presentation.out' has not changed.
 (rerunfilecheck)             Checksum: F8A2989B9E03393A3CC55BA9997F4ADB;221.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 430.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 433.
  ) 
 Here is how much of TeX's memory you used:
  16207 strings out of 494049
@@ -1149,7 +1154,7 @@ pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/P
 rogram Files/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files/M
 iKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/urw/helvetic/uhvro8a.pfb>
-Output written on gp_lab_presentation.pdf (17 pages, 5535646 bytes).
+Output written on gp_lab_presentation.pdf (17 pages, 5535872 bytes).
 PDF statistics:
  654 PDF objects out of 1000 (max. 8388607)
  49 named destinations out of 1000 (max. 500000)
