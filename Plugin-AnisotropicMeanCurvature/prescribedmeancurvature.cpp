@@ -34,11 +34,11 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
 
     OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
-    mesh->add_property( old_vertex, "new_amc_vertex" );
+    mesh->add_property( old_vertex, "old_amc_vertex" );
 
     // Add a property to the mesh to store mean curvature and area
     mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
-    mesh->add_property( smoothed_amc_Ha, "smoothed_mnisotropic_mean_curvature_Ha" );
+    mesh->add_property( smoothed_amc_Ha, "smoothed_anisotropic_mean_curvature_Ha" );
     mesh->add_property( area_star, "area_star" );
     mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
     mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
@@ -179,7 +179,7 @@ smooth_aniso(int _iterations, TriMeshObject * meshObject
     OpenMesh::VPropHandleT< int > vertex_id;
 
     // Add a property to the mesh to store mean curvature and area
-    mesh->add_property( old_vertex, "new_amc_vertex" );
+    mesh->add_property( old_vertex, "old_amc_vertex" );
     mesh->add_property( area_star, "area_star" );
     mesh->add_property( vertex_id, "vertex_id" );
 

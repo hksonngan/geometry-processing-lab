@@ -209,7 +209,7 @@ void AnisotropicMeanCurvature::smooth(int _iterations, double time_step) {
             OpenMesh::VPropHandleT< double > areaStar;
 
             OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
-            mesh->add_property( old_vertex, "new_amc_vertex" );
+            mesh->add_property( old_vertex, "old_amc_vertex" );
 
             // Add a property to the mesh to store mean curvature and area
             mesh->add_property( smoothVector, "explicitAnisotropicMeanCurvature" );
