@@ -19,15 +19,12 @@
  * Consequently, the mass matrix will have the size of 3n*3n
  * where each entry is a 3*3 diagonal matrix storing the same value Mij.
  */
-class Implicit_Integration
+class Implicit_Integration : public PrescribedMeanCurvature
 {
 public:
     Implicit_Integration();
 
-
-
     static const double MODULATOR = 0.001;//0.001
-
 
     /**
      * @brief establish the mass matrix and the matrix for calculating aniso. mean curvature Ka.
@@ -49,7 +46,10 @@ public:
 
 
 
-
+    void smooth_aniso(int _iterations, TriMeshObject * meshObject
+                      , SmoothingMode smooth_type
+                      , IntegrationScheme scheme
+                      , VisualizeMode visualize, double time_step);
 
 
 
@@ -88,28 +88,28 @@ private:
     void init_vertex_vector(TriMesh * mesh, Eigen::VectorXd & vertices
                             , const OpenMesh::VPropHandleT< int > & vertex_id);
 
-    void init_mass_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
+    void init_mass_matrix(TriMesh * mesh
                           , const OpenMesh::VPropHandleT< double > & area_star
                           , const OpenMesh::VPropHandleT< int > & vertex_id
                           , Eigen::SparseMatrix<double> & mass);
 
-    void init_amc_matrix(TriMesh * mesh, PrescribedMeanCurvature * pmc
+    void init_amc_matrix(TriMesh * mesh
                          , const OpenMesh::VPropHandleT< int > & vertex_id
                          , Eigen::SparseMatrix<double> & amc_matrix);
 
 
-    void init_lumped_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
+    void init_lumped_mass_matrix(TriMesh *mesh
                      , const OpenMesh::VPropHandleT< double > & area_star
                      , const OpenMesh::VPropHandleT< int > & vertex_id
                      , Eigen::SparseMatrix<double> & mass);
 
 
-    void init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
+    void init_Jacobian(TriMesh *mesh
                     , const OpenMesh::VPropHandleT< int > &vertex_id
                     , Eigen::SparseMatrix<double> &jacobian);
 
 
-    void init_lumped_mass_matrix_inverted(TriMesh *mesh , PrescribedMeanCurvature * pmc
+    void init_lumped_mass_matrix_inverted(TriMesh *mesh
                      , const OpenMesh::VPropHandleT< double > & area_star
                      , const OpenMesh::VPropHandleT< int > & vertex_id
                      , Eigen::SparseMatrix<double> & mass);

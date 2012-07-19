@@ -7,7 +7,6 @@
 #include <ACG/Scenegraph/LineNode.hh>
 #include <ACG/Math/VectorT.hh>
 #include "Mat3x3.hh"
-//#include "AnisotropicMeanCurvature.hh"
 
 
 
@@ -30,12 +29,6 @@
  * In these rows, we use neighborhood map to refer to its neighbors.
  * Thus column indices refer to its neighbors.
  *
- *
- *
- *
- *
- *
- *
  */
 class PrescribedMeanCurvature
 {
@@ -46,51 +39,9 @@ public:
     //! radius of the smoothness of the weight
     static const double R = 10;
 
-    //! stable time step for explicit methods
-    //! for implicit method multiply by a factor of 10 or 100
-    //! for fine scale noise multiply by a factor of 0.1
-    //! for scan images time step = 0.001
-    //static const double time_step = 0.00001;
-
-
-
     enum SmoothingMode { ANISO_MEAN_CURVATURE, PRESCRIBED_MEAN_CURVATURE };
     enum IntegrationScheme { INDIVIDUAL_UPDATE, BATCH_UPDATE };
     enum VisualizeMode {NONE, UPDATE_VECTOR, COLOR_CODING};
-
-
-
-    /**
-     * @brief                       calculate face area.
-     *
-     * @param _mesh                 the mesh
-     * @param fh                    face handle
-     * @return TriMesh::Scalar      face area
-     */
-    TriMesh::Scalar face_area(TriMesh *_mesh, TriMesh::FaceHandle fh);
-
-    /**
-     * @brief   circulate around the oriented face using FaceHalfEdgeIter to extract p, q, r in CCW, take (qxr)/6.
-     *
-     * @param _mesh     the mesh.
-     * @param fh        face handle.
-     * @param vh        vertex handle for the point p.
-     * @param gradient  returned volume gradient.
-     */
-    void volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh
-                         , TriMesh::VertexHandle vh, TriMesh::Normal & gradient);
-
-
-    /**
-     * @brief           compute edge mean curvature.
-     *
-     * @param _mesh     the mesh
-     * @param _eh       edge handle to extract edge information from the mesh
-     * @param normal    edge normal
-     * @return double   edge mean curvature value He
-     */
-    double edge_mean_curvature_He_Ne(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
-    double edge_mean_curvature_He_Ne(PolyMesh * _mesh, PolyMesh::EdgeHandle _eh, TriMesh::Normal & normal);
 
     /**
      * @brief               put less smoothing weight on feature edge based on edge mean curvature.
@@ -105,24 +56,6 @@ public:
     void smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
                              , VisualizeMode visualize, double time_step);
 
-    void smooth_aniso(int _iterations, TriMeshObject * meshObject
-                      , SmoothingMode smooth_type
-                      , IntegrationScheme scheme
-                      , VisualizeMode visualize, double time_step);
-
-    double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
-
-    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh
-                                          , TriMesh::Scalar & normal_length
-                                          , const TriMesh::VertexHandle & _vh, Mat3x3 & cross);
-
-
-
-    double cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
-                                    , TriMesh::Scalar & normal_length
-                                    , std::vector<Mat3x3> & derivatives);
-
-
     double get_lambda()
     {
         return m_lambda;
@@ -135,12 +68,6 @@ public:
 
     double get_feature_threshold(TriMesh * mesh);
 
-    double get_edge_length(TriMesh * mesh);
-
-    void updateLineNode(TriMeshObject * _meshObject
-                        , const OpenMesh::VPropHandleT< TriMesh::Normal > & anisoMeanCurvature
-                        , const OpenMesh::VPropHandleT< double >& areaStar);
-
     void updateLineNode(TriMeshObject * _meshObject
                         , const OpenMesh::VPropHandleT< TriMesh::Point > & old_vertex);
 
@@ -148,25 +75,32 @@ public:
 
     void showLineNode(TriMeshObject * _meshObject);
 
-private:
+    /**
+     * @brief                       calculate face area.
+     *
+     * @param _mesh                 the mesh
+     * @param fh                    face handle
+     * @return TriMesh::Scalar      face area
+     */
+    TriMesh::Scalar face_area(TriMesh *_mesh, TriMesh::FaceHandle fh);
+
+    /**
+     * @brief           compute edge mean curvature.
+     *
+     * @param _mesh     the mesh
+     * @param _eh       edge handle to extract edge information from the mesh
+     * @param normal    edge normal
+     * @return double   edge mean curvature value He
+     */
+    double edge_mean_curvature_He_Ne(TriMesh * _mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal);
+
+protected:
 
     typedef ACG::Vec3uc Color;
     typedef ACG::Vec3d  Vec3d;
 
-
-    /*
-      bunny: lambda = 0.1 and number of feature vertices: 1389 in total 8810
-      cylinder: lambda = 0.32 or 0.31
-      cylinder does not manifest the problem with curved edges, but the bunny does
-      espectially in the ears regions having curved edges (or high curvature features)
-      even with smaller time step
-
-      for scan images: lambda often 1.0
-      can only smooth raw scan patches
-
-      todo: automatic lambda computation
-    */
     double m_lambda;
+
 
 
     /**
@@ -194,7 +128,6 @@ private:
                     , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
                     , const OpenMesh::VPropHandleT< bool > & is_feature);
 
-
     /**
      * @brief   compute prescribed mean curvature function value f at a vertex p.
      *          f = M^-1*Ha but is approximated by Ha/|Va|
@@ -213,10 +146,28 @@ private:
                             , const OpenMesh::VPropHandleT< double > & apmc_function_f
                             , const OpenMesh::VPropHandleT< double > & smoothed_apmc_function_f);
 
+    double area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh);
 
+    double calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh
+                                          , TriMesh::Scalar & normal_length
+                                          , const TriMesh::VertexHandle & _vh, Mat3x3 & cross);
 
+    double cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
+                                    , TriMesh::Scalar & normal_length
+                                    , std::vector<Mat3x3> & derivatives);
 
+    double get_edge_length(TriMesh * mesh);
 
+    /**
+     * @brief   circulate around the oriented face using FaceHalfEdgeIter to extract p, q, r in CCW, take (qxr)/6.
+     *
+     * @param _mesh     the mesh.
+     * @param fh        face handle.
+     * @param vh        vertex handle for the point p.
+     * @param gradient  returned volume gradient.
+     */
+    void volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh
+                         , TriMesh::VertexHandle vh, TriMesh::Normal & gradient);
 
     ACG::SceneGraph::LineNode * getLineNode(TriMeshObject * _meshObject);
     void addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color );

@@ -1,14 +1,16 @@
 #include "implicit_integration.h"
 
+
+
 Implicit_Integration::Implicit_Integration()
 {
 }
 
 
+
 void Implicit_Integration::
 init_vertex_vector(TriMesh *mesh, Eigen::VectorXd &vertices, const OpenMesh::VPropHandleT< int > & vertex_id)
 {
-
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
         unsigned int id = mesh->property(vertex_id, v_it);
@@ -20,18 +22,18 @@ init_vertex_vector(TriMesh *mesh, Eigen::VectorXd &vertices, const OpenMesh::VPr
 }
 
 
+
 void Implicit_Integration::
-init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
+init_mass_matrix(TriMesh *mesh
                  , const OpenMesh::VPropHandleT< double > & area_star
                  , const OpenMesh::VPropHandleT< int > & vertex_id
                  , Eigen::SparseMatrix<double> & mass)
 {
-
     Eigen::DynamicSparseMatrix<double> mass_dyn(mass.rows(), mass.cols());
 
     for (TriMesh::EdgeIter e_it=mesh->edges_begin(); e_it!=mesh->edges_end(); ++e_it)
     {
-        double edge_area_star = (1.0/12.0)*pmc->area_star_edge(mesh, e_it.handle());
+        double edge_area_star = (1.0/12.0)*area_star_edge(mesh, e_it.handle());
         TriMesh::HalfedgeHandle hh = mesh->halfedge_handle(e_it.handle(), 0);
 
         TriMesh::VertexHandle p, q;
@@ -53,12 +55,10 @@ init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
 
         mass_dyn.coeffRef(pId*3+2, qId*3+2) = edge_area_star;
         mass_dyn.coeffRef(qId*3+2, pId*3+2) = edge_area_star;
-
     }
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
-
         double vertex_area_star = (1.0/6.0)*mesh->property(area_star, v_it);
 
         int pId = mesh->property(vertex_id, v_it.handle());
@@ -66,23 +66,19 @@ init_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
         mass_dyn.coeffRef(pId*3, pId*3) = vertex_area_star;
         mass_dyn.coeffRef(pId*3+1, pId*3+1) = vertex_area_star;
         mass_dyn.coeffRef(pId*3+2, pId*3+2) = vertex_area_star;
-
     }
 
     mass = Eigen::SparseMatrix<double>(mass_dyn);
-
 }
 
 
 
-
 void Implicit_Integration::
-init_lumped_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
+init_lumped_mass_matrix(TriMesh *mesh
                  , const OpenMesh::VPropHandleT< double > & area_star
                  , const OpenMesh::VPropHandleT< int > & vertex_id
                  , Eigen::SparseMatrix<double> & mass)
 {
-
     Eigen::DynamicSparseMatrix<double> mass_dyn(mass.rows(), mass.cols());
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -97,30 +93,23 @@ init_lumped_mass_matrix(TriMesh *mesh , PrescribedMeanCurvature * pmc
         mass_dyn.coeffRef(pId*3, pId*3) = vertex_area_star;
         mass_dyn.coeffRef(pId*3+1, pId*3+1) = vertex_area_star;
         mass_dyn.coeffRef(pId*3+2, pId*3+2) = vertex_area_star;
-
     }
 
     mass = Eigen::SparseMatrix<double>(mass_dyn);
-
 }
 
 
 
-
-
-
 void Implicit_Integration::
-init_lumped_mass_matrix_inverted(TriMesh *mesh , PrescribedMeanCurvature * pmc
+init_lumped_mass_matrix_inverted(TriMesh *mesh
                  , const OpenMesh::VPropHandleT< double > & area_star
                  , const OpenMesh::VPropHandleT< int > & vertex_id
                  , Eigen::SparseMatrix<double> & mass)
 {
-
     Eigen::DynamicSparseMatrix<double> mass_dyn(mass.rows(), mass.cols());
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
-
         double vertex_area_star = (3.0)/mesh->property(area_star, v_it);
 
         //printf("area star %f \n", vertex_area_star);
@@ -130,44 +119,33 @@ init_lumped_mass_matrix_inverted(TriMesh *mesh , PrescribedMeanCurvature * pmc
         mass_dyn.coeffRef(pId*3, pId*3) = vertex_area_star;
         mass_dyn.coeffRef(pId*3+1, pId*3+1) = vertex_area_star;
         mass_dyn.coeffRef(pId*3+2, pId*3+2) = vertex_area_star;
-
     }
 
     mass = Eigen::SparseMatrix<double>(mass_dyn);
-
 }
 
 
 
-
-
-
-
 void Implicit_Integration::
-init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
+init_amc_matrix(TriMesh *mesh
                 , const OpenMesh::VPropHandleT< int > &vertex_id
                 , Eigen::SparseMatrix<double> &amc_matrix)
 {
-
-    double threshold = pmc->get_feature_threshold(mesh);
+    double threshold = get_feature_threshold(mesh);
 
     Eigen::DynamicSparseMatrix<double> amc_dyn(amc_matrix.rows(), amc_matrix.cols());
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
-
         for (TriMesh::VertexOHalfedgeIter voh_it=mesh->voh_iter(v_it.handle()); voh_it; ++voh_it)
         {
-
             TriMesh::EdgeHandle eh = mesh->edge_handle(voh_it.handle());
             Mat3x3 the_cross;
             TriMesh::Scalar normalLength;
-            TriMesh::Scalar meanCurvature = pmc->calculate_cross_matrix_Ax_qjpi(mesh, eh
-                                                                           , normalLength
+            TriMesh::Scalar meanCurvature = calculate_cross_matrix_Ax_qjpi(mesh, eh, normalLength
                                                                            , v_it.handle(), the_cross);
 
-
-            double weight = pmc->anisotropic_weight(meanCurvature, threshold
+            double weight = anisotropic_weight(meanCurvature, threshold
                                                     , PrescribedMeanCurvature::R);
 
             the_cross *= ((0.5*meanCurvature*weight)/normalLength);
@@ -197,8 +175,6 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
             amc_dyn.coeffRef(p_id*3+2, q_plus_id*3+1) += the_cross(2, 1);
             amc_dyn.coeffRef(p_id*3+2, q_plus_id*3+2) += the_cross(2, 2);
 
-
-
             amc_dyn.coeffRef(p_id*3, q_minus_id*3) -= the_cross(0, 0);
             amc_dyn.coeffRef(p_id*3, q_minus_id*3+1) -= the_cross(0, 1);
             amc_dyn.coeffRef(p_id*3, q_minus_id*3+2) -= the_cross(0, 2);
@@ -208,46 +184,33 @@ init_amc_matrix(TriMesh *mesh, PrescribedMeanCurvature *pmc
             amc_dyn.coeffRef(p_id*3+2, q_minus_id*3) -= the_cross(2, 0);
             amc_dyn.coeffRef(p_id*3+2, q_minus_id*3+1) -= the_cross(2, 1);
             amc_dyn.coeffRef(p_id*3+2, q_minus_id*3+2) -= the_cross(2, 2);
-
         }
-
     }
 
     amc_matrix = Eigen::SparseMatrix<double>(amc_dyn);
-
 }
 
 
 
-
-
-
-
-
-
 void Implicit_Integration::
-init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
+init_Jacobian(TriMesh *mesh
                 , const OpenMesh::VPropHandleT< int > &vertex_id
                 , Eigen::SparseMatrix<double> &jacobian)
 {
-
-    double threshold = pmc->get_feature_threshold(mesh);
+    double threshold = get_feature_threshold(mesh);
 
     Eigen::DynamicSparseMatrix<double> jacobian_dyn(jacobian.rows(), jacobian.cols());
 
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
-
         for (TriMesh::VertexOHalfedgeIter voh_it=mesh->voh_iter(v_it.handle()); voh_it; ++voh_it)
         {
-
             TriMesh::Scalar normalLength;
             std::vector<Mat3x3> derivatives;
-            TriMesh::Scalar meanCurvature = pmc->cal_edge_norm_deriv_qjpi(mesh, voh_it.handle()
-                                                                          , normalLength, derivatives);
+            TriMesh::Scalar meanCurvature = cal_edge_norm_deriv_qjpi(mesh, voh_it.handle()
+                                                                     , normalLength, derivatives);
 
-
-            double weight = pmc->anisotropic_weight(meanCurvature, threshold
+            double weight = anisotropic_weight(meanCurvature, threshold
                                                     , PrescribedMeanCurvature::R);
 
             //the_cross *= ((0.5*meanCurvature*weight)/normalLength);
@@ -283,7 +246,6 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
             jacobian_dyn.coeffRef(p_id*3+2, p_id*3+1) += the_cross(2, 1);
             jacobian_dyn.coeffRef(p_id*3+2, p_id*3+2) += the_cross(2, 2);
 
-
             the_cross = derivatives[1]*weight;
             jacobian_dyn.coeffRef(p_id*3, q_minus_id*3) += the_cross(0, 0);
             jacobian_dyn.coeffRef(p_id*3, q_minus_id*3+1) += the_cross(0, 1);
@@ -294,7 +256,6 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
             jacobian_dyn.coeffRef(p_id*3+2, q_minus_id*3) += the_cross(2, 0);
             jacobian_dyn.coeffRef(p_id*3+2, q_minus_id*3+1) += the_cross(2, 1);
             jacobian_dyn.coeffRef(p_id*3+2, q_minus_id*3+2) += the_cross(2, 2);
-
 
             the_cross = derivatives[2]*weight;
             jacobian_dyn.coeffRef(p_id*3, qj_id*3) += the_cross(0, 0);
@@ -307,7 +268,6 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
             jacobian_dyn.coeffRef(p_id*3+2, qj_id*3+1) += the_cross(2, 1);
             jacobian_dyn.coeffRef(p_id*3+2, qj_id*3+2) += the_cross(2, 2);
 
-
             the_cross = derivatives[3]*weight;
             jacobian_dyn.coeffRef(p_id*3, q_plus_id*3) += the_cross(0, 0);
             jacobian_dyn.coeffRef(p_id*3, q_plus_id*3+1) += the_cross(0, 1);
@@ -318,21 +278,11 @@ init_Jacobian(TriMesh *mesh, PrescribedMeanCurvature *pmc
             jacobian_dyn.coeffRef(p_id*3+2, q_plus_id*3) += the_cross(2, 0);
             jacobian_dyn.coeffRef(p_id*3+2, q_plus_id*3+1) += the_cross(2, 1);
             jacobian_dyn.coeffRef(p_id*3+2, q_plus_id*3+2) += the_cross(2, 2);
-
-
-
         }
-
     }
 
     jacobian = Eigen::SparseMatrix<double>(jacobian_dyn);
-
 }
-
-
-
-
-
 
 
 
@@ -346,10 +296,6 @@ compute_taylor_semi_implicit(TriMesh *mesh
                              , bool is_lumped_mass
                              )
 {
-
-    printf("entering implicit taylor step \n");
-
-    PrescribedMeanCurvature pmc;
     mesh_size *= 3;
 
     Eigen::VectorXd input_vertices(mesh_size);
@@ -359,17 +305,17 @@ compute_taylor_semi_implicit(TriMesh *mesh
 
     if (!is_lumped_mass)
     {
-        this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        this->init_mass_matrix(mesh, area_star, vertex_id, mass_matrix);
     }else
     {
-        this->init_lumped_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        this->init_lumped_mass_matrix(mesh, area_star, vertex_id, mass_matrix);
     }
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
-    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+    this->init_amc_matrix(mesh, vertex_id, amc_matrix);
 
     Eigen::SparseMatrix<double> jacobian(mesh_size, mesh_size);
-    this->init_Jacobian(mesh, &pmc, vertex_id, jacobian);
+    this->init_Jacobian(mesh, vertex_id, jacobian);
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
     A = mass_matrix + time_step*jacobian;
@@ -401,12 +347,150 @@ compute_taylor_semi_implicit(TriMesh *mesh
 
         mesh->set_point(v_it, point);
     }
-
 }
 
 
 
+void Implicit_Integration::
+smooth_aniso(int _iterations, TriMeshObject * meshObject
+            , SmoothingMode smooth_type
+            , IntegrationScheme scheme
+            , VisualizeMode visualize
+            , double time_step)
+{
+    TriMesh* mesh = meshObject->mesh();
 
+    // Property for the active mesh to store original point positions
+    OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
+    OpenMesh::VPropHandleT< double > area_star;
+    OpenMesh::VPropHandleT< int > vertex_id;
+
+    // Add a property to the mesh to store mean curvature and area
+    mesh->add_property( old_vertex, "old_amc_vertex" );
+    mesh->add_property( area_star, "area_star" );
+    mesh->add_property( vertex_id, "vertex_id" );
+
+    // Property for the active mesh to store original point positions
+    OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
+    //the smoothed_amc_Ha is for temporary use
+    OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
+    OpenMesh::VPropHandleT< double > apmc_function_f;
+    OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
+    OpenMesh::VPropHandleT< bool > is_feature;
+    OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
+
+    // Add a property to the mesh to store mean curvature and area
+    mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
+    mesh->add_property( smoothed_amc_Ha, "smoothed_anisotropic_mean_curvature_Ha" );
+    mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
+    mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
+    mesh->add_property( is_feature, "is_feature" );
+    mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
+
+    mesh->request_vertex_normals();
+    mesh->request_vertex_colors();
+    mesh->request_face_normals();
+
+    unsigned int count(meshObject->mesh()->n_vertices());
+
+    mesh->update_normals();
+
+    double threshold = get_feature_threshold(mesh);
+
+    //initialize vertex id and its neighbors
+    int idx = 0;
+    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+    {
+        mesh->property(vertex_id, v_it) = idx;
+        idx++;
+    }
+
+    for ( int i = 0 ; i < _iterations ; ++i )
+    {
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
+            mesh->property(area_star,v_it) = 0;
+
+            mesh->property(amc_Ha,v_it).vectorize(0.0f);
+            mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
+            mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
+            mesh->property(apmc_function_f,v_it) = 0;
+            mesh->property(smoothed_apmc_function_f,v_it) = 0;
+            mesh->property(is_feature,v_it) = false;
+        }
+
+        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
+        {
+            TriMesh::Normal isotropic;
+            isotropic.vectorize(0);
+
+            for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
+            {
+                TriMesh::Normal edgeNormal;
+                TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
+                double weight = anisotropic_weight(meanCurvature, threshold, R);
+
+                mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
+
+                isotropic += 0.5*meanCurvature*edgeNormal;
+            }
+
+            if (mesh->property(amc_Ha, v_it) != isotropic)
+            {
+                mesh->property(is_feature,v_it) = true;
+                //noFeatureVertices++;
+            }
+
+            for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
+            {
+
+                mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
+
+                //volume gradient
+                TriMesh::Normal volGrad;
+                volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
+                mesh->property(volume_gradient_Va, v_it) += volGrad;
+            }
+        }
+
+        smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
+
+        compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
+                                , is_feature, apmc_function_f, smoothed_apmc_function_f);
+
+        if (scheme == BATCH_UPDATE
+                && smooth_type == ANISO_MEAN_CURVATURE)
+        {
+            compute_explicit_integration_with_mass(mesh, count, area_star, vertex_id, old_vertex, time_step);
+        }
+
+        if(scheme == BATCH_UPDATE && smooth_type == PRESCRIBED_MEAN_CURVATURE)
+        {
+            compute_pmc(mesh, time_step);
+        }
+
+        mesh->update_normals();
+
+    }// Iterations end
+
+    mesh->update_normals();
+    //if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, old_vertex);
+    updateLineNode(meshObject, old_vertex);
+    if (visualize != UPDATE_VECTOR) this->clearLineNode(meshObject);
+
+    // Remove the property
+    mesh->remove_property( area_star );
+    mesh->remove_property( vertex_id );
+    mesh->remove_property( old_vertex );
+
+    mesh->remove_property( amc_Ha );
+    mesh->remove_property( is_feature );
+    mesh->remove_property( volume_gradient_Va );
+    mesh->remove_property( smoothed_amc_Ha );
+    mesh->remove_property( smoothed_apmc_function_f );
+    mesh->remove_property( apmc_function_f );
+}
 
 
 
@@ -420,10 +504,6 @@ compute_semi_implicit_integration(TriMesh *mesh
                                   , bool is_lumped_mass
                                   )
 {
-
-    printf("entering implicit step \n");
-
-    PrescribedMeanCurvature pmc;
     mesh_size *= 3;
 
     Eigen::VectorXd input_vertices(mesh_size);
@@ -433,14 +513,14 @@ compute_semi_implicit_integration(TriMesh *mesh
 
     if (!is_lumped_mass)
     {
-        this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        this->init_mass_matrix(mesh, area_star, vertex_id, mass_matrix);
     }else
     {
-        this->init_lumped_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        this->init_lumped_mass_matrix(mesh, area_star, vertex_id, mass_matrix);
     }
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
-    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+    this->init_amc_matrix(mesh, vertex_id, amc_matrix);
 
     Eigen::SparseMatrix<double> A(mesh_size, mesh_size);
     A = mass_matrix + time_step*amc_matrix;
@@ -453,7 +533,7 @@ compute_semi_implicit_integration(TriMesh *mesh
     cholmoDec.compute(A);
     x = cholmoDec.solve(b);
 
-    std::cout << "residual: " << (A * x - b).norm() << std::endl;
+    //std::cout << "residual: " << (A * x - b).norm() << std::endl;
 
     //convert the result back to vertex and update the mesh
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -461,6 +541,10 @@ compute_semi_implicit_integration(TriMesh *mesh
 
         TriMesh::Point old_point = mesh->point(v_it);
         mesh->property(old_vertex, v_it) = old_point;
+
+        if(mesh->is_boundary(v_it.handle())) {
+            continue;
+        }
 
         TriMesh::Point point = TriMesh::Point(0,0,0);
         int idx = mesh->property(vertex_id, v_it);
@@ -471,16 +555,7 @@ compute_semi_implicit_integration(TriMesh *mesh
 
         mesh->set_point(v_it, point);
     }
-
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -494,10 +569,6 @@ compute_explicit_integration_with_mass(TriMesh *mesh
                                        , bool is_lumped_mask
                                        )
 {
-
-    printf("entering explicit step \n");
-
-    PrescribedMeanCurvature pmc;
     mesh_size *= 3;
 
     Eigen::VectorXd x(mesh_size);
@@ -505,12 +576,9 @@ compute_explicit_integration_with_mass(TriMesh *mesh
 
     Eigen::VectorXd input_vertices(mesh_size);
     this->init_vertex_vector(mesh, input_vertices, vertex_id);
-    printf("done init vertex vector \n");
-
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
-    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
-    printf("done init amc matrix \n");
+    this->init_amc_matrix(mesh, vertex_id, amc_matrix);
 
     Eigen::VectorXd Ha(mesh_size);
     Ha = amc_matrix*input_vertices;
@@ -520,30 +588,29 @@ compute_explicit_integration_with_mass(TriMesh *mesh
 
     if (!is_lumped_mask)
     {
-        this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        this->init_mass_matrix(mesh, area_star, vertex_id, mass_matrix);
         Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
         cholmoDec.compute(mass_matrix);
         x = cholmoDec.solve(Ha);
         b = time_step*x;
     }else
     {
-        this->init_lumped_mass_matrix_inverted(mesh, &pmc, area_star, vertex_id, mass_matrix);
+        this->init_lumped_mass_matrix_inverted(mesh, area_star, vertex_id, mass_matrix);
         b = time_step*mass_matrix*Ha;
     }
-
-
 
     //convert the result back to vertex and update the mesh
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
-
         TriMesh::Point old_point = mesh->point(v_it);
         mesh->property(old_vertex, v_it) = old_point;
 
+        if(mesh->is_boundary(v_it.handle())) {
+            continue;
+        }
+
         TriMesh::Point point = TriMesh::Point(0,0,0);
         int idx = mesh->property(vertex_id, v_it);
-
-        //TriMesh::Scalar area = mesh->property(area_star, v_it);
 
         point[0] = old_point[0] - b[idx*3];
         point[1] = old_point[1] - b[idx*3+1];
@@ -551,12 +618,7 @@ compute_explicit_integration_with_mass(TriMesh *mesh
 
         mesh->set_point(v_it, point);
     }
-
 }
-
-
-
-
 
 
 
@@ -566,7 +628,6 @@ void Implicit_Integration::init_pmc(TriMesh * mesh
               , const OpenMesh::VPropHandleT< TriMesh::Normal > & volume_gradient_Va
               , Eigen::VectorXd & pmc_vector)
 {
-
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
     {
         unsigned int id = mesh->property(vertex_id, v_it);
@@ -578,31 +639,13 @@ void Implicit_Integration::init_pmc(TriMesh * mesh
         pmc_vector[id*3+1] = volumeGrad[1];
         pmc_vector[id*3+2] = volumeGrad[2];
     }
-
 }
-
-
-
-
 
 
 
 void Implicit_Integration::
 compute_pmc(TriMesh *mesh, double time_step)
 {
-
-    /*
-    mesh->property(old_vertex, v_it) = mesh->point(v_it);
-
-    TriMesh::Scalar area = mesh->property(area_star, v_it);
-    TriMesh::Normal updateVector = mesh->property(amc_Ha, v_it);
-
-    TriMesh::Normal result = updateVector -
-            mesh->property(smoothed_apmc_function_f, v_it)*mesh->property(volume_gradient_Va, v_it);
-
-    mesh->set_point(v_it, mesh->point(v_it) - (3*time_step/area)*result);
-
-    //*/
 
     OpenMesh::VPropHandleT< double > area_star;
     OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
@@ -617,8 +660,6 @@ compute_pmc(TriMesh *mesh, double time_step)
     mesh->get_property_handle( vertex_id, "vertex_id" );
     mesh->get_property_handle( old_vertex, "old_amc_vertex" );
 
-
-    PrescribedMeanCurvature pmc;
     mesh_size *= 3;
 
     Eigen::VectorXd x(mesh_size);
@@ -628,7 +669,7 @@ compute_pmc(TriMesh *mesh, double time_step)
     this->init_vertex_vector(mesh, input_vertices, vertex_id);
 
     Eigen::SparseMatrix<double> amc_matrix(mesh_size, mesh_size);
-    this->init_amc_matrix(mesh, &pmc, vertex_id, amc_matrix);
+    this->init_amc_matrix(mesh, vertex_id, amc_matrix);
 
     Eigen::VectorXd fVa(mesh_size);
     this->init_pmc(mesh, vertex_id, smoothed_apmc_function_f, volume_gradient_Va, fVa);
@@ -638,14 +679,11 @@ compute_pmc(TriMesh *mesh, double time_step)
 
     Eigen::SparseMatrix<double> mass_matrix(mesh_size, mesh_size);
 
-    this->init_mass_matrix(mesh, &pmc, area_star, vertex_id, mass_matrix);
+    this->init_mass_matrix(mesh, area_star, vertex_id, mass_matrix);
     Eigen::SparseLLT<Eigen::SparseMatrix<double>, Eigen::Cholmod> cholmoDec;
     cholmoDec.compute(mass_matrix);
     x = cholmoDec.solve(Ha);
     b = time_step*x;
-
-
-
 
     //convert the result back to vertex and update the mesh
     for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -653,6 +691,10 @@ compute_pmc(TriMesh *mesh, double time_step)
 
         TriMesh::Point old_point = mesh->point(v_it);
         mesh->property(old_vertex, v_it) = old_point;
+
+        if(mesh->is_boundary(v_it.handle())) {
+            continue;
+        }
 
         TriMesh::Point point = TriMesh::Point(0,0,0);
         int idx = mesh->property(vertex_id, v_it);
@@ -665,7 +707,6 @@ compute_pmc(TriMesh *mesh, double time_step)
 
         mesh->set_point(v_it, point);
     }
-
 }
 
 
