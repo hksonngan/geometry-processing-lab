@@ -54,7 +54,6 @@
 #include <OpenFlipper/common/Types.hh>
 #include <ObjectTypes/PolyMesh/PolyMesh.hh>
 #include <ObjectTypes/TriangleMesh/TriangleMesh.hh>
-#include "prescribedmeancurvature.h"
 #include "SmootherToolboxWidget.hh"
 #include "implicit_integration.h"
 #include <limits>
@@ -72,6 +71,7 @@ class AnisotropicMeanCurvature : public QObject, BaseInterface, ToolboxInterface
     Q_INTERFACES(BackupInterface)
 
 signals:
+
     //BaseInterface
     void updateView();
     void updatedObject(int _id, const UpdateType& _type);
@@ -100,11 +100,6 @@ public:
     QString name() { return (QString("Explicit Anisotropic Mean Curvature Smoother")); };
     QString description( ) { return (QString("Smooths the active Mesh")); };
 
-
-
-
-
-
 private:
 
     OpenMesh::VPropHandleT< TriMesh::Point > source_points;
@@ -114,12 +109,12 @@ private:
 
     double color_range;
 
-
     PrescribedMeanCurvature::SmoothingMode smooth_type;
     PrescribedMeanCurvature::IntegrationScheme scheme;
     PrescribedMeanCurvature::VisualizeMode visualize;
 
-    PrescribedMeanCurvature pmc;
+    //PrescribedMeanCurvature pmc;
+    Implicit_Integration pmc;
 
     bool attach_source(TriMeshObject * meshObject);
     void recompute_color(TriMeshObject * meshObject, int object_id);

@@ -1,9 +1,6 @@
 #include "prescribedmeancurvature.h"
-#define EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET
-#include <Eigen/Sparse>
-//install cholmod first
-#include <unsupported/Eigen/CholmodSupport>
-#include "implicit_integration.h"
+
+
 
 PrescribedMeanCurvature::PrescribedMeanCurvature()
 {
@@ -16,7 +13,6 @@ void PrescribedMeanCurvature::
 smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
                     , VisualizeMode visualize, double time_step)
 {
-
     bool selectionExists = false;
 
     TriMesh* mesh = meshObject->mesh();
@@ -55,7 +51,6 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
     for ( int i = 0 ; i < _iterations ; ++i )
     {
-
         unsigned int noFeatureVertices = 0;
 
         for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
@@ -71,7 +66,6 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
             selectionExists |= mesh->status(v_it).selected();
         }
 
-
         for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
         {
             TriMesh::Normal isotropic;
@@ -79,7 +73,6 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
             for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
             {
-
                 TriMesh::Normal edgeNormal;
                 TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
                 double weight = anisotropic_weight(meanCurvature, threshold, R);
@@ -87,7 +80,6 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
                 mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
 
                 isotropic += 0.5*meanCurvature*edgeNormal;
-
             }
 
             if (mesh->property(amc_Ha, v_it) != isotropic)
@@ -98,14 +90,12 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
             for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
             {
-
                 mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
                 //volume gradient
                 TriMesh::Normal volGrad;
                 volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
                 mesh->property(volume_gradient_Va, v_it) += volGrad;
             }
-
         }
 
         smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
@@ -134,9 +124,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
 
         mesh->update_normals();
 
-
     }// Iterations end
-
 
     mesh->update_normals();
 
@@ -144,7 +132,6 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     updateLineNode(meshObject, old_vertex);
     if (visualize != UPDATE_VECTOR) this->clearLineNode(meshObject);
 
-
     // Remove the property
     mesh->remove_property( amc_Ha );
     mesh->remove_property( area_star );
@@ -154,178 +141,7 @@ smooth_explicit_pmc(int _iterations, TriMeshObject * meshObject
     mesh->remove_property( smoothed_apmc_function_f );
     mesh->remove_property( apmc_function_f );
     mesh->remove_property( old_vertex );
-
-
 }
-
-
-
-
-void PrescribedMeanCurvature::
-smooth_aniso(int _iterations, TriMeshObject * meshObject
-            , SmoothingMode smooth_type
-            , IntegrationScheme scheme
-            , VisualizeMode visualize
-            , double time_step)
-{
-
-    TriMesh* mesh = meshObject->mesh();
-
-    // Property for the active mesh to store original point positions
-    OpenMesh::VPropHandleT< TriMesh::Point > old_vertex;
-    OpenMesh::VPropHandleT< double > area_star;
-    OpenMesh::VPropHandleT< int > vertex_id;
-
-    // Add a property to the mesh to store mean curvature and area
-    mesh->add_property( old_vertex, "old_amc_vertex" );
-    mesh->add_property( area_star, "area_star" );
-    mesh->add_property( vertex_id, "vertex_id" );
-
-
-    // Property for the active mesh to store original point positions
-    OpenMesh::VPropHandleT< TriMesh::Normal > amc_Ha;
-    //the smoothed_amc_Ha is for temporary use
-    OpenMesh::VPropHandleT< TriMesh::Normal > smoothed_amc_Ha;
-    OpenMesh::VPropHandleT< double > apmc_function_f;
-    OpenMesh::VPropHandleT< double > smoothed_apmc_function_f;
-    OpenMesh::VPropHandleT< bool > is_feature;
-    OpenMesh::VPropHandleT< TriMesh::Normal > volume_gradient_Va;
-
-    // Add a property to the mesh to store mean curvature and area
-    mesh->add_property( amc_Ha, "anisotropic_mean_curvature_Ha" );
-    mesh->add_property( smoothed_amc_Ha, "smoothed_anisotropic_mean_curvature_Ha" );
-    mesh->add_property( apmc_function_f, "aniso_prescribed_mean_curvature_function_f" );
-    mesh->add_property( smoothed_apmc_function_f, "smoothed_apmc_function_f" );
-    mesh->add_property( is_feature, "is_feature" );
-    mesh->add_property( volume_gradient_Va, "volume_gradient_Va" );
-
-
-    mesh->request_vertex_normals();
-    mesh->request_vertex_colors();
-    mesh->request_face_normals();
-
-    unsigned int count(meshObject->mesh()->n_vertices());
-
-
-    mesh->update_normals();
-
-    double threshold = get_feature_threshold(mesh);
-
-    //initialize vertex id and its neighbors
-    int idx = 0;
-    for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-    {
-        mesh->property(vertex_id, v_it) = idx;
-        idx++;
-    }
-
-
-    for ( int i = 0 ; i < _iterations ; ++i )
-    {
-
-        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-        {
-            mesh->property(old_vertex,v_it) = TriMesh::Point(0, 0, 0);
-            mesh->property(area_star,v_it) = 0;
-
-            mesh->property(amc_Ha,v_it).vectorize(0.0f);
-            mesh->property(smoothed_amc_Ha,v_it).vectorize(0.0f);
-            mesh->property(volume_gradient_Va,v_it).vectorize(0.0f);
-            mesh->property(apmc_function_f,v_it) = 0;
-            mesh->property(smoothed_apmc_function_f,v_it) = 0;
-            mesh->property(is_feature,v_it) = false;
-
-
-        }
-
-        for (TriMesh::VertexIter v_it=mesh->vertices_begin(); v_it!=mesh->vertices_end(); ++v_it)
-        {
-
-            TriMesh::Normal isotropic;
-            isotropic.vectorize(0);
-
-            for (TriMesh::VertexEdgeIter ve_it=mesh->ve_iter(v_it.handle()); ve_it; ++ve_it)
-            {
-
-                TriMesh::Normal edgeNormal;
-                TriMesh::Scalar meanCurvature = edge_mean_curvature_He_Ne(mesh, ve_it.handle(), edgeNormal);
-                double weight = anisotropic_weight(meanCurvature, threshold, R);
-
-                mesh->property(amc_Ha, v_it) += 0.5*meanCurvature*weight*edgeNormal;
-
-                isotropic += 0.5*meanCurvature*edgeNormal;
-
-            }
-
-            if (mesh->property(amc_Ha, v_it) != isotropic)
-            {
-                mesh->property(is_feature,v_it) = true;
-                //noFeatureVertices++;
-            }
-
-            for (TriMesh::VertexFaceIter vf_it=mesh->vf_iter(v_it.handle()); vf_it; ++vf_it)
-            {
-
-                mesh->property(area_star, v_it) += face_area(mesh, vf_it.handle());
-
-                //volume gradient
-                TriMesh::Normal volGrad;
-                volume_gradient(mesh, vf_it.handle(), v_it, volGrad);
-                mesh->property(volume_gradient_Va, v_it) += volGrad;
-
-            }
-
-        }
-
-        smooth_amc(mesh, amc_Ha, smoothed_amc_Ha, volume_gradient_Va, is_feature);
-
-        compute_apmc_function_f(mesh, amc_Ha, volume_gradient_Va
-                                , is_feature, apmc_function_f, smoothed_apmc_function_f);
-
-        Implicit_Integration implicit_solver;
-        //implicit_solver.compute_semi_implicit_integration(mesh, count, area_star, vertex_id, old_vertex);
-
-        if (scheme == BATCH_UPDATE
-                && smooth_type == ANISO_MEAN_CURVATURE)
-        {
-            implicit_solver.compute_explicit_integration_with_mass(mesh, count, area_star
-                                                                   , vertex_id, old_vertex, time_step);
-        }
-
-        if(scheme == BATCH_UPDATE && smooth_type == PRESCRIBED_MEAN_CURVATURE)
-        {
-            implicit_solver.compute_pmc(mesh, time_step);
-        }
-
-
-        //implicit_solver.compute_taylor_semi_implicit(mesh, count, area_star, vertex_id, old_vertex, time_step);
-
-        mesh->update_normals();
-
-
-    }// Iterations end
-
-
-    mesh->update_normals();
-    //if (visualize == UPDATE_VECTOR) updateLineNode(meshObject, old_vertex);
-    updateLineNode(meshObject, old_vertex);
-    if (visualize != UPDATE_VECTOR) this->clearLineNode(meshObject);
-
-
-    // Remove the property
-    mesh->remove_property( area_star );
-    mesh->remove_property( vertex_id );
-    mesh->remove_property( old_vertex );
-
-    mesh->remove_property( amc_Ha );
-    mesh->remove_property( is_feature );
-    mesh->remove_property( volume_gradient_Va );
-    mesh->remove_property( smoothed_amc_Ha );
-    mesh->remove_property( smoothed_apmc_function_f );
-    mesh->remove_property( apmc_function_f );
-
-}
-
 
 
 
@@ -339,7 +155,6 @@ double PrescribedMeanCurvature::get_feature_threshold(TriMesh *mesh)
     }
     return max_edge_length*m_lambda*2;
 }
-
 
 
 
@@ -361,7 +176,6 @@ cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
                          , TriMesh::Scalar & normal_length
                          , std::vector<Mat3x3> & derivatives)
 {
-
     double dihedral = _mesh->calc_dihedral_angle(hh1);
 
     TriMesh::HalfedgeHandle  hh2;
@@ -397,7 +211,6 @@ cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
     TriMesh::Point edge_dev_q_plus = cross_B;
     TriMesh::Point edge_dev_q_minus = -cross_B;
 
-
     derivatives.push_back(Mat3x3(0, -edge_dev_pi[2], edge_dev_pi[1],
                                  edge_dev_pi[2], 0, -edge_dev_pi[0],
                                  -edge_dev_pi[1], edge_dev_pi[0], 0
@@ -418,18 +231,9 @@ cal_edge_norm_deriv_qjpi(TriMesh *_mesh, const TriMesh::HalfedgeHandle & hh1
                                  -edge_dev_q_plus[1], edge_dev_q_plus[0], 0
                                  ));
 
-
     double edgeLength = _mesh->calc_edge_length(hh1);
     return 2.0*edgeLength*cos(dihedral/2.0);
-
 }
-
-
-
-
-
-
-
 
 
 
@@ -437,8 +241,6 @@ double PrescribedMeanCurvature::
 calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, TriMesh::Scalar & normal_length
                                , const TriMesh::VertexHandle & _vh, Mat3x3 & cross)
 {
-
-
     //dihedral = 0 on the boundary
     double dihedral = 0;
 
@@ -453,15 +255,14 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, 
     //normal is the edge vector rotated by 90 degree
     if ( _mesh->is_boundary( hh1 ) )
     {
-
         fh2 = _mesh->face_handle(hh2);
         TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
         TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh2)) - _mesh->point(_mesh->from_vertex_handle(hh2));
         //rotation by -90, normal of 2d triangle edge pointing outward
         normal = (edgeVector%n2);
         normal_length = normal.norm();
-
-    }else if ( _mesh->is_boundary( hh2 ) )
+    }
+    else if ( _mesh->is_boundary( hh2 ) )
     {
 
         fh1 = _mesh->face_handle(hh1);
@@ -469,10 +270,9 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, 
         TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh1)) - _mesh->point(_mesh->from_vertex_handle(hh1));
         normal = (edgeVector%n1);
         normal_length = normal.norm();
-
-    }else
+    }
+    else
     {
-
         fh1 = _mesh->face_handle(hh1);
         fh2 = _mesh->face_handle(hh2);
 
@@ -503,19 +303,16 @@ calculate_cross_matrix_Ax_qjpi(TriMesh *_mesh, const TriMesh::EdgeHandle & _eh, 
         cross = Mat3x3(0, -the_edge[2], the_edge[1],
                        the_edge[2], 0, -the_edge[0],
                        -the_edge[1], the_edge[0], 0);
-
     }
 
     double edgeLength = _mesh->calc_edge_length(_eh);
     return 2.0*edgeLength*cos(dihedral/2.0);
-
 }
 
 
 
 double PrescribedMeanCurvature::area_star_edge(TriMesh *_mesh, TriMesh::EdgeHandle _eh)
 {
-
     TriMesh::HalfedgeHandle  hh1, hh2;
     TriMesh::FaceHandle    fh1, fh2;
     double area_star = 0;
@@ -546,25 +343,6 @@ double PrescribedMeanCurvature::area_star_edge(TriMesh *_mesh, TriMesh::EdgeHand
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void PrescribedMeanCurvature::
 compute_apmc_function_f(TriMesh *_mesh
                         , const OpenMesh::VPropHandleT< TriMesh::Normal > & amc_Ha
@@ -586,7 +364,6 @@ compute_apmc_function_f(TriMesh *_mesh
     //smooth by averaging over the neighborhood
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
-
         bool feature = _mesh->property(is_feature, v_it);
         TriMesh::Scalar avg = 0;
         int i = 0;
@@ -599,15 +376,13 @@ compute_apmc_function_f(TriMesh *_mesh
 
             avg += _mesh->property(apmc_function_f, vv_iter);
             i++;
-
         }
 
         avg /= i;
         _mesh->property(smoothed_apmc_function_f, v_it) = avg;
-
     }
-
 }
+
 
 
 void PrescribedMeanCurvature::
@@ -620,7 +395,6 @@ smooth_amc(TriMesh *_mesh
     //only replace volume gradient by its aniso counterpart at feature vertices
     for (TriMesh::VertexIter v_it=_mesh->vertices_begin(); v_it!=_mesh->vertices_end(); ++v_it)
     {
-
         if (!_mesh->property(is_feature, v_it)) continue;
 
         TriMesh::Point p, q, r1, r2;
@@ -629,22 +403,18 @@ smooth_amc(TriMesh *_mesh
         TriMesh::Normal e_Ha;
         TriMesh::Normal volGradient;
 
-
         // ( .. for each Incoming halfedge .. )
         TriMesh::VertexIHalfedgeIter vih_it(*_mesh,v_it);
         for ( ; vih_it; ++vih_it )
         {
-
             double sumAngle = 0;
             TriMesh::VertexHandle qvh = _mesh->from_vertex_handle(vih_it);
             q = _mesh->point(qvh);
 
             if (!_mesh->is_boundary(vih_it))
             {
-
                 r1 = _mesh->point(_mesh->to_vertex_handle(_mesh->next_halfedge_handle(vih_it)));
                 sumAngle += cal_angle(p, q, r1);
-
             }
 
             TriMesh::HalfedgeHandle opp = _mesh->opposite_halfedge_handle(vih_it);
@@ -653,13 +423,11 @@ smooth_amc(TriMesh *_mesh
             {
                 r2 = _mesh->point(_mesh->from_vertex_handle(_mesh->prev_halfedge_handle(opp)));
                 sumAngle += cal_angle(p, q, r2);
-
             }
 
             totalAngle += sumAngle;
 
             _mesh->property(smoothed_amc_Ha, v_it) += sumAngle*_mesh->property(amc_Ha, qvh);
-
         }
 
         e_Ha = 0.5*(_mesh->property(amc_Ha, v_it) + _mesh->property(smoothed_amc_Ha, v_it)/totalAngle);
@@ -670,11 +438,8 @@ smooth_amc(TriMesh *_mesh
         if (sign < 0) e_Ha *= -1;
 
         _mesh->property(volume_grad, v_it) = e_Ha;
-
     }
 }
-
-
 
 
 
@@ -690,10 +455,10 @@ cal_angle(const TriMesh::Point & p, const TriMesh::Point & q, const TriMesh::Poi
 }
 
 
+
 double PrescribedMeanCurvature::
 edge_mean_curvature_He_Ne(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Normal & normal)
 {
-
     //dihedral = 0 on the boundary
     double dihedral = 0;
 
@@ -706,25 +471,24 @@ edge_mean_curvature_He_Ne(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Norm
     //normal is the edge vector rotated by 90 degree
     if ( _mesh->is_boundary( hh1 ) )
     {
-
         fh2 = _mesh->face_handle(hh2);
         TriMesh::Normal n2 = _mesh->calc_face_normal(fh2);
         TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh2)) - _mesh->point(_mesh->from_vertex_handle(hh2));
         normal = (edgeVector%n2);
         normal.normalize();
 
-    }else if ( _mesh->is_boundary( hh2 ) )
+    }
+    else if ( _mesh->is_boundary( hh2 ) )
     {
-
         fh1 = _mesh->face_handle(hh1);
         TriMesh::Normal n1 = _mesh->calc_face_normal(fh1);
         TriMesh::Normal edgeVector = _mesh->point(_mesh->to_vertex_handle(hh1)) - _mesh->point(_mesh->from_vertex_handle(hh1));
         normal = (edgeVector%n1);
         normal.normalize();
 
-    }else
+    }
+    else
     {
-
         fh1 = _mesh->face_handle(hh1);
         fh2 = _mesh->face_handle(hh2);
 
@@ -744,15 +508,13 @@ edge_mean_curvature_He_Ne(TriMesh *_mesh, TriMesh::EdgeHandle _eh, TriMesh::Norm
 
     double edgeLength = _mesh->calc_edge_length(_eh);
     return 2*edgeLength*cos(dihedral/2.0);
-
 }
+
+
 
 double PrescribedMeanCurvature::anisotropic_weight(double curvature, double lambda, double r)
 {
-
     double weight;
-
-    //printf("lambda %f curvature %f \n", lambda, curvature);
 
     if (fabs(curvature) <= lambda)
     {
@@ -796,6 +558,7 @@ TriMesh::Scalar PrescribedMeanCurvature::face_area(TriMesh *_mesh, TriMesh::Face
 }
 
 
+
 /*
  * circulate around the oriented face using FaceHalfEdgeIter to extract p, q, r in CCW
  *
@@ -805,7 +568,6 @@ void
 PrescribedMeanCurvature::
 volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh, TriMesh::Normal & gradient)
 {
-
     TriMesh::Point  q, r;
     TriMesh::VertexHandle vq, vr;
 
@@ -824,10 +586,7 @@ volume_gradient(TriMesh *_mesh, TriMesh::FaceHandle fh, TriMesh::VertexHandle vh
 
     gradient = q%r;
     gradient /= 6;
-
 }
-
-
 
 
 
@@ -861,9 +620,10 @@ updateLineNode(TriMeshObject * _meshObject
 
     }
 
-    printf("energy error: %f \n", energy_error);
+    //printf("energy error: %f \n", energy_error);
 
 }
+
 
 
 ACG::SceneGraph::LineNode *
@@ -893,6 +653,8 @@ getLineNode(TriMeshObject * _meshObject)
     return line_node;
 }
 
+
+
 void
 PrescribedMeanCurvature::
 addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _color )
@@ -900,8 +662,6 @@ addLine( ACG::SceneGraph::LineNode * _line_node, Vec3d _p0, Vec3d _p1, Color _co
     _line_node->add_line( _p0, _p1 );
     _line_node->add_color(_color);
 }
-
-
 
 
 
@@ -920,11 +680,8 @@ clearLineNode(TriMeshObject * _meshObject)
 //        line_node->show();
 
         line_node->hide();
-
     }
-
 }
-
 
 
 
@@ -939,13 +696,8 @@ showLineNode(TriMeshObject * _meshObject)
     {
         _meshObject->getAdditionalNode ( line_node, "NormalEstimationPlugin", "LineNode" );
 
-
         line_node->show();
-
-
-
     }
-
 }
 
 
