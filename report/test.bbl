@@ -1,8 +1,15 @@
-\begin{thebibliography}{HP04}
+\begin{thebibliography}{Tau95}
 
 \bibitem[HP04]{Hildebrandt04anisotropicfiltering}
 Klaus Hildebrandt and Konrad Polthier.
 \newblock Anisotropic filtering of non-linear surface features.
 \newblock {\em Computer Graphics Forum}, 23:391--400, 2004.
+
+\bibitem[Tau95]{Taubin:1995:SPA:218380.218473}
+Gabriel Taubin.
+\newblock A signal processing approach to fair surface design.
+\newblock In {\em Proceedings of the 22nd annual conference on Computer
+  graphics and interactive techniques}, SIGGRAPH '95, pages 351--358, New York,
+  NY, USA, 1995. ACM.
 
 \end{thebibliography}
