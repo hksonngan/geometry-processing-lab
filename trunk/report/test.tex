@@ -27,10 +27,10 @@ p \leftarrow \frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}q = p - \underb
 \label{eq:update}
 \end{equation}
 
-Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in which the old vertex is moved by an amount of the update vector $\bigtriangleup p$ to the new position. The update vector $\bigtriangleup p$ can be generalized to have arbitrary weights of the 1-ring $w_q\sum\limits_{q \in N_1(p)}(p - q)$ other than uniform weights as in the equation $\ref{eq:update}$. In fact, we can choose the weights such that the update vector points in the direction normal to the mesh surface. Such an update formula was first proposed by Pinkall and Polthier \cite{Pinkall93computingdiscrete} as follows:
+Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in which the old vertex is moved by an amount of the update vector $\bigtriangleup p$ to the new position. The update vector $\bigtriangleup p$ can be generalized to have arbitrary weights over the 1-ring $\sum\limits_{q \in N_1(p)}w_q(p - q)$ other than uniform weights as in the equation $\ref{eq:update}$. In fact, we can choose the weights such that the update vector points in the direction normal to the mesh surface. (mean curvature and area gradient here). Such an update formula was first proposed by Pinkall and Polthier \cite{Pinkall93computingdiscrete} known as cotangent weights:
 
 \begin{equation}
-\bigtriangledown_p\ area\ M = \vec{H}(p) = 1/2\sum\limits_{q_i\ \in\ link\ p}{(cot\alpha_{i} + cot\beta_{i})(p-q_i)}
+\bigtriangledown_p\ area\ M = \vec{H}(p) = 1/2\sum\limits_{q \in N_1(p)}{(cot\alpha_{q} + cot\beta_{q})(p-q)}
 \end{equation}
 
 \begin{figure}[htbp]
