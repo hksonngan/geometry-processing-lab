@@ -5,6 +5,11 @@ Klaus Hildebrandt and Konrad Polthier.
 \newblock Anisotropic filtering of non-linear surface features.
 \newblock {\em Computer Graphics Forum}, 23:391--400, 2004.
 
+\bibitem[PP93]{Pinkall93computingdiscrete}
+Ulrich Pinkall and Konrad Polthier.
+\newblock Computing discrete minimal surfaces and their conjugates.
+\newblock {\em Experimental Mathematics}, 2:15--36, 1993.
+
 \bibitem[Tau95]{Taubin:1995:SPA:218380.218473}
 Gabriel Taubin.
 \newblock A signal processing approach to fair surface design.
