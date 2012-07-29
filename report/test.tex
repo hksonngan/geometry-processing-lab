@@ -1,8 +1,14 @@
 \documentclass[11pt]{article}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+
 \author{Phan-Anh Nguyen\\
 		286049} 
+		
 \title{Geometry Processing Lab 2012\\
 	   Anisotropic Filtering of Non-Linear Surface Features}
+	   
 \begin{document}
 \maketitle
 
@@ -12,15 +18,42 @@
 
 Nowadays, geometric data acquired through imaging or scanning devices has grown rapidly due to advances in technology, making it affordable in many aspects of our lives. However, when dealing with real data we always have to cope with measurement error which brings high frequency noise to our geometric models. Many researches have been conducted in order to remove noise from a scanned model while trying to preserve the underlying sampled surface. One of the seminal results was the work of Taubin et al. \cite{Taubin:1995:SPA:218380.218473} in which they use a signal processing approach to derive the Laplacian operator acting as a low-pass filter on the geometric signal. Even though the Laplacian operator is a powerful tool to remove high frequency noise, it isotropic behaviour makes it unable to preserve sharp features. Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering} have developed an anisotropic method which can preserve high curvature features in a certain direction while suppressing unwanted curvature peaks in the other directions. This method makes it possible to denoise arbitrary surface meshes whereas non-linear geometric features e.g. curved surface regions and feature lines are preserved. This lab report explores and elaborates theory and practice needed to implement the prescribed mean curvature flow proposed by Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering}.
 
-\section{Mean Curvature}
+\section{Smoothing Principle}
 
+A very intuitive smoothing operator one can think of is to move a vertex $p$ to the center of gravity (c.o.g) of its one-ring neighbors $N_1(p)$:
 
+\begin{equation}
+p \leftarrow \frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}q = p - \underbrace{\frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}(p - q)}_{\bigtriangleup p}
+\label{eq:update}
+\end{equation}
+
+Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in which the old vertex is moved by an amount of the update vector $\bigtriangleup p$ to the new position. The update vector $\bigtriangleup p$ can be generalized to have arbitrary weights of the 1-ring $w_q\sum\limits_{q \in N_1(p)}(p - q)$ other than uniform weights as in the equation $\ref{eq:update}$. In fact, we can choose the weights such that the update vector points in the direction normal to the mesh surface. Such an update formula was first proposed by Pinkall and Polthier \cite{Pinkall93computingdiscrete} as follows:
+
+\begin{equation}
+\bigtriangledown_p\ area\ M = \vec{H}(p) = 1/2\sum\limits_{q_i\ \in\ link\ p}{(cot\alpha_{i} + cot\beta_{i})(p-q_i)}
+\end{equation}
+
+\begin{figure}[htbp]
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{umbrella.png}
+    \caption{smooth a vertex p by moving it in the direction of mean curvature vector $\vec{H}(p)$}
+    \label{fig:umbrella}
+  \end{minipage}
+  \hspace{0.5cm}
+  \begin{minipage}[b]{0.5\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{cotangent.png}
+    \caption{Cotangent weights}
+    \label{fig:cotangent}
+  \end{minipage}
+\end{figure}
 
 \section{Conclusion}
 
 
 
-
+\pagebreak
 
 \bibliographystyle{alpha}	% (uses file "plain.bst")
 \bibliography{bibliography}		% expects file "myrefs.bib"
