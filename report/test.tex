@@ -47,23 +47,42 @@ Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in 
 
 \begin{equation}
 \bigtriangledown_p\ area = \vec{H}(p) = 1/2\sum\limits_{q \in N_1(p)}{(cot\alpha_{q} + cot\beta_{q})(p-q)}
+\label{eq:cotangent}
 \end{equation}
 
 Where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gradient of the area functional $\bigtriangledown_p\ area$ at that vertex. Figure $\ref{fig:umbrella}$ and $\ref{fig:cotangent}$ show how the mean curvature vector is calculated.
 
 \section{Anisotropic Mean Curvature}
 
+The first step toward the formulation of the anisotropic mean curvature vector is to define an edge based mean curvature vector. Given the configuration in figure $\ref{fig:curvature}$.
 
+\begin{figure}[htbp]
+  \begin{minipage}[b]{0.45\linewidth}
+	\centering
+	\includegraphics[width=\textwidth]{curvature.png}
+	\caption{Edge based mean curvature}
+	\label{fig:curvature}
+  \end{minipage}
+  \hspace{0.5cm}
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Dihedral_angle.png}
+    \caption{Dihedral angle}
+    \label{fig:dihedral}
+  \end{minipage}
+\end{figure}
 
 \section{Prescribed Mean Curvature}
 
+Explain volume gradient in detail.
+
 \section{Implementation and Results}
 
-\section{Conclusion}
+Matrix form: Ha, Mass (non-diagonal converges better => larger time step), Taylor for implicit attempt.
+
+\section{Conclusion and Future Work}
 
 
-
-%\pagebreak
 
 \bibliographystyle{alpha}	% (uses file "plain.bst")
 \bibliography{bibliography}		% expects file "myrefs.bib"
