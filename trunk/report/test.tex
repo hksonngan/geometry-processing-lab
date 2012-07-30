@@ -54,7 +54,12 @@ Where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gr
 
 \section{Anisotropic Mean Curvature}
 
-The first step toward the formulation of the anisotropic mean curvature vector is to define an edge based mean curvature vector. Given the configuration in figure $\ref{fig:curvature}$ we can easily identify the 2 principal curvature directions $d_{min}$ and $d_{max}$. The minimal curvature direction runs along the common edge $e$ and the maximal one is orthogonal to the plane formed by the edge $e$ and the edge normal vector $n_e = \frac{n_1 + n_2}{\parallel n_1 + n_2 \parallel}$. Obviously the curvature value along the edge $e$ is always zero and the maximal curvature is proportional to the dihedral angle 
+The first step toward the formulation of the anisotropic mean curvature vector is to express the vertex mean curvature vector $\ref{eq:cotangent}$ in terms of an edge based mean curvature vector:
+\begin{equation}
+  \vec{H}(e) = H_e n_e
+  \label{eq:edgeMC}
+\end{equation}
+where $n_e = \frac{n_1 + n_2}{\parallel n_1 + n_2 \parallel}$ is the edge normal vector as shown in figure $\ref{fig:curvature}$ and $H_e = 2\mid e \mid \cos \frac{\theta_e}{2}$ is the edge mean curvature which depends on the dihedral angle $\theta_e$ $\ref{fig:dihedral}$. It can be shown in the work of Pothier \cite{PolthierHabilitation} that both mean curvature vectors $\ref{eq:cotangent}$ and $\ref{eq:edgeMC}$ are related by the equation:
 
 \begin{figure}[htbp]
   \begin{minipage}[b]{0.45\linewidth}
