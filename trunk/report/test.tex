@@ -54,24 +54,24 @@ Where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gr
 
 \section{Anisotropic Mean Curvature}
 
-The first step toward the formulation of the anisotropic mean curvature vector is to express the vertex mean curvature vector $\ref{eq:cotangent}$ in terms of an edge based mean curvature vector:
+The first step towards deriving an anisotropic mean curvature formula is to express the vertex mean curvature vector $\ref{eq:cotangent}$ in terms of an edge based mean curvature vector:
 \begin{equation}
-  \vec{H}(e) = H_e n_e
+  \vec{H}(e) = H_e \vec{N}_e
   \label{eq:edgeMC}
 \end{equation}
-where $n_e = \frac{n_1 + n_2}{\parallel n_1 + n_2 \parallel}$ is the edge normal vector as shown in figure $\ref{fig:curvature}$ and $H_e = 2\mid e \mid \cos \frac{\theta_e}{2}$ is the edge mean curvature which depends on the dihedral angle $\theta_e$ $\ref{fig:dihedral}$. It can be shown in the work of Pothier \cite{PolthierHabilitation} that both mean curvature vectors $\ref{eq:cotangent}$ and $\ref{eq:edgeMC}$ are related by the equation:
+where $N_e = \frac{N_1 + N_2}{\parallel N_1 + N_2 \parallel}$ is the edge normal vector as shown in figure $\ref{fig:curvature}$ and $H_e = 2\mid e \mid \cos \frac{\theta_e}{2}$ is the edge mean curvature which depends on the dihedral angle $\theta_e$ as illustrated in figure $\ref{fig:dihedral}$. Note that the smaller the dihedral angle, the sharper the edge resulting in the higher the mean curvature $H_e$. It can be shown in the work of Pothier \cite{PolthierHabilitation} that both mean curvature vectors $\ref{eq:cotangent}$ and $\ref{eq:edgeMC}$ are related by the equation:
 
 \begin{figure}[htbp]
   \begin{minipage}[b]{0.45\linewidth}
 	\centering
 	\includegraphics[width=\textwidth]{curvature.png}
-	\caption{Edge based mean curvature}
+	\caption{Edge normal vector $N_e$}
 	\label{fig:curvature}
   \end{minipage}
   \hspace{0.5cm}
   \begin{minipage}[b]{0.45\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{Dihedral_angle.png}
+    \includegraphics[width=\linewidth]{dihedral.png}
     \caption{Dihedral angle $\theta_e$}
     \label{fig:dihedral}
   \end{minipage}
