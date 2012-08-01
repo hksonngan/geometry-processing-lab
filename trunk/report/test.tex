@@ -101,7 +101,35 @@ w_{\lambda, r}(a) =
 \end{cases}
 \end{equation}
 
-The threshold $\lambda$ is used to detect features and the radius $r$ controls the width of the transition between those areas that are smoothed and those that are kept as features.
+The threshold $\lambda$ is used to detect features and the radius $r$ controls the width of the transition between those areas that are smoothed and those that are kept as features. In our implementation, we choose $\lambda = 2 \lambda' \max |e| $ where $\lambda' \in \left[ 0, 1 \right] $ to cover the whole range of the edge mean curvature $H_e$. Following Hildebrandt and Polthier suggestion \cite{Hildebrandt04anisotropicfiltering}, we fix the radius $r$ to 10 to ensure that $w_{\lambda, 10}(2\lambda) < 0.1$.
+
+The smoothing operation is carried out by integrating the flow of the anisotropic mean curvature vector $\vec{H}_A$ with some integration scheme. We first use the explicit Euler method because it is simpler to implement. Discussion about the semi-implicit integration scheme will be presented later on.
+
+Given the mesh $M_h$ with its vertices $\mathcal{P} = \left\lbrace p_1, ..., p_m \right\rbrace $, an explicit iteration step of the anisotropic mean curvature flow is computed as follows:
+
+\begin{equation}
+\mathcal{P}^{j+1} = \mathcal{P}^j -sM^{-1}\vec{H_A}(\mathcal{P}^j)
+\end{equation}
+
+where $s \in [0, 1]$ is a damping factor controlling the magnitude of the update vector thereby stabilizing the flow. $M^{-1}$ is the inverse of the mass matrix $M \in \mathcal{R}^{m \times m}$ of the mesh $M^j_h$ at time step $j$. It is used to convert the integrated mean curvature vector into a piecewise linear vector field:
+
+\begin{equation}
+M_{pq} = 
+\begin{cases} \dfrac{1}{6}area(star\ p), & \mbox{if } p=q \\ 
+\dfrac{1}{12}area(star\ e), & \mbox{if there is an edge } e=(p, q) \\
+0, & \mbox{otherwise} \end{cases}
+\label{eq:mass_matrix}
+\end{equation}
+
+If we use a diagonalization of $M$ called the lumped mass matrix with diagonal elements $M_{pp} = \frac{1}{3} area(star\ p)$, then the integration step for each vertex $p$ is derived as follows:
+
+\begin{equation}
+p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}\vec{H_A}(p^j)
+\end{equation}
+
+\subsection{Matrix Form of Anisotropic Mean Curvature}
+
+One problem when using the lumped mass matrix is
 
 \section{Prescribed Mean Curvature}
 
