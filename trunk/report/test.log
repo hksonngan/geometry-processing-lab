@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  1 AUG 2012 16:28
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  1 AUG 2012 18:08
 entering extended mode
 **test.tex
 
@@ -172,120 +172,197 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip43
 )
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsmath.sty"
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip44
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks15
+\ex@=\dimen108
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen109
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count98
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count99
+\leftroot@=\count100
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count101
+\DOTSCASE@=\count102
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen110
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count103
+\c@MaxMatrixCols=\count104
+\dotsspace@=\muskip11
+\c@parentequation=\count105
+\dspbrk@lvl=\count106
+\tag@help=\toks16
+\row@=\count107
+\column@=\count108
+\maxfields@=\count109
+\andhelp@=\toks17
+\eqnshift@=\dimen111
+\alignsep@=\dimen112
+\tagshift@=\dimen113
+\tagwidth@=\dimen114
+\totwidth@=\dimen115
+\lineht@=\dimen116
+\@envbody=\toks18
+\multlinegap=\skip45
+\multlinetaggap=\skip46
+\mathdisplay@stack=\toks19
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\classes\amsthm.sty"
+Package: amsthm 2004/08/06 v2.20
+\thm@style=\toks20
+\thm@bodyfont=\toks21
+\thm@headfont=\toks22
+\thm@notefont=\toks23
+\thm@headpunct=\toks24
+\thm@preskip=\skip47
+\thm@postskip=\skip48
+\thm@headsep=\skip49
+\dth@everypar=\toks25
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty"
+Package: amssymb 2009/06/22 v3.00
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+))
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.aux")
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
 
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count98
-\scratchdimen=\dimen108
-\scratchbox=\box26
-\nofMPsegments=\count99
-\nofMParguments=\count100
-\everyMPshowfont=\toks15
-\MPscratchCnt=\count101
-\MPscratchDim=\dimen109
-\MPnumerator=\count102
-\makeMPintoPDFobject=\count103
-\everyMPtoPDFconversion=\toks16
+\scratchcounter=\count110
+\scratchdimen=\dimen117
+\scratchbox=\box28
+\nofMPsegments=\count111
+\nofMParguments=\count112
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen118
+\MPnumerator=\count114
+\makeMPintoPDFobject=\count115
+\everyMPtoPDFconversion=\toks27
 )
-\AtBeginShipoutBox=\box27
-Package hyperref Info: Link coloring OFF on input line 12.
+\AtBeginShipoutBox=\box29
+Package hyperref Info: Link coloring OFF on input line 13.
  ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count104
+\c@section@level=\count116
 )
-LaTeX Info: Redefining \ref on input line 12.
-LaTeX Info: Redefining \pageref on input line 12.
-LaTeX Info: Redefining \nameref on input line 12.
+LaTeX Info: Redefining \ref on input line 13.
+LaTeX Info: Redefining \pageref on input line 13.
+LaTeX Info: Redefining \nameref on input line 13.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.out")
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.out")
 \@outlinefile=\write3
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 14.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 14.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 14.
- <umbrella.png, id=30, 370.38374pt x 409.53pt>
+LaTeX Font Info:    Try loading font information for U+msa on input line 15.
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 15.
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+)
+<umbrella.png, id=30, 370.38374pt x 409.53pt>
 File: umbrella.png Graphic file (type png)
-
-<use umbrella.png>
-Package pdftex.def Info: umbrella.png used on input line 26.
+ <use umbrella.png>
+Package pdftex.def Info: umbrella.png used on input line 27.
 (pdftex.def)             Requested size: 161.9989pt x 179.11894pt.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 27.
- <cotangent.png, id=31, 642.4pt x 652.4375pt>
-File: cotangent.png Graphic file (type png)
 
-<use cotangent.png>
-Package pdftex.def Info: cotangent.png used on input line 33.
+<cotangent.png, id=31, 642.4pt x 652.4375pt>
+File: cotangent.png Graphic file (type png)
+ <use cotangent.png>
+Package pdftex.def Info: cotangent.png used on input line 34.
 (pdftex.def)             Requested size: 161.9989pt x 164.52263pt.
  [1
 
 {C:/Documents and Settings/All Users/Application Data/MiKTeX/2.9/pdftex/config/
 pdftex.map}] [2 <E:/Media Informatics/courses/second semester/geometry processi
 ng lab/smooth report/report/umbrella.png> <E:/Media Informatics/courses/second 
-semester/geometry processing lab/smooth report/report/cotangent.png>] <curvatur
-e.png, id=72, 381.425pt x 238.8925pt>
+semester/geometry processing lab/smooth report/report/cotangent.png>]
+<curvature.png, id=69, 381.425pt x 238.8925pt>
 File: curvature.png Graphic file (type png)
-
-<use curvature.png>
-Package pdftex.def Info: curvature.png used on input line 67.
+ <use curvature.png>
+Package pdftex.def Info: curvature.png used on input line 68.
 (pdftex.def)             Requested size: 161.9989pt x 101.46053pt.
- <dihedral.png, id=73, 401.5pt x 387.4475pt>
+
+<dihedral.png, id=70, 401.5pt x 387.4475pt>
 File: dihedral.png Graphic file (type png)
-
-<use dihedral.png>
-Package pdftex.def Info: dihedral.png used on input line 74.
+ <use dihedral.png>
+Package pdftex.def Info: dihedral.png used on input line 75.
 (pdftex.def)             Requested size: 161.9989pt x 156.3301pt.
-
+ [3 <E:/Media Informatics/courses/second semester/geometry processing lab/smoot
+h report/report/curvature.png> <E:/Media Informatics/courses/second semester/ge
+ometry processing lab/smooth report/report/dihedral.png>]
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
-eport\report\test.bbl" [3 <E:/Media Informatics/courses/second semester/geometr
-y processing lab/smooth report/report/curvature.png> <E:/Media Informatics/cour
-ses/second semester/geometry processing lab/smooth report/report/dihedral.png>]
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 94.
- [4]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 94.
+eport\report\test.bbl" [4])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 120.
+ [5]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 120.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 94.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 94.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 120.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 120.
 Package rerunfilecheck Info: File `test.out' has not changed.
 (rerunfilecheck)             Checksum: 30A7A59A49F65DE086E04F0A66957647;350.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 94.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 120.
  ) 
 Here is how much of TeX's memory you used:
- 4870 strings out of 494049
- 72769 string characters out of 3148420
- 151346 words of memory out of 3000000
- 8127 multiletter control sequences out of 15000+200000
- 8542 words of font info for 30 fonts, out of 3000000 for 9000
+ 5793 strings out of 494049
+ 83134 string characters out of 3148420
+ 163342 words of memory out of 3000000
+ 9007 multiletter control sequences out of 15000+200000
+ 11083 words of font info for 42 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 29i,8n,28p,1473b,411s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,9n,28p,1473b,414s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
@@ -298,9 +375,9 @@ b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
 s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on test.pdf (4 pages, 223862 bytes).
+Output written on test.pdf (5 pages, 228174 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
- 23 named destinations out of 1000 (max. 500000)
+ 142 PDF objects out of 1000 (max. 8388607)
+ 27 named destinations out of 1000 (max. 500000)
  69 words of extra memory for PDF output out of 10000 (max. 10000000)
 
