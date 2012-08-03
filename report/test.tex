@@ -131,6 +131,18 @@ One disadvantage of the lumped mass matrix is that it gives an unstable solution
 
 \section{Prescribed Mean Curvature}
 
+Since the mean curvature vector at a vertex is equivalent to its area gradient, applying the mean curvature flow on the mesh has the same effect as minimizing its surface area. This leads to the problem of surface shrinkage. This issue also occurs in the anisotropic case. Particularly, the anisotropic smoothing slows down the smoothing process in regions with high curvature, causing
+deformations of the surface as shown in figure $\ref{fig:amc_pmc}$.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{amc_pmc.png}
+\caption{The Anisotropic Mean Curvature flow (left) contracts the interior of the bunny's ears making it to deform. In contrast, the Prescribed Mean Curvature flow (right) converges to a stable surface.}
+\label{fig:amc_pmc}
+\end{figure}
+
+
+
 Explain volume gradient in detail.
 
 \section{Implementation and Results}
@@ -143,7 +155,7 @@ Matrix form: first attempt Ha, second attempt Taylor approximation.
 
 \section{Conclusion and Future Work}
 
-
+summary the main idea, pose problem to be solved in the future
 
 \bibliographystyle{alpha}	% (uses file "plain.bst")
 \bibliography{bibliography}		% expects file "myrefs.bib"
