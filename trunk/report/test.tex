@@ -143,7 +143,20 @@ deformations of the surface as shown in figure $\ref{fig:amc_pmc}$.
 
 To circumvent this problem, Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering} used the so-called prescribed mean curvature flow (PMC) to evolve the surface towards a surface having a prescribed mean curvature. This process includes two steps. In the first step, the surface mean curvature is computed and then this scalar field is smoothed. In the second step, the PMC flow is applied to let the surface evolve towards a surface with this precomputed mean curvature. 
 
-This idea comes from the result given \cite{PolthierRossmann2002}.
+This idea comes from the result \cite{PolthierRossmann2002} given as follows:
+
+\begin{equation}
+\vec{H_A}(p) = \bigtriangledown_p area = H \bigtriangledown_p vol
+\label{eq:evolution}
+\end{equation}
+
+for all interior vertices $p$ and a constant mean curvature $H$. Hence instead of minimizing the anisotropic mean curvature vector $\vec{H_A}(p) \rightarrow 0$, we let $\vec{H_A}(p)$ evolve to the prescribed mean curvature according to equation $\ref{eq:evolution}$, i.e. $\vec{H_A}(p) \rightarrow H\vec{V_A}(p)$. The anisotropic PMC flow thus is defined by:
+
+\begin{equation}
+\mathcal{P}^{j+1} = \mathcal{P}^j -sM^{-1}(\vec{H_A}(\mathcal{P}^j) - f(\mathcal{P}) \cdot \vec{V}_A(\mathcal{P}))
+\end{equation}
+
+where $f$ is a function that prescribes the anisotropic mean curvature and $\vec{V}_A$ is an anisotropic volume gradient.
 
 \begin{figure}[htb]
 \centering
