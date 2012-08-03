@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  1 AUG 2012 21:45
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  3 AUG 2012 13:09
 entering extended mode
 **test.tex
 
@@ -342,27 +342,27 @@ Package pdftex.def Info: dihedral.png used on input line 75.
 h report/report/curvature.png> <E:/Media Informatics/courses/second semester/ge
 ometry processing lab/smooth report/report/dihedral.png>] [4]
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
-eport\report\test.bbl")
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
- [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
+eport\report\test.bbl" [5])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 150.
+ [6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 150.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 148.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 150.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 150.
 Package rerunfilecheck Info: File `test.out' has not changed.
-(rerunfilecheck)             Checksum: 1F0D91CADF3D8D543850DF44DE844715;441.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 148.
+(rerunfilecheck)             Checksum: FE3C679DA784BB3F448F12CE6F80630C;418.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 150.
  ) 
 Here is how much of TeX's memory you used:
  5800 strings out of 494049
- 83231 string characters out of 3148420
+ 83212 string characters out of 3148420
  166395 words of memory out of 3000000
- 9010 multiletter control sequences out of 15000+200000
- 11390 words of font info for 43 fonts, out of 3000000 for 9000
+ 9009 multiletter control sequences out of 15000+200000
+ 11083 words of font info for 42 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 29i,9n,28p,1473b,344s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,9n,28p,1473b,414s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
@@ -375,9 +375,9 @@ b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
 s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on test.pdf (5 pages, 236196 bytes).
+Output written on test.pdf (6 pages, 236906 bytes).
 PDF statistics:
- 151 PDF objects out of 1000 (max. 8388607)
- 31 named destinations out of 1000 (max. 500000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 32 named destinations out of 1000 (max. 500000)
  77 words of extra memory for PDF output out of 10000 (max. 10000000)
 

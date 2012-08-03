@@ -127,9 +127,7 @@ If we use a diagonalization of $M$ called the lumped mass matrix with diagonal e
 p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}\vec{H_A}(p^j)
 \end{equation}
 
-\subsection{Matrix Form of Anisotropic Mean Curvature}
-
-One problem when using the lumped mass matrix is
+One disadvantage of the lumped mass matrix is that it gives an unstable solution. To overcome this problem we have to use a very small time step leading to a slow convergence rate. In contrast, the full mass matrix gives a more stable solution, thereby giving a faster convergence rate with the cost of having to compute the inverted mass matrix.
 
 \section{Prescribed Mean Curvature}
 
@@ -137,7 +135,11 @@ Explain volume gradient in detail.
 
 \section{Implementation and Results}
 
-Matrix form: Ha, Mass (non-diagonal converges better => larger time step), Taylor for implicit attempt.
+use OpenFlipper, Eigen library, Cholmod suite sparse to invert mass matrix
+
+\section{Implicit Integration of the Flow}
+
+Matrix form: first attempt Ha, second attempt Taylor approximation.
 
 \section{Conclusion and Future Work}
 
