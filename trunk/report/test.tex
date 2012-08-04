@@ -156,7 +156,13 @@ for all interior vertices $p$ and a constant mean curvature $H$. Hence instead o
 \mathcal{P}^{j+1} = \mathcal{P}^j -sM^{-1}(\vec{H_A}(\mathcal{P}^j) - f(\mathcal{P}) \cdot \vec{V}_A(\mathcal{P}))
 \end{equation}
 
-where $f$ is a function that prescribes the anisotropic mean curvature and $\vec{V}_A$ is an anisotropic volume gradient.
+where $f$ is a function that prescribes the anisotropic mean curvature and $\vec{V}_A$ is an anisotropic volume gradient. The volume of a surface is the oriented volume enclosed by the cone of the surface over the origin in $\mathcal{R}^3$:
+
+\begin{equation}
+vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}<p, q \times r>
+\end{equation}
+
+Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated.
 
 \begin{figure}[htb]
 \centering
@@ -164,6 +170,14 @@ where $f$ is a function that prescribes the anisotropic mean curvature and $\vec
 \caption{volume}
 \label{fig:volume}
 \end{figure}
+
+The gradient of $vol \ M_h$ is:
+
+\begin{equation}
+\bigtriangledown_p vol = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}q \times r
+\end{equation}
+
+since $vol \ M_h$ linearly depends on $p$.
 
 \section{Implementation and Results}
 
