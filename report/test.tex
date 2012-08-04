@@ -160,9 +160,10 @@ where $f$ is a function that prescribes the anisotropic mean curvature and $\vec
 
 \begin{equation}
 vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}<p, q \times r>
+\label{eq:volume}
 \end{equation}
 
-Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated.
+Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated. Note that w.l.o.g. the model can always be translated to the origin since translation does not scale the volume and that in an occluded region (where the normal pointing to the origin) the volume of a tetrahedron can be negative hence only the volume enclosed by that region is added to the total volume.
 
 \begin{figure}[htb]
 \centering
@@ -171,13 +172,13 @@ Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated.
 \label{fig:volume}
 \end{figure}
 
-The gradient of $vol \ M_h$ is:
+Since $vol \ M_h$ linearly depends on $p$, the gradient of $vol \ M_h$ at $p$ is easily derived as follows:
 
 \begin{equation}
 \bigtriangledown_p vol = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}q \times r
 \end{equation}
 
-since $vol \ M_h$ linearly depends on $p$.
+
 
 \section{Implementation and Results}
 
