@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  4 AUG 2012 19:03
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  4 AUG 2012 21:46
 entering extended mode
 **test.tex
 
@@ -375,24 +375,22 @@ File: results.png Graphic file (type png)
  <use results.png>
 Package pdftex.def Info: results.png used on input line 227.
 (pdftex.def)             Requested size: 360.0pt x 161.93047pt.
-
-<amc_laplacian.png, id=140, 806.01125pt x 989.6975pt>
+ [8]
+<amc_laplacian.png, id=151, 806.01125pt x 989.6975pt>
 File: amc_laplacian.png Graphic file (type png)
  <use amc_laplacian.png>
 Package pdftex.def Info: amc_laplacian.png used on input line 236.
 (pdftex.def)             Requested size: 360.0pt x 442.03741pt.
 
-[8]
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
-eport\report\test.bbl"
+eport\report\test.bbl" [9 <E:/Media Informatics/courses/second semester/geometr
+y processing lab/smooth report/report/results.png>]
 Underfull \hbox (badness 6995) in paragraph at lines 15--18
 []\OT1/cmr/m/n/10.95 Gael Guen-nebaud, Beno^t Ja-cob, et al.  Eigen v3.
  []
 
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¶ in font cmr10!
-[9 <E:/Media Informatics/courses/second semester/geometry processing lab/smooth
- report/report/results.png>]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
@@ -413,11 +411,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 251.
 Here is how much of TeX's memory you used:
  5864 strings out of 494049
  84165 string characters out of 3148420
- 167360 words of memory out of 3000000
+ 167463 words of memory out of 3000000
  9045 multiletter control sequences out of 15000+200000
  11083 words of font info for 42 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 29i,9n,28p,1473b,418s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,9n,28p,1473b,416s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
 les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
@@ -430,9 +428,9 @@ b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
 s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on test.pdf (11 pages, 1011415 bytes).
+Output written on test.pdf (11 pages, 1012538 bytes).
 PDF statistics:
- 222 PDF objects out of 1000 (max. 8388607)
+ 223 PDF objects out of 1000 (max. 8388607)
  55 named destinations out of 1000 (max. 500000)
  102 words of extra memory for PDF output out of 10000 (max. 10000000)
 
