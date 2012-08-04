@@ -214,7 +214,29 @@ p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}(\vec{H_A}(p^j) - f(p^j)\vec{V_A}(p
 
 \section{Implementation and Results}
 
-use OpenFlipper, Eigen library, Cholmod suite sparse to invert mass matrix
+For the implementation, we use OpenFlipper framework \cite{springerlink:10.1007} which supports Mesh manipulation, Graphical User Interface and many utilities including OpenMesh \cite{Botsch02openmesh-} for Halfedge data structure. We use Eigen library \cite{eigenweb} and CHOLMOD \cite{Davis:2009:DSS:1462173.1462176} for matrix operations.
+
+For testing purpose, we develop an adaptive noise generator which generate noisy model based on local edge length while avoiding folded mesh. We also use color coding with the color range from zero to the maximum difference between a vertex from the true model and a vertex from the smoothed model.
+
+In figure $\ref{fig:amc_pmc}$ we have already seen the effect of applying anisotropic mean curvature flow versus the prescribed mean curvature flow. In this configuration, we use the lumped mass matrix and use a very small time step of 0.000001 with 100 iterations. Note that the time step depends on the edge length, so with the larger model we could expect the larger time step. obviously in this case, PMC flow gives better result.
+
+Figure $\ref{fig:results}$ compares the results of applying the full mass matrix as against the lumped mass matrix. The figure on the left shows PMC flow with lumped mass matrix after 200 iterations. In this case, we use a small time step at 0.00001 and set the feature detector $\lambda = 0.5$. The result still shows some noise on the top of the model but there is some sign of over smoothed on the fading ridge. The figure in the middle shows PMC flow with full mass matrix after 100 iterations. This time we use a larger time step at 0.001 and use a smaller feature detector value $\lambda = 0.3$ making it more sensitive to features. The result shows that, not only can we keep the sharp feature at the fading ridge, we can still get rid of the noise on the top of the model. Unfortunately, we have to invert the mass matrix for each iteration, thereby making it much slower than using the lumped mass matrix. The color coding additionally shows the good convergence to the ground truth.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{results.png}
+\caption{From left to right: PMC flow with lumped mass matrix, PMC flow with full mass matrix, Color coding for PMC flow with full mass matrix.}
+\label{fig:results}
+\end{figure}
+
+Finally, figure $\ref{fig:compare}$
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{amc_laplacian.png}
+\caption{}
+\label{fig:compare}
+\end{figure}
 
 \section{Implicit Integration of the Flow}
 
