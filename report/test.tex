@@ -166,11 +166,20 @@ vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \fra
 
 Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated. Note that the volume of tetrahedrons is negative in front-facing regions (where the normal pointing to the origin). This negative volume cancels out with the volume of back-facing tetrahedrons hence only the volume enclosed by the surface is computed.
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
+  \begin{minipage}[b]{0.45\linewidth}
 \centering
-\includegraphics[width=0.6\textwidth]{volume.png}
+\includegraphics[width=\textwidth]{volume.png}
 \caption{volume of a surface is the sum of volume of oriented tetrahedrons spanned by surface triangles with the origin.}
 \label{fig:volume}
+  \end{minipage}
+  \hspace{0.5cm}
+  \begin{minipage}[b]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{vertex_angles.png}
+\caption{sum of vertex angles $\omega_q$.}
+\label{fig:vertex_angle}
+  \end{minipage}
 \end{figure}
 
 Since $vol \ M_h$ linearly depends on $p$, the gradient of $vol \ M_h$ at $p$ is easily derived from $\ref{eq:volume}$ as follows:
@@ -195,7 +204,9 @@ where $\vec{e}_{H_A}(p)$ is the unit vector field of $\vec{H}^s_A$ and we get $\
 \vec{e}_{H_A}(p) = \dfrac{\vec{H}^s_A(p)}{\parallel \vec{H}^s_A(p) \parallel}
 \end{equation}
 
-where $\omega_q$ is the sum of the vertex angles at $p$ in the triangles adjacent to the edge $\bar{pq}$ as displayed in figure .
+where $\omega_q$ is the sum of the vertex angles at $p$ in the triangles adjacent to the edge $\bar{pq}$ as displayed in figure $\ref{fig:vertex_angle}$.
+
+
 
 \section{Implementation and Results}
 
