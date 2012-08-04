@@ -163,7 +163,7 @@ vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \fra
 \label{eq:volume}
 \end{equation}
 
-Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated. Note that w.l.o.g. the model can always be translated to the origin since translation does not scale the volume and that in an occluded region (where the normal pointing to the origin) the volume of a tetrahedron can be negative hence only the volume enclosed by that region is added to the total volume.
+Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated. Note that the volume of tetrahedrons is negative in front-facing regions (where the normal pointing to the origin). This negative volume cancels out with the volume of back-facing tetrahedrons hence only the volume enclosed by the surface is computed.
 
 \begin{figure}[htb]
 \centering
@@ -172,7 +172,7 @@ Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated.
 \label{fig:volume}
 \end{figure}
 
-Since $vol \ M_h$ linearly depends on $p$, the gradient of $vol \ M_h$ at $p$ is easily derived as follows:
+Since $vol \ M_h$ linearly depends on $p$, the gradient of $vol \ M_h$ at $p$ is easily derived from $\ref{eq:volume}$ as follows:
 
 \begin{equation}
 \bigtriangledown_p vol = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}q \times r
