@@ -1,9 +1,32 @@
-\begin{thebibliography}{Tau95}
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{BSBK02}
+
+\bibitem[BSBK02]{Botsch02openmesh-}
+M.~Botsch, S.~Steinberg, S.~Bischoff, and L.~Kobbelt.
+\newblock Openmesh - a generic and efficient polygon mesh data structure, 2002.
+
+\bibitem[DH09]{Davis:2009:DSS:1462173.1462176}
+Timothy~A. Davis and William~W. Hager.
+\newblock Dynamic supernodes in sparse cholesky update/downdate and triangular
+  solves.
+\newblock {\em ACM Trans. Math. Softw.}, 35(4):27:1--27:23, February 2009.
+
+\bibitem[GJ{\etalchar{+}}10]{eigenweb}
+Ga\"{e}l Guennebaud, Beno\^{i}t Jacob, et~al.
+\newblock Eigen v3.
+\newblock http://eigen.tuxfamily.org, 2010.
 
 \bibitem[HP04]{Hildebrandt04anisotropicfiltering}
 Klaus Hildebrandt and Konrad Polthier.
 \newblock Anisotropic filtering of non-linear surface features.
 \newblock {\em Computer Graphics Forum}, 23:391--400, 2004.
+
+\bibitem[MK12]{springerlink:10.1007}
+Jan Möbius and Leif Kobbelt.
+\newblock Openflipper: An open source geometry processing and rendering
+  framework.
+\newblock In {\em Curves and Surfaces}, volume 6920 of {\em Lecture Notes in
+  Computer Science}, pages 488--500. Springer Berlin / Heidelberg, 2012.
 
 \bibitem[PK02]{PolthierRossmann2002}
 ROSSMANN~W. POLTHIER~K.
