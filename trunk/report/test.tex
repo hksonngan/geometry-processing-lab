@@ -229,12 +229,12 @@ Figure $\ref{fig:results}$ compares the results of applying the full mass matrix
 \label{fig:results}
 \end{figure}
 
-Finally, figure $\ref{fig:compare}$
+Finally, figure $\ref{fig:compare}$ compares the results from the squared Laplacian smoothing operator and the PMC flow. Since the squared Laplacian treats the curvature equally in all directions, it cannot preserve sharp edges. In contrast, the PMC flow can detect features based on the directional measurement of curvature, hence it can avoid smoothing in high curvature regions.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\textwidth]{amc_laplacian.png}
-\caption{}
+\caption{Top left: original model, top right: noisy model, bottom left: squared Laplacian, bottom right: PMC flow.}
 \label{fig:compare}
 \end{figure}
 
@@ -244,7 +244,7 @@ Matrix form: first attempt Ha, second attempt Taylor approximation.
 
 \section{Conclusion and Future Work}
 
-summary the main idea, pose problem to be solved in the future
+This report focused on evaluating the anisotropic filtering methods developed by Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering}. The authors decomposed the vertex-based mean curvature into the sum of the edge-based mean curvature in the neighborhood of the vertex. The edge-based mean curvature measures the directional curvature connected to that edge leading to the definition of the anisotropic mean curvature vector. Besides the anisotropic mean curvature flow, they also proposed the prescribed mean curvature flow to let the surface evolve to a surface with prescribed mean curvature. This report explored the explicit integration scheme for both two kind of flows. The appendix will discuss some attempts to deal with the implicit integration method which is also open for future work.
 
 \bibliographystyle{alpha}	% (uses file "plain.bst")
 \bibliography{bibliography}		% expects file "myrefs.bib"
