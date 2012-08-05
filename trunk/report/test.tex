@@ -251,7 +251,13 @@ This report focused on evaluating the anisotropic filtering methods developed by
 \section{Attempts towards semi-implicit Integration}
 \label{apx:implicit}
 
-The idea of a semi-implicit scheme is to shift part of the calculation to the current time step instead of computing the update based entirely on the previous time step. In order to apply this idea into our problem, we start from the explicit integration scheme in equation $\ref{eq:explicit}$
+The idea of a semi-implicit scheme is to shift part of the calculation to the current time step instead of computing the update based entirely on the previous time step. In order to apply this idea into our problem, we start from the explicit integration scheme in equation $\ref{eq:explicit}$ and replace the anisotropic mean curvature vector $\vec{H}_A(\mathcal{P}^j)$ at time $j$ by the one at time $j+1$, that is $\vec{H}_A(\mathcal{P}^{j+1})$. The problem here is that the function $\vec{H}_A(\mathcal{P}^{j+1})$ is non-linear on the unknown $\mathcal{P}^{j+1}$ hence we have to approximate it by the linear component of its Taylor expansion:
+
+\begin{equation}
+\vec{H}_A(\mathcal{P}^{j+1}) = \vec{H}_A(\mathcal{P}^{j} + \bigtriangleup \mathcal{P}^j) \approx \vec{H}_A(\mathcal{P}^{j}) + (\mathcal{P}^{j+1} - \mathcal{P}^{j}) \cdot \mathcal{J}
+\end{equation}
+
+where $\mathcal{J} = \dfrac{\partial\vec{H}_A(\mathcal{P}^{j})}{\partial\mathcal{P}^{j}}$ is the first derivative of $\vec{H}_A(\mathcal{P}^{j})$ with respect to $\mathcal{P}^{j}$.
 
 \end{appendices}
 
