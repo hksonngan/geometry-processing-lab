@@ -257,7 +257,19 @@ The idea of a semi-implicit scheme is to shift part of the calculation to the cu
 \vec{H}_A(\mathcal{P}^{j+1}) = \vec{H}_A(\mathcal{P}^{j} + \bigtriangleup \mathcal{P}^j) \approx \vec{H}_A(\mathcal{P}^{j}) + (\mathcal{P}^{j+1} - \mathcal{P}^{j}) \cdot \mathcal{J}
 \end{equation}
 
-where $\mathcal{J} = \dfrac{\partial\vec{H}_A(\mathcal{P}^{j})}{\partial\mathcal{P}^{j}}$ is the first derivative of $\vec{H}_A(\mathcal{P}^{j})$ with respect to $\mathcal{P}^{j}$.
+where $\mathcal{J} = \dfrac{\partial\vec{H}_A(\mathcal{P}^{j})}{\partial\mathcal{P}^{j}}$ is the first derivative of $\vec{H}_A(\mathcal{P}^{j})$ with respect to $\mathcal{P}^{j}$. Thus the equation $\ref{eq:explicit}$ becomes:
+
+\begin{equation}
+\mathcal{P}^{j+1} = \mathcal{P}^{j} - sM^{-1}\left( \vec{H}_A(\mathcal{P}^{j}) + (\mathcal{P}^{j+1} - \mathcal{P}^{j}) \cdot \mathcal{J} \right) 
+\end{equation}
+
+After rearranging the terms we obtain:
+
+\begin{equation}
+(M + s\mathcal{J})\mathcal{P}^{j+1} = M\mathcal{P}^{j} - s\vec{H}_A(\mathcal{P}^{j}) + s\mathcal{J}\mathcal{P}^j
+\end{equation}
+
+Now the only problem left is to calculate $\mathcal{J}$.
 
 \end{appendices}
 
