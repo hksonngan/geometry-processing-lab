@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  5 AUG 2012 16:20
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  5 AUG 2012 16:52
 entering extended mode
 **test.tex
 
@@ -401,22 +401,22 @@ Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
 ) [10]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 264.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 276.
  [11] [12 <E:/Media Informatics/courses/second semester/geometry processing lab
 /smooth report/report/amc_laplacian.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 264.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 276.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 264.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 264.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 276.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 276.
 Package rerunfilecheck Info: File `test.out' has not changed.
 (rerunfilecheck)             Checksum: 3611BFBAD6663D75A58607BE5410B5DE;478.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 264.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 276.
  ) 
 Here is how much of TeX's memory you used:
- 5968 strings out of 494049
- 85655 string characters out of 3148420
+ 5970 strings out of 494049
+ 85685 string characters out of 3148420
  169018 words of memory out of 3000000
  9143 multiletter control sequences out of 15000+200000
  11689 words of font info for 44 fonts, out of 3000000 for 9000
@@ -434,9 +434,9 @@ b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
 s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on test.pdf (12 pages, 1016372 bytes).
+Output written on test.pdf (12 pages, 1017756 bytes).
 PDF statistics:
- 234 PDF objects out of 1000 (max. 8388607)
- 58 named destinations out of 1000 (max. 500000)
+ 237 PDF objects out of 1000 (max. 8388607)
+ 60 named destinations out of 1000 (max. 500000)
  110 words of extra memory for PDF output out of 10000 (max. 10000000)
 
