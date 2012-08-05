@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  5 AUG 2012 16:52
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.7.28)  5 AUG 2012 18:23
 entering extended mode
 **test.tex
 
@@ -400,25 +400,31 @@ Missing character: There is no ¶ in font cmr10!
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
-) [10]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 276.
+) [10] <edge_normal.png, id=172, 400.49625pt x 265.99374pt>
+File: edge_normal.png Graphic file (type png)
+
+<use edge_normal.png>
+Package pdftex.def Info: edge_normal.png used on input line 281.
+(pdftex.def)             Requested size: 216.0022pt x 143.45995pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 293.
  [11] [12 <E:/Media Informatics/courses/second semester/geometry processing lab
-/smooth report/report/amc_laplacian.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 276.
+/smooth report/report/amc_laplacian.png>] [13 <E:/Media Informatics/courses/sec
+ond semester/geometry processing lab/smooth report/report/edge_normal.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 293.
 
 ("E:\Media Informatics\courses\second semester\geometry processing lab\smooth r
 eport\report\test.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 276.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 276.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 293.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 293.
 Package rerunfilecheck Info: File `test.out' has not changed.
 (rerunfilecheck)             Checksum: 3611BFBAD6663D75A58607BE5410B5DE;478.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 276.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 293.
  ) 
 Here is how much of TeX's memory you used:
- 5970 strings out of 494049
- 85685 string characters out of 3148420
- 169018 words of memory out of 3000000
- 9143 multiletter control sequences out of 15000+200000
+ 5980 strings out of 494049
+ 85837 string characters out of 3148420
+ 169093 words of memory out of 3000000
+ 9148 multiletter control sequences out of 15000+200000
  11689 words of font info for 44 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  29i,9n,28p,1473b,416s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -434,9 +440,9 @@ b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Prog
 ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
 s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on test.pdf (12 pages, 1017756 bytes).
+Output written on test.pdf (13 pages, 1028135 bytes).
 PDF statistics:
- 237 PDF objects out of 1000 (max. 8388607)
- 60 named destinations out of 1000 (max. 500000)
- 110 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 249 PDF objects out of 1000 (max. 8388607)
+ 64 named destinations out of 1000 (max. 500000)
+ 115 words of extra memory for PDF output out of 10000 (max. 10000000)
 

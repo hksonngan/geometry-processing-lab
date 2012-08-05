@@ -269,7 +269,24 @@ After rearranging the terms we obtain:
 (M + s\mathcal{J})\mathcal{P}^{j+1} = M\mathcal{P}^{j} - s\vec{H}_A(\mathcal{P}^{j}) + s\mathcal{J}\mathcal{P}^j
 \end{equation}
 
-Now the only problem left is to calculate $\mathcal{J}$.
+Now the only problem left is to calculate $\mathcal{J}$. The anisotropic mean curvature vector in equation $\ref{eq:aniso}$ can be written as follows:
+
+\begin{equation}
+\vec{H}_A(p_i) = \sum\limits_{e_j \in N_1(p_i)}\dfrac{w(H_{e_j})}{\parallel N+M \parallel}(N + M)
+\end{equation}
+
+where $N$ and $M$ are normals of faces adjacent to the edge $e_j$ as shown in figure $\ref{fig:normal}$.
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{edge_normal.png}
+\caption{$N$ and $M$ are normals of faces adjacent to $e_j$.}
+\label{fig:normal}
+\end{figure}
+The first derivative of $\vec{H}_A(p_i)$ with respect to some vertex $p_k$ is then given as follows:
+
+\begin{equation}
+\dfrac{\partial \vec{H}_A(p_i)}{\partial p_k} = \sum\limits_{e_j \in N_1(p_i)} \left( \dfrac{\partial \dfrac{w(H_{e_j})}{\parallel N+M \parallel}}{\partial p_k}(N+M) + \dfrac{w(H_{e_j})}{\parallel N+M \parallel} \dfrac{\partial (N+M)}{\partial p_k} \right) 
+\end{equation}
 
 \end{appendices}
 
