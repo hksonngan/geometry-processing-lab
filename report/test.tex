@@ -136,7 +136,7 @@ One disadvantage of the lumped mass matrix is that it gives an unstable solution
 Since the mean curvature vector at a vertex is equivalent to its area gradient, applying the mean curvature flow on the mesh has the same effect as minimizing its surface area. This leads to the problem of surface shrinkage. This issue also occurs in the anisotropic case. Particularly, the anisotropic smoothing slows down the smoothing process in regions with high curvature, causing
 deformations of the surface as shown in figure $\ref{fig:amc_pmc}$.
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{amc_pmc.png}
 \caption{The Anisotropic Mean Curvature flow (left) contracts the interior of the bunny's ears making it to deform. In contrast, the Prescribed Mean Curvature flow (right) converges to a stable surface.}
@@ -224,7 +224,7 @@ In figure $\ref{fig:amc_pmc}$ we have already seen the effect of applying anisot
 
 Figure $\ref{fig:results}$ compares the results of applying the full mass matrix as against the lumped mass matrix. The figure on the left shows PMC flow with lumped mass matrix after 200 iterations. In this case, we use a small time step at 0.00001 and set the feature detector $\lambda = 0.5$. The result still shows some noise on the top of the model but there is some sign of over smoothed on the fading ridge. The figure in the middle shows PMC flow with full mass matrix after 100 iterations. This time we use a larger time step at 0.001 and use a smaller feature detector value $\lambda = 0.3$ making it more sensitive to features. The result shows that, not only can we keep the sharp feature at the fading ridge, we can still get rid of the noise on the top of the model. Unfortunately, we have to invert the mass matrix for each iteration, thereby making it much slower than using the lumped mass matrix. The color coding additionally shows the good convergence to the ground truth.
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{results.png}
 \caption{From left to right: PMC flow with lumped mass matrix, PMC flow with full mass matrix, Color coding for PMC flow with full mass matrix.}
@@ -233,7 +233,7 @@ Figure $\ref{fig:results}$ compares the results of applying the full mass matrix
 
 Finally, figure $\ref{fig:compare}$ compares the results from the squared Laplacian smoothing operator and the PMC flow. Since the squared Laplacian treats the curvature equally in all directions, it cannot preserve sharp edges. In contrast, the PMC flow can detect features based on the directional measurement of curvature, hence it can avoid smoothing in high curvature regions.
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{amc_laplacian.png}
 \caption{Top left: original model, top right: noisy model, bottom left: squared Laplacian, bottom right: PMC flow.}
@@ -276,7 +276,7 @@ Now the only problem left is to calculate $\mathcal{J}$. The anisotropic mean cu
 \end{equation}
 
 where $N$ and $M$ are normals of faces adjacent to the edge $e_j$ as shown in figure $\ref{fig:normal}$.
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{edge_normal.png}
 \caption{$N$ and $M$ are normals of faces adjacent to $e_j$.}
@@ -286,7 +286,28 @@ The first derivative of $\vec{H}_A(p_i)$ with respect to some vertex $p_k$ is th
 
 \begin{equation}
 \dfrac{\partial \vec{H}_A(p_i)}{\partial p_k} = \sum\limits_{e_j \in N_1(p_i)} \left( \dfrac{\partial \dfrac{w(H_{e_j})}{\parallel N+M \parallel}}{\partial p_k}(N+M) + \dfrac{w(H_{e_j})}{\parallel N+M \parallel} \dfrac{\partial (N+M)}{\partial p_k} \right) 
+\label{eq:total_derivative}
 \end{equation}
+
+In this section, we only elaborate on the second term of the equation $\ref{eq:total_derivative}$. Particularly, we will compute the term $\dfrac{\partial (N+M)}{\partial p_k}$ for all $p_k$ influencing the value of $N+M$. The normal $N$ and $M$, see figure $\ref{fig:normal}$, are computed as follows:
+\begin{equation}
+\begin{array}{rcl} 
+N & = & (q_j - p_i) \times (q_{j+1} - p_i) \\ 
+M & = & (q_{j-1} - p_i) \times (q_j - p_i) 
+\end{array} 
+\end{equation}
+Figure $\ref{fig:normal}$ shows that there are 4 vertices influencing $N+M$: $p_i, q_{j-1}, q_j, q_{j+1}$, taking the derivative of $N+M$ with respect to these 4 vertices gives:
+
+\begin{equation}
+\begin{array}{rcl} 
+\dfrac{\partial (N+M)}{\partial p_i} & = & \left[ q_{j+1} - q_{j-1} \right]_{\times} \\ 
+\dfrac{\partial (N+M)}{\partial q_j} & = & \left[ q_{j-1} - q_{j+1} \right]_{\times} \\
+\dfrac{\partial (N+M)}{\partial q_{j-1}} & = & \left[ p_{i} - q_{j} \right]_{\times} \\
+\dfrac{\partial (N+M)}{\partial q_{j+1}} & = & \left[ q_{j} - p_{i} \right]_{\times} \\
+\end{array}
+\end{equation}
+
+where the notation $\left[ a \right]_{\times} $ denotes the skew-symmetric matrix of the vector $a$.
 
 \end{appendices}
 
