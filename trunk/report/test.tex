@@ -267,6 +267,7 @@ After rearranging the terms we obtain:
 
 \begin{equation}
 (M + s\mathcal{J})\mathcal{P}^{j+1} = M\mathcal{P}^{j} - s\vec{H}_A(\mathcal{P}^{j}) + s\mathcal{J}\mathcal{P}^j
+\label{eq:implicit_form}
 \end{equation}
 
 Now the only problem left is to calculate $\mathcal{J}$. The anisotropic mean curvature vector in equation $\ref{eq:aniso}$ can be written as follows:
@@ -307,7 +308,7 @@ Figure $\ref{fig:normal}$ shows that there are 4 vertices influencing $N+M$: $p_
 \end{array}
 \end{equation}
 
-where the notation $\left[ a \right]_{\times} $ denotes the skew-symmetric matrix of the vector $a$.
+where the notation $\left[ a \right]_{\times} $ denotes the skew-symmetric matrix of the vector $a$. This completes the second term of the equation $\ref{eq:total_derivative}$. Similarly, we can continue with the first term and then accumulate the result for each edge $e_j$ into the global $3m \times 3m$ matrix $\mathcal{J}$. Finally, having assembled the matrix $\mathcal{J}$ we have all the ingredients to solve for the implicit equation $\ref{eq:implicit_form}$.
 
 \end{appendices}
 
