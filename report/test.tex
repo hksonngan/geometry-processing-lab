@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{amsmath, amsthm, amssymb}
+\usepackage[toc,page]{appendix}
 
 \author{Phan-Anh Nguyen\\
 		286049} 
@@ -109,6 +110,7 @@ Given the mesh $M_h$ with its vertices $\mathcal{P} = \left\lbrace p_1, ..., p_m
 
 \begin{equation}
 \mathcal{P}^{j+1} = \mathcal{P}^j -sM^{-1}\vec{H_A}(\mathcal{P}^j)
+\label{eq:explicit}
 \end{equation}
 
 where $s \in [0, 1]$ is a damping factor controlling the magnitude of the update vector thereby stabilizing the flow. $M^{-1}$ is the inverse of the mass matrix $M \in \mathcal{R}^{m \times m}$ of the mesh $M^j_h$ at time step $j$. It is used to convert the integrated mean curvature vector into a piecewise linear vector field:
@@ -238,14 +240,19 @@ Finally, figure $\ref{fig:compare}$ compares the results from the squared Laplac
 \label{fig:compare}
 \end{figure}
 
-\section{Implicit Integration of the Flow}
-
-Matrix form: first attempt Ha, second attempt Taylor approximation.
-
 \section{Conclusion and Future Work}
 
-This report focused on evaluating the anisotropic filtering methods developed by Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering}. The authors decomposed the vertex-based mean curvature into the sum of the edge-based mean curvature in the neighborhood of the vertex. The edge-based mean curvature measures the directional curvature connected to that edge leading to the definition of the anisotropic mean curvature vector. Besides the anisotropic mean curvature flow, they also proposed the prescribed mean curvature flow to let the surface evolve to a surface with prescribed mean curvature. This report explored the explicit integration scheme for both two kind of flows. The appendix will discuss some attempts to deal with the implicit integration method which is also open for future work.
+This report focused on evaluating the anisotropic filtering methods developed by Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering}. The authors decomposed the vertex-based mean curvature into the sum of the edge-based mean curvature in the neighborhood of the vertex. The edge-based mean curvature measures the directional curvature connected to that edge leading to the definition of the anisotropic mean curvature vector. Besides the anisotropic mean curvature flow, they also proposed the prescribed mean curvature flow to let the surface evolve to a surface with prescribed mean curvature. This report explored the explicit integration scheme for both two kind of flows. The appendix $\ref{apx:implicit}$ will discuss some attempts to deal with the implicit integration method which is also open for future work.
 
-\bibliographystyle{alpha}	% (uses file "plain.bst")
-\bibliography{bibliography}		% expects file "myrefs.bib"
+\bibliographystyle{alpha}
+\bibliography{bibliography}
+
+\begin{appendices}
+\section{Attempts towards semi-implicit Integration}
+\label{apx:implicit}
+
+The idea of a semi-implicit scheme is to shift part of the calculation to the current time step instead of computing the update based entirely on the previous time step. In order to apply this idea into our problem, we start from the explicit integration scheme in equation $\ref{eq:explicit}$
+
+\end{appendices}
+
 \end{document}
