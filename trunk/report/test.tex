@@ -221,37 +221,37 @@ After rearranging the terms we obtain:
 Now the only problem left is to calculate $\mathcal{J}$. The anisotropic mean curvature vector in Equation $\ref{eq:aniso}$ can be written as follows:
 
 \begin{equation}
-\vec{H}_A(p_i) = \sum\limits_{e_j \in N_1(p_i)}\dfrac{w(H_{e_j})}{\parallel N+M \parallel}(N + M),
+\vec{H}_A(p_i) = \sum\limits_{e_j \in N_1(p_i)}\dfrac{w(H_{e_j})}{\parallel n_1+n_2 \parallel}(n_1 + n_2),
 \end{equation}
-where $N$ and $M$ are normals of faces adjacent to the edge $e_j$ as shown in Figure $\ref{fig:normal}$.
+where $n_1$ and $n_2$ are normals of faces adjacent to the edge $e_j$ as shown in Figure $\ref{fig:normal}$.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{edge_normal.png}
-\caption{$N$ and $M$ are normals of faces adjacent to $e_j$.}
+\caption{$n_1$ and $n_2$ are normals of faces adjacent to $e_j$.}
 \label{fig:normal}
 \end{figure}
 The first derivative of $\vec{H}_A(p_i)$ with respect to some vertex $p_k$ is then given as follows:
 
 \begin{equation}
-\dfrac{\partial \vec{H}_A(p_i)}{\partial p_k} = \sum\limits_{e_j \in N_1(p_i)} \left( \dfrac{\partial \dfrac{w(H_{e_j})}{\parallel N+M \parallel}}{\partial p_k}(N+M) + \dfrac{w(H_{e_j})}{\parallel N+M \parallel} \dfrac{\partial (N+M)}{\partial p_k} \right) .
+\dfrac{\partial \vec{H}_A(p_i)}{\partial p_k} = \sum\limits_{e_j \in N_1(p_i)} \left( \dfrac{\partial \dfrac{w(H_{e_j})}{\parallel n_1+n_2 \parallel}}{\partial p_k}(n_1+n_2) + \dfrac{w(H_{e_j})}{\parallel n_1+n_2 \parallel} \dfrac{\partial (n_1+n_2)}{\partial p_k} \right) .
 \label{eq:total_derivative}
 \end{equation}
 
-In this section, we only elaborate on the second term of the Equation $\ref{eq:total_derivative}$. Particularly, we will compute the term $\dfrac{\partial (N+M)}{\partial p_k}$ for all $p_k$ influencing the value of $N+M$. The normal $N$ and $M$, see Figure $\ref{fig:normal}$, are computed as follows:
+In this section, we only elaborate on the second term of the Equation $\ref{eq:total_derivative}$. Particularly, we will compute the term $\dfrac{\partial (n_1+n_2)}{\partial p_k}$ for all $p_k$ influencing the value of $n_1+n_2$. The normal $n_1$ and $n_2$, see Figure $\ref{fig:normal}$, are computed as follows:
 \begin{equation}
 \begin{array}{rcl} 
-N & = & (q_j - p_i) \times (q_{j+1} - p_i) \\ 
-M & = & (q_{j-1} - p_i) \times (q_j - p_i) 
+n_1 & = & (q_j - p_i) \times (q_{j+1} - p_i) \\ 
+n_2 & = & (q_{j-1} - p_i) \times (q_j - p_i) 
 \end{array} .
 \end{equation}
-Figure $\ref{fig:normal}$ shows that there are 4 vertices influencing $N+M$: $p_i, q_{j-1}, q_j, q_{j+1}$, taking the derivative of $N+M$ with respect to these 4 vertices gives:
+Figure $\ref{fig:normal}$ shows that there are 4 vertices influencing $n_1+n_2$: $p_i, q_{j-1}, q_j, q_{j+1}$, taking the derivative of $n_1+n_2$ with respect to these 4 vertices gives:
 
 \begin{equation}
 \begin{array}{rcl} 
-\dfrac{\partial (N+M)}{\partial p_i} & = & \left[ q_{j+1} - q_{j-1} \right]_{\times} \\ 
-\dfrac{\partial (N+M)}{\partial q_j} & = & \left[ q_{j-1} - q_{j+1} \right]_{\times} \\
-\dfrac{\partial (N+M)}{\partial q_{j-1}} & = & \left[ p_{i} - q_{j} \right]_{\times} \\
-\dfrac{\partial (N+M)}{\partial q_{j+1}} & = & \left[ q_{j} - p_{i} \right]_{\times} \\
+\dfrac{\partial (n_1+n_2)}{\partial p_i} & = & \left[ q_{j+1} - q_{j-1} \right]_{\times} \\ 
+\dfrac{\partial (n_1+n_2)}{\partial q_j} & = & \left[ q_{j-1} - q_{j+1} \right]_{\times} \\
+\dfrac{\partial (n_1+n_2)}{\partial q_{j-1}} & = & \left[ p_{i} - q_{j} \right]_{\times} \\
+\dfrac{\partial (n_1+n_2)}{\partial q_{j+1}} & = & \left[ q_{j} - p_{i} \right]_{\times} \\
 \end{array},
 \end{equation}
 where the notation $\left[ a \right]_{\times} $ denotes the skew-symmetric matrix of the vector $a$. This completes the second term of the Equation $\ref{eq:total_derivative}$. Similarly, we can continue with the first term and then accumulate the result for each edge $e_j$ into the global $3m \times 3m$ matrix $\mathcal{J}$. Finally, having assembled the matrix $\mathcal{J}$ we have all the ingredients to solve for the semi-implicit Equation $\ref{eq:implicit_form}$.
