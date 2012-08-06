@@ -41,7 +41,7 @@ Nowadays, geometric data acquired through imaging or scanning devices has grown 
 A very intuitive smoothing operator one can think of is to move a vertex $p$ to the center of gravity (c.o.g) of its one-ring neighbors $N_1(p)$:
 
 \begin{equation}
-p \leftarrow \frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}q = p - \underbrace{\frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}(p - q)}_{\bigtriangleup p}
+p \leftarrow \frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}q = p - \underbrace{\frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}(p - q)}_{\bigtriangleup p}.
 \label{eq:update}
 \end{equation}
 
@@ -79,11 +79,11 @@ where $N_e = \frac{N_1 + N_2}{\parallel N_1 + N_2 \parallel}$ is the edge normal
 
 It can be shown, in the work of Polthier \cite{PolthierHabilitation}, that the vertex mean curvature vector $\vec{H}(p)$ and the edge mean curvature vector $\vec{H}(e)$ are related by the equation:
 \begin{equation}
-\vec{H}(p) = \frac{1}{2}\sum\limits_{e = (p, q), q \in N_1(p)}\vec{H}(e)
+\vec{H}(p) = \frac{1}{2}\sum\limits_{e = (p, q), q \in N_1(p)}\vec{H}(e).
 \end{equation}
 The anisotropic mean curvature vector $\vec{H}_A$ at a vertex $p$ is then defined as a weighted sum over the contributions $H_e\vec{N}_e$ at the edges incident to a vertex $p$:
 \begin{equation}
-\vec{H_A}(p) = 1/2\sum\limits_{e = (p, q), q \in N_1(p)}{w(H_e)H_e \vec{N}(e)}
+\vec{H_A}(p) = 1/2\sum\limits_{e = (p, q), q \in N_1(p)}{w(H_e)H_e \vec{N}(e)}.
 \label{eq:aniso}
 \end{equation}
 The weight function $w$ is used to put less weight on feature vertices in order to avoid smoothing sharp features:
@@ -92,7 +92,7 @@ w_{\lambda, r}(a) =
 \begin{cases}
 1 & \text{for } |a| \leq \lambda \\
 \dfrac{\lambda^2}{r(\lambda - |a|)^2+\lambda^2} & \text{for } |a| > \lambda
-\end{cases}
+\end{cases}.
 \end{equation}
 The threshold $\lambda$ is used to detect features and the radius $r$ controls the width of the transition between those areas that are smoothed and those that are kept as features. In our implementation, we choose $\lambda = 2 \lambda' \max |e| $ where $\lambda' \in \left[ 0, 1 \right] $ to cover the whole range of the edge mean curvature $H_e$. Following Hildebrandt and Polthier suggestion \cite{Hildebrandt04anisotropicfiltering}, we fix the radius $r$ to 10 to ensure that $w_{\lambda, 10}(2\lambda) < 0.1$.
 
@@ -108,12 +108,12 @@ where $s \in [0, 1]$ is a damping factor controlling the magnitude of the update
 M_{pq} = 
 \begin{cases} \dfrac{1}{6}area(star\ p), & \mbox{if } p=q \\ 
 \dfrac{1}{12}area(star\ e), & \mbox{if there is an edge } e=(p, q) \\
-0, & \mbox{otherwise} \end{cases}
+0, & \mbox{otherwise} \end{cases}.
 \label{eq:mass_matrix}
 \end{equation}
 If we use a diagonalization of $M$ called the lumped mass matrix with diagonal elements $M_{pp} = \frac{1}{3} area(star\ p)$, then the integration step for each vertex $p$ is derived as follows:
 \begin{equation}
-p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}\vec{H_A}(p^j)
+p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}\vec{H_A}(p^j).
 \end{equation}
 One disadvantage of the lumped mass matrix is that it gives an unstable solution. To overcome this problem we have to use a very small time step leading to a slow convergence rate. In contrast, the full mass matrix gives a more stable solution, thereby giving a faster convergence rate with the cost of having to compute the inverted mass matrix.
 
@@ -131,7 +131,7 @@ deformations of the surface as shown in figure $\ref{fig:amc_pmc}$.
 
 To circumvent this problem, Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering} used the so-called prescribed mean curvature flow (PMC) to evolve the surface towards a surface having a prescribed mean curvature. This process includes two steps. In the first step, the surface mean curvature is computed and then this scalar field is smoothed. In the second step, the PMC flow is applied to let the surface evolve towards a surface with this precomputed mean curvature. 
 
-This idea comes from the result \cite{PolthierRossmann2002} given as follows:
+This idea comes from the property of constant mean curvature surfaces defined by Polthier and Rossmann \cite{PolthierRossmann2002}:
 \begin{equation}
 \vec{H_A}(p) = \bigtriangledown_p area = H \bigtriangledown_p vol,
 \label{eq:evolution}
@@ -143,7 +143,7 @@ for all interior vertices $p$ and a constant mean curvature $H$. Hence instead o
 \end{equation}
 where $f$ is a function that prescribes the anisotropic mean curvature and $\vec{V}_A$ is an anisotropic volume gradient. The volume of a surface is the oriented volume enclosed by the cone of the surface over the origin in $\mathcal{R}^3$:
 \begin{equation}
-vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}<p, q \times r>
+vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}<p, q \times r>.
 \label{eq:volume}
 \end{equation}
 Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated. Note that the volume of tetrahedrons is negative in front-facing regions (where the normal pointing to the origin). This negative volume cancels out with the volume of back-facing tetrahedrons hence only the volume enclosed by the surface is computed.
@@ -166,7 +166,7 @@ Figure $\ref{fig:volume}$ illustrates how the volume of a surface is calculated.
 
 Since $vol \ M_h$ linearly depends on $p$, the gradient of $vol \ M_h$ at $p$ is easily derived from $\ref{eq:volume}$ as follows:
 \begin{equation}
-\bigtriangledown_p vol = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}q \times r
+\bigtriangledown_p vol = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}q \times r.
 \end{equation}
 Having defined the volume gradient we can now derive its anisotropic counterpart $\vec{V}_A$ as introduced in equation $\ref{eq:pmc}$. For non-feature vertices $p$, i.e. $\vec{H}_A(p) = \vec{H}(p)$, $\vec{V}_A(p)$ is set to $\bigtriangledown_p(vol)$. For the other vertices $\vec{V}_A(p)$ is defined by:
 \begin{equation}
@@ -175,7 +175,7 @@ Having defined the volume gradient we can now derive its anisotropic counterpart
 where $\vec{e}_{H_A}(p)$ is the unit vector field of $\vec{H}^s_A$ and we get $\vec{H}^s_A$ by performing a simple smoothing step on $\vec{H}_A$:
 
 \begin{equation}
-\vec{H}^s_A(p) = \frac{1}{2}\left( \vec{H}_A(p) + \dfrac{1}{\sum\limits_{q \in N_1(p)} \omega_q}\sum\limits_{q \in N_1(p)}\omega_q\vec{H}_A(q) \right) 
+\vec{H}^s_A(p) = \frac{1}{2}\left( \vec{H}_A(p) + \dfrac{1}{\sum\limits_{q \in N_1(p)} \omega_q}\sum\limits_{q \in N_1(p)}\omega_q\vec{H}_A(q) \right) ,
 \end{equation}
 
 \begin{equation}
@@ -186,7 +186,7 @@ where $\omega_q$ is the sum of the vertex angles at $p$ in the triangles adjacen
 The function $f$ is computed according to the formula $f = M^{-1}H_A$. To avoid computing the inverse of the mass matrix in each step Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering} approximate $f$ by $H_A(p)/\parallel \vec{V}_A(p) \parallel$. After that the scalar field prescribed by $f$ at each vertex $p$ is smoothed by averaging over neighbor vertices of $p$. To preserve sharp edges, each feature vertex $p$ is only averaged over those neighbor vertices that are feature vertices as well. Finally the update formula for each vertex $p$ utilizing the lumped mass matrix is given in the following:
 
 \begin{equation}
-p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}(\vec{H_A}(p^j) - f(p^j)\vec{V_A}(p^j))
+p^{j+1} = p^{j} - \dfrac{3s}{area(star\ p^j)}(\vec{H_A}(p^j) - f(p^j)\vec{V_A}(p^j)).
 \end{equation}
 
 \section{Implementation and Results}
@@ -217,7 +217,10 @@ Finally, figure $\ref{fig:compare}$ compares the results from the squared Laplac
 
 \section{Conclusion and Future Work}
 
-This report focused on evaluating the anisotropic filtering methods developed by Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering}. The authors decomposed the vertex-based mean curvature into the sum of the edge-based mean curvature in the neighborhood of the vertex. The edge-based mean curvature measures the directional curvature connected to that edge leading to the definition of the anisotropic mean curvature vector. Besides the anisotropic mean curvature flow, they also proposed the prescribed mean curvature flow to let the surface evolve to a surface with prescribed mean curvature. This report explored the explicit integration scheme for both two kind of flows. The appendix $\ref{apx:implicit}$ will discuss some attempts to deal with the implicit integration method which is also open for future work.
+This report focused on evaluating the anisotropic filtering methods developed by Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering}. The authors decomposed the vertex-based mean curvature into the sum of the edge-based mean curvature in the neighborhood of the vertex. The edge-based mean curvature measures the directional curvature connected to that edge leading to the definition of the anisotropic mean curvature vector. Besides the anisotropic mean curvature flow, they also proposed the prescribed mean curvature flow to let the surface evolve to a surface with prescribed mean curvature. This report explored the explicit integration scheme for both two kinds of flows. When it comes to the semi-implicit scheme, unfortunately we were not able to get a stable version working during the course of the lab. 
+The source of this problem might possibly come from our coarse approximation of the mean curvature vector $\vec{H}_A$. More details can be found in the Appendix $\ref{apx:implicit}$.
+%Possibly the problem has to do with xxx ...  details found in the Appendix A
+%Appendix $\ref{apx:implicit}$ will discuss some attempts to deal with the implicit integration method which is also open for future work.
 
 \bibliographystyle{alpha}
 \bibliography{bibliography}
@@ -234,11 +237,11 @@ The idea of a semi-implicit scheme is to shift part of the calculation to the cu
 where $\mathcal{J} = \dfrac{\partial\vec{H}_A(\mathcal{P}^{j})}{\partial\mathcal{P}^{j}}$ is the first derivative of $\vec{H}_A(\mathcal{P}^{j})$ with respect to $\mathcal{P}^{j}$. Thus the equation $\ref{eq:explicit}$ becomes:
 
 \begin{equation}
-\mathcal{P}^{j+1} = \mathcal{P}^{j} - sM^{-1}\left( \vec{H}_A(\mathcal{P}^{j}) + (\mathcal{P}^{j+1} - \mathcal{P}^{j}) \cdot \mathcal{J} \right) 
+\mathcal{P}^{j+1} = \mathcal{P}^{j} - sM^{-1}\left( \vec{H}_A(\mathcal{P}^{j}) + (\mathcal{P}^{j+1} - \mathcal{P}^{j}) \cdot \mathcal{J} \right) .
 \end{equation}
 After rearranging the terms we obtain:
 \begin{equation}
-(M + s\mathcal{J})\mathcal{P}^{j+1} = M\mathcal{P}^{j} - s\vec{H}_A(\mathcal{P}^{j}) + s\mathcal{J}\mathcal{P}^j
+(M + s\mathcal{J})\mathcal{P}^{j+1} = M\mathcal{P}^{j} - s\vec{H}_A(\mathcal{P}^{j}) + s\mathcal{J}\mathcal{P}^j .
 \label{eq:implicit_form}
 \end{equation}
 
@@ -257,7 +260,7 @@ where $N$ and $M$ are normals of faces adjacent to the edge $e_j$ as shown in fi
 The first derivative of $\vec{H}_A(p_i)$ with respect to some vertex $p_k$ is then given as follows:
 
 \begin{equation}
-\dfrac{\partial \vec{H}_A(p_i)}{\partial p_k} = \sum\limits_{e_j \in N_1(p_i)} \left( \dfrac{\partial \dfrac{w(H_{e_j})}{\parallel N+M \parallel}}{\partial p_k}(N+M) + \dfrac{w(H_{e_j})}{\parallel N+M \parallel} \dfrac{\partial (N+M)}{\partial p_k} \right) 
+\dfrac{\partial \vec{H}_A(p_i)}{\partial p_k} = \sum\limits_{e_j \in N_1(p_i)} \left( \dfrac{\partial \dfrac{w(H_{e_j})}{\parallel N+M \parallel}}{\partial p_k}(N+M) + \dfrac{w(H_{e_j})}{\parallel N+M \parallel} \dfrac{\partial (N+M)}{\partial p_k} \right) .
 \label{eq:total_derivative}
 \end{equation}
 
@@ -266,7 +269,7 @@ In this section, we only elaborate on the second term of the equation $\ref{eq:t
 \begin{array}{rcl} 
 N & = & (q_j - p_i) \times (q_{j+1} - p_i) \\ 
 M & = & (q_{j-1} - p_i) \times (q_j - p_i) 
-\end{array} 
+\end{array} .
 \end{equation}
 Figure $\ref{fig:normal}$ shows that there are 4 vertices influencing $N+M$: $p_i, q_{j-1}, q_j, q_{j+1}$, taking the derivative of $N+M$ with respect to these 4 vertices gives:
 
@@ -278,7 +281,9 @@ Figure $\ref{fig:normal}$ shows that there are 4 vertices influencing $N+M$: $p_
 \dfrac{\partial (N+M)}{\partial q_{j+1}} & = & \left[ q_{j} - p_{i} \right]_{\times} \\
 \end{array},
 \end{equation}
-where the notation $\left[ a \right]_{\times} $ denotes the skew-symmetric matrix of the vector $a$. This completes the second term of the equation $\ref{eq:total_derivative}$. Similarly, we can continue with the first term and then accumulate the result for each edge $e_j$ into the global $3m \times 3m$ matrix $\mathcal{J}$. Finally, having assembled the matrix $\mathcal{J}$ we have all the ingredients to solve for the implicit equation $\ref{eq:implicit_form}$.
+where the notation $\left[ a \right]_{\times} $ denotes the skew-symmetric matrix of the vector $a$. This completes the second term of the equation $\ref{eq:total_derivative}$. Similarly, we can continue with the first term and then accumulate the result for each edge $e_j$ into the global $3m \times 3m$ matrix $\mathcal{J}$. Finally, having assembled the matrix $\mathcal{J}$ we have all the ingredients to solve for the semi-implicit equation $\ref{eq:implicit_form}$.
+
+In our experiments, we ignored the first term in equation $\ref{eq:total_derivative}$ during the assembly of the semi-implicit equation $\ref{eq:implicit_form}$. This problem might possibly be the source of the failure in applying the semi-implicit integration scheme and will need further investigation in future work.
 
 \end{appendices}
 
