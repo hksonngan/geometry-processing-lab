@@ -50,4 +50,11 @@ Gabriel Taubin.
   graphics and interactive techniques}, SIGGRAPH '95, pages 351--358, New York,
   NY, USA, 1995. ACM.
 
+\bibitem[War08]{Wardetzky08Cotan}
+Max Wardetzky.
+\newblock Convergence of the cotangent formula: {A}n overview.
+\newblock In Alexander~I. Bobenko, John~M. Sullivan, Peter Schr\"oder, and
+  G\"unter Ziegler, editors, {\em Discrete Differential Geometry}. Birkh\"auser
+  Basel, 2008.
+
 \end{thebibliography}
