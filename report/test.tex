@@ -23,6 +23,20 @@ Nowadays, geometric data acquired through imaging or scanning devices has grown 
 
 \section{Smoothing Principle}
 
+A very intuitive smoothing operator one can think of is to move a vertex $p$ to the center of gravity (c.o.g) of its one-ring neighbors $N_1(p)$:
+
+\begin{equation}
+p \leftarrow \frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}q = p - \underbrace{\frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}(p - q)}_{\bigtriangleup p}.
+\label{eq:update}
+\end{equation}
+
+Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in which the old vertex is moved by an amount of the update vector $\bigtriangleup p$ to the new position. The update vector $\bigtriangleup p$ can be generalized to have arbitrary weights over the 1-ring $\sum\limits_{q \in N_1(p)}w_q(p - q)$ other than uniform weights as in the Equation $\ref{eq:update}$. In fact, we can choose the weights such that the update vector points in the direction normal to the mesh surface. Such an update formula was first proposed by Pinkall and Polthier \cite{Pinkall93computingdiscrete} known as cotangent weights:
+\begin{equation}
+\bigtriangledown_p\ area = \vec{H}(p) = 1/2\sum\limits_{q \in N_1(p)}{(cot\alpha_{q} + cot\beta_{q})(p-q)},
+\label{eq:cotangent}
+\end{equation}
+where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gradient of the area functional $\bigtriangledown_p\ area$ at that vertex. Figure $\ref{fig:umbrella::a}$ illustrates the update vector pointing in the opposite direction  of the mean curvature vector. Figure $\ref{fig:umbrella::b}$ shows the enumeration scheme for 1-Ring angles used in the cotangent formula.
+
 \begin{figure}[htbp]
     \centering
     \subfigure[]
@@ -38,20 +52,6 @@ Nowadays, geometric data acquired through imaging or scanning devices has grown 
     \caption{(a) Smooth a vertex p by moving it in the direction of the mean curvature vector $\vec{H}(p)$. (b) Enumeration scheme for 1-Ring cotangent weights.}
     \label{fig:umbrella}
 \end{figure}
-
-A very intuitive smoothing operator one can think of is to move a vertex $p$ to the center of gravity (c.o.g) of its one-ring neighbors $N_1(p)$:
-
-\begin{equation}
-p \leftarrow \frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}q = p - \underbrace{\frac{1}{\mid N_1(p) \mid}\sum\limits_{q \in N_1(p)}(p - q)}_{\bigtriangleup p}.
-\label{eq:update}
-\end{equation}
-
-Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in which the old vertex is moved by an amount of the update vector $\bigtriangleup p$ to the new position. The update vector $\bigtriangleup p$ can be generalized to have arbitrary weights over the 1-ring $\sum\limits_{q \in N_1(p)}w_q(p - q)$ other than uniform weights as in the Equation $\ref{eq:update}$. In fact, we can choose the weights such that the update vector points in the direction normal to the mesh surface. Such an update formula was first proposed by Pinkall and Polthier \cite{Pinkall93computingdiscrete} known as cotangent weights:
-\begin{equation}
-\bigtriangledown_p\ area = \vec{H}(p) = 1/2\sum\limits_{q \in N_1(p)}{(cot\alpha_{q} + cot\beta_{q})(p-q)},
-\label{eq:cotangent}
-\end{equation}
-where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gradient of the area functional $\bigtriangledown_p\ area$ at that vertex. Figure $\ref{fig:umbrella::a}$ illustrates the update vector pointing in the opposite direction  of the mean curvature vector. Figure $\ref{fig:umbrella::b}$ shows the enumeration scheme for 1-Ring angles used in the cotangent formula.
 
 \section{Anisotropic Mean Curvature}
 
@@ -161,7 +161,7 @@ Figure $\ref{fig:volume::a}$ illustrates how the volume of a surface is calculat
         \includegraphics[width=0.35\textwidth]{angles.pdf}
         \label{fig:volume::b}
     }
-\caption{(a) Volume of a surface is the sum of volume of oriented tetrahedrons spanned by surface triangles with the origin. (b) sum of vertex angles $\omega_q$.}
+\caption{(a) Volume of a surface is the sum of volume of oriented tetrahedrons spanned by surface triangles with the origin. (b) Sum of vertex angles $\omega_q$.}
 \label{fig:volume}
 \end{figure}
 
