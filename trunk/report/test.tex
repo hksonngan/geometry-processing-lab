@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage[toc,page]{appendix}
+\usepackage{subfigure}
 
 \author{Phan-Anh Nguyen\\
 		286049} 
@@ -24,8 +25,17 @@ Nowadays, geometric data acquired through imaging or scanning devices has grown 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{fig12.png}
-    \caption{(A) Smooth a vertex p by moving it in the direction of the mean curvature vector $\vec{H}(p)$. (B) Cotangent weights.}
+    \subfigure[]
+    {
+        \includegraphics[width=0.45\textwidth]{umbrella.pdf}
+        \label{fig:umbrella::a}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.45\textwidth]{cotangent.pdf}
+        \label{fig:umbrella::b}
+    }
+    \caption{(a) Smooth a vertex p by moving it in the direction of the mean curvature vector $\vec{H}(p)$. (b) Enumeration scheme for 1-Ring cotangent weights.}
     \label{fig:umbrella}
 \end{figure}
 
@@ -41,7 +51,7 @@ Equation $\ref{eq:update}$ reveals the update form of the smoothing operator in 
 \bigtriangledown_p\ area = \vec{H}(p) = 1/2\sum\limits_{q \in N_1(p)}{(cot\alpha_{q} + cot\beta_{q})(p-q)},
 \label{eq:cotangent}
 \end{equation}
-where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gradient of the area functional $\bigtriangledown_p\ area$ at that vertex. Figure $\ref{fig:umbrella}$ (A) illustrates the update vector pointing in the opposite direction  of the mean curvature vector. Figure $\ref{fig:umbrella}$ (B) shows the enumeration scheme for 1-Ring angles used in the cotangent formula.
+where $\vec{H}(p)$ is the mean curvature vector at a vertex $p$ and equal the gradient of the area functional $\bigtriangledown_p\ area$ at that vertex. Figure $\ref{fig:umbrella::a}$ illustrates the update vector pointing in the opposite direction  of the mean curvature vector. Figure $\ref{fig:umbrella::b}$ shows the enumeration scheme for 1-Ring angles used in the cotangent formula.
 
 \section{Anisotropic Mean Curvature}
 
@@ -50,12 +60,21 @@ The first step towards deriving an anisotropic mean curvature formula is to expr
   \vec{H}(e) = H_e \vec{N}_e,
   \label{eq:edgeMC}
 \end{equation}
-where $N_e = \frac{N_1 + N_2}{\parallel N_1 + N_2 \parallel}$ is the edge normal vector as shown in Figure $\ref{fig:curvature}$ (A) and $H_e = 2\mid e \mid \cos \frac{\theta_e}{2}$ is the edge mean curvature which depends on the dihedral angle $\theta_e$ as illustrated in Figure $\ref{fig:curvature}$ (B). Note that the smaller the dihedral angle, the sharper the edge thus resulting in the higher the mean curvature $H_e$. Therefore, the term $H_e$ can be seen as the measurement of the directional curvature of the surface in the direction orthogonal to the edge.
+where $N_e = \frac{N_1 + N_2}{\parallel N_1 + N_2 \parallel}$ is the edge normal vector as shown in Figure $\ref{fig:curvature::a}$ and $H_e = 2\mid e \mid \cos \frac{\theta_e}{2}$ is the edge mean curvature which depends on the dihedral angle $\theta_e$ as illustrated in Figure $\ref{fig:curvature::b}$. Note that the smaller the dihedral angle, the sharper the edge thus resulting in the higher mean curvature $H_e$. Therefore, the term $H_e$ can be seen as the measurement of the directional curvature of the surface in the direction orthogonal to the edge.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\textwidth]{fig34.png}
-	\caption{(A) Edge normal vector $N_e$. (B) The dihedral angle $\theta_e$ measures the angle between two planes defined by the normal vectors $n_1$ and $n_2$.}
+    \subfigure[]
+    {
+        \includegraphics[width=0.45\textwidth]{edge_normal.pdf}
+        \label{fig:curvature::a}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.45\textwidth]{dihedral.pdf}
+        \label{fig:curvature::b}
+    }
+	\caption{(a) Edge normal vector $N_e$. (b) The dihedral angle $\theta_e$ measures the angle between two planes defined by the normal vectors $N_1$ and $N_2$.}
 	\label{fig:curvature}
 \end{figure}
 
@@ -128,12 +147,21 @@ where $f$ is a function that prescribes the anisotropic mean curvature and $\vec
 vol \ M_h = \sum\limits_{T=(p, q, r) \in M_h}vol(tetrahedron(o, p, q, r)) = \frac{1}{6}\sum\limits_{T=(p, q, r) \in M_h}<p, q \times r>.
 \label{eq:volume}
 \end{equation}
-Figure $\ref{fig:volume}$ (A) illustrates how the volume of a surface is calculated. Note that the volume of tetrahedrons is negative in front-facing regions (where the normal pointing to the origin). This negative volume cancels out with the volume of back-facing tetrahedrons hence only the volume enclosed by the surface is computed.
+Figure $\ref{fig:volume::a}$ illustrates how the volume of a surface is calculated. Note that the volume of tetrahedrons is negative in front-facing regions (where the normal pointing to the origin). This negative volume cancels out with the volume of back-facing tetrahedrons hence only the volume enclosed by the surface is computed.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{fig67.png}
-\caption{(A) Volume of a surface is the sum of volume of oriented tetrahedrons spanned by surface triangles with the origin. (B) sum of vertex angles $\omega_q$.}
+    \subfigure[]
+    {
+        \includegraphics[width=0.6\textwidth]{volume.pdf}
+        \label{fig:volume::a}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.35\textwidth]{angles.pdf}
+        \label{fig:volume::b}
+    }
+\caption{(a) Volume of a surface is the sum of volume of oriented tetrahedrons spanned by surface triangles with the origin. (b) sum of vertex angles $\omega_q$.}
 \label{fig:volume}
 \end{figure}
 
@@ -154,7 +182,7 @@ where $\vec{e}_{H_A}(p)$ is the unit vector field of $\vec{H}^s_A$ and we get $\
 \begin{equation}
 \vec{e}_{H_A}(p) = \dfrac{\vec{H}^s_A(p)}{\parallel \vec{H}^s_A(p) \parallel},
 \end{equation}
-where $\omega_q$ is the sum of the vertex angles at $p$ in the triangles adjacent to the edge $\bar{pq}$ as displayed in Figure $\ref{fig:volume}$ (B).
+where $\omega_q$ is the sum of the vertex angles at $p$ in the triangles adjacent to the edge $\bar{pq}$ as displayed in Figure $\ref{fig:volume::b}$.
 
 The function $f$ is computed according to the formula $f = M^{-1}H_A$. To avoid computing the inverse of the mass matrix in each step Hildebrandt and Polthier \cite{Hildebrandt04anisotropicfiltering} approximate $f$ by $H_A(p)/\parallel \vec{V}_A(p) \parallel$. After that the scalar field prescribed by $f$ at each vertex $p$ is smoothed by averaging over neighbor vertices of $p$. To preserve sharp edges, each feature vertex $p$ is only averaged over those neighbor vertices that are feature vertices as well. Finally the update formula for each vertex $p$ utilizing the lumped mass matrix is given in the following:
 
