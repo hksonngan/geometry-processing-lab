@@ -2,6 +2,9 @@
 % Dokument-Einstellungen
 \documentclass{SMBV12}
 
+\setcounter{tocdepth}{5} %to make it appears in TOC
+\setcounter{secnumdepth}{5} %to make it numbered
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
 % Hier beginnt das eigentliche Dokument
@@ -50,7 +53,7 @@ What are image features? How can we describe/represent them?
 
 \subsubsection{Canny Edge Detector}
 
-\subsubsection{Contour Detector}
+\subsubsection{gPb Contour Detector}
 
 \cite{maire2008using}
 \cite{martin2004learning}
@@ -64,21 +67,19 @@ What are image features? How can we describe/represent them?
 
 pros and cons. Which descriptor is suitable for a particular case.
 
-\section{Supervised versus Unsupervised Approaches}
+\section{Supervised versus Unsupervised Segmentation Approaches}
 
 
 
 \subsection{Supervised Approaches}
 
+\subsubsection{Region Classification}
 
+\paragraph{Bag of Visual Words}
 
-\subsubsection{Bag of Visual Words}
+\paragraph{Support Vector Machine}
 
-
-
-\subsubsection{Support Vector Machine}
-
-\subsubsection{Structured SVM learning framework}
+\paragraph{Structured SVM learning framework}
 
 \cite{tsochantaridis2006large}
 
@@ -104,7 +105,7 @@ Circulation and Circle Embedding
 
 \subsection{Markov Random Field}
 
-\section{Graph Optimization Algorithms}
+\section{Graph Cut Algorithms}
 
 comparison of cut algorithms, could them be used interchangeably in different situations.
 
@@ -131,7 +132,7 @@ comparison of cut algorithms, could them be used interchangeably in different si
 
 \subsubsection{Alpha-Expansion and Fusion Move}
 
-\section{Typical Applications}
+\section{Applications}
 
 System pipeline, result: accuracy, efficiency, benefits.
 
