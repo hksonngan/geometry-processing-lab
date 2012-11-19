@@ -47,12 +47,11 @@ Low level image features are essential building blocks for high level image proc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{SURF Feature}
 \label{sec:surf}
+Since SURF \cite{bay2006surf} is a point-based feature, we need a method to detect interest points in the input image. The choice of the detector varies depending on the application need. In an image registration application, it is required that the same interest points be detected in two different images of the same scene under different viewing conditions. In this case, the good detector would pick up corner points. In the case of image segmentation, it would be a wise choice to select points on contours to be interest points.
 
-Since SURF is a point-based feature, we need a method to detect interest points in the input image. The choice of the detector varies depending on the application need. In an image registration application, it is required that the same interest points be detected in two different images of the same scene under different viewing conditions. In this case, the good detector would pick up corner points. In the case of image segmentation, it would be a wise choice to select points on contours to be interest points.
+Given an interest point in the input image, the SURF descriptor is obtained by extracting distinctive information around its neighbourhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it has to be computed very fast. In order to be invariant to rotation, we first find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
 
-Given an interest point in the input image, the SURF descriptor will extract distinctive information around its neighbourhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it has to be computed very fast. In order to be invariant to rotation, we first have to find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
 
-\cite{bay2006surf}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Edges and Contours}
