@@ -41,15 +41,16 @@ Introduction is written at last.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Image Feature Overview}
 %What are image features? How can we describe/represent them?
-Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation etc. In general, image features capture important properties over image regions in various forms that can be used by high level applications. Features often come in two form: point-based features describing salient points in an image and shape-based features containing geometric information such as contours. In this section we present the methods to detect and represent these two kind of features. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art point feature and Section $\ref{sec:shape_feature}$ shows the methods to extract shape-based features.
+Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation etc. In general, image features capture important properties over image regions in various forms that can be used by high level applications. Features often come in two form: point-based features describing salient points in an image and shape-based features containing geometric information such as contours. In this section we present the methods to detect and represent these two kind of features. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art point-based feature called SURF (Speeded Up Robust Features) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ shows the methods to extract shape-based features.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{SURF Feature}
 \label{sec:surf}
 
-Given an interest point in an image.
-SURF descriptor is 
+Since SURF is a point-based feature, we need a method to detect interest points in the input image. The choice of the detector varies depending on the application need. In an image registration application, it is required that the same interest points be detected in two different images of the same scene under different viewing conditions. In this case, the good detector would pick up corner points. In the case of image segmentation, it would be a wise choice to select points on contours to be interest points.
+
+Given an interest point in the input image, the SURF descriptor will extract distinctive information around its neighbourhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it has to be computed very fast. In order to be invariant to rotation, we first have to find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
 
 \cite{bay2006surf}
 
