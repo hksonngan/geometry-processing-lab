@@ -70,9 +70,12 @@ To find the dominant orientation, the Haar wavelet responses in $x$ and $y$ dire
         \includegraphics[width=0.5\textwidth]{images/surf.png}
         \label{fig:surf}
     }
-    \caption{(a) . .}
+    \caption{(a) Haar wavelet filters for the x (left) and y (right) components. The dark parts are weighted -1 and the light parts +1. (b) Orientation assignment: a sliding orientation window of size $\pi/3$ detects the dominant orientation. (c) The SURF descriptor: an oriented quadratic grid with $4 \times 4$ square cells is laid over the interest point (left). For each cell, the wavelet responses are computed from $5 \times 5$ samples (for illustrative
+    purposes, only $2 \times 2$ sub-divisions are shown here). In each cell, the 4 elements $\sum d_x$, $\sum \left| d_x \right|$, $\sum d_y$, $\sum \left| d_y \right| $ contribute to the SURF feature vector. } 
     %\label{fig:surf}
 \end{figure}
+
+To extract the SURF descriptor, we construct a window of size $20s$ centred at the interest point and oriented in the dominant orientation as illustrated in Figure $\ref{fig:surf}$. The window is then subdivided into a regular $4 \times 4$ grid cells, each being a $5 \times 5$ pixel patch. For each cell, the Gaussian weighted ($\sigma = 3.3s$) Haar wavelet responses are summed up to form a first set of entries in the feature vector. The sum of the absolute values of the responses, $\left| d_x \right| $ and $\left| d_y \right| $ are also extracted to capture information about the polarity of the intensity changes. Therefore, each cell has a 4D descriptor vector for its underlying intensity structure $\left( \sum d_x, \sum d_y, \sum \left| d_x \right| , \sum \left| d_y \right|  \right)$. Concatenating this for all $4 \times 4$ cells results in a descriptor vector of length 64. Finally the descriptor vector is normalized to make it invariant to contrast.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Edges and Contours}
