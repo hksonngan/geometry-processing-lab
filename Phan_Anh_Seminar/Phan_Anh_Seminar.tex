@@ -47,11 +47,32 @@ Low level image features are essential building blocks for high level image proc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{SURF Feature}
 \label{sec:surf}
-Since SURF \cite{bay2006surf} is a point-based feature, we need a method to detect interest points in the input image. The choice of the detector varies depending on the application need. In an image registration application, it is required that the same interest points be detected in two different images of the same scene under different viewing conditions. In this case, the good detector would pick up corner points. In the case of image segmentation, it would be a wise choice to select points on contours to be interest points.
+Since SURF \cite{bay2006surf} is a point-based feature, we need a method to detect interest points in the input image. The choice of the detector varies depending on the application need. In an image registration application, it is required that the same interest points be detected in two different images of the same scene under different viewing conditions. In this case, the good detector would pick up corner points. In the case of image segmentation, it would be a wise choice to select points on contours to be interest points. In the original SURF paper, Bay et al. suggested using approximate Hessian detector to search in scale-space domain for points having strong derivatives in two orthogonal directions as interest points (often located at corners and strongly textured areas).
 
-Given an interest point in the input image, the SURF descriptor is obtained by extracting distinctive information around its neighbourhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it has to be computed very fast. In order to be invariant to rotation, we first find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
+Given an interest point in the input image, the SURF descriptor is obtained by extracting distinctive information around its neighbourhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it has to be computed very fast. Scale invariance is achieved by adopting the scale at which the Hessian detector attains maximal response. In order to be invariant to rotation, we first find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
 
+To find the dominant orientation, the Haar wavelet responses in $x$ and $y$ directions, ($d_x$, $d_y$), are calculated within a circular neighbourhood of radius $6s$ around the interest point and weighted with a Gaussian ($\sigma = 2s$), where $s$ is the scale chosen above. Figure $\ref{fig:haar_wavelet}$ shows the structure of the Haar wavelet filters. The wavelet responses ($d_x, d_y$) are then represented in a vector space and the sum of all vectors within a sliding orientation window of size $\pi/3$ are calculated, see Figure $\ref{fig:orientation_window}$. The dominant orientation is finally assigned to the sum vector having the maximal length.
 
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+        \includegraphics[width=0.15\textwidth]{images/haar_wavelet.png}
+        \label{fig:haar_wavelet}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.25\textwidth]{images/orientation_window.png}
+        \label{fig:orientation_window}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.5\textwidth]{images/surf.png}
+        \label{fig:surf}
+    }
+    \caption{(a) . .}
+    %\label{fig:surf}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Edges and Contours}
@@ -165,6 +186,7 @@ System pipeline, result: accuracy, efficiency, benefits.
 
 \section{Conclusion}
 
+lack of information: SURF at Canny points: what scale?
 some criticisms e.g. time consuming, dataset used. Recommendation: what to use, why?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
