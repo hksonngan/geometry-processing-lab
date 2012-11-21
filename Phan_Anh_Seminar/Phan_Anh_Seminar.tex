@@ -41,7 +41,7 @@ Introduction is written at last.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Image Feature Overview}
 %What are image features? How can we describe/represent them?
-Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation etc. In general, image features capture important properties over image regions in various forms that can be used by high level applications. Features often come in two form: point-based features describing salient points in an image and shape-based features containing geometric information such as contours. In this section we present the methods to detect and represent these two kind of features. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art point-based feature called SURF (Speeded Up Robust Features) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ shows the methods to extract shape-based features.
+Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation etc. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. Features often come in two form: point-based features describing salient points in an image and shape-based features containing geometric information such as contours. In this section we present the methods to detect and represent these two kind of features. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art point-based feature called SURF (Speeded Up Robust Features) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ shows the methods to extract shape-based features.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,6 +90,9 @@ To extract the SURF descriptor, we construct a window of size $20s$ centred at t
 
 Pb is the supervised learning approach based on local features.
 Split Pb into 2 sections: one for features the second for supervised learning.
+
+Explain Hillbert transformation.
+http://en.wikipedia.org/wiki/Hilbert_transform
 
 \subsubsection{Measuring Contour Saliency}
 
