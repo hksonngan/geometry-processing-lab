@@ -41,7 +41,7 @@ Introduction is written at last.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Image Feature Overview}
 %What are image features? How can we describe/represent them?
-Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation etc. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. Normally, raw features are extracted at each pixel by applying various filters. Each filter response contributes one dimension in feature vector space. The shape and size of filters reflect local structure around each pixel. Raw features at each pixel can be collected to form region descriptors which can be used to represent shapes, contours etc. In this section we present the methods to extract raw features and the various ways of constructing region descriptors. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art feature named SURF (Speeded Up Robust Features) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ shows the methods to extract contours.
+Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation etc. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. Normally, raw features are extracted at each pixel by applying various filters. Each filter response contributes one dimension in feature vector space. The shape and size of filters reflect local structure around each pixel. Raw features at each pixel can be collected to form region descriptors which can be used to represent shapes, contours etc. In this section we present the methods to extract raw features and the various ways of constructing region descriptors. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art feature named SURF (Speeded Up Robust Features) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ explains the gPb (globalized probability of boundary) contour extractor \cite{maire2008using}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,15 +78,17 @@ To find the dominant orientation, the Haar wavelet responses in $x$ and $y$ dire
 To extract the SURF descriptor, we construct a window of size $20s$ centred at the interest point and oriented in the dominant orientation as illustrated in Figure $\ref{fig:surf}$. The window is then subdivided into a regular $4 \times 4$ grid cells, each being a $5 \times 5$ pixel patch. For each cell, the Gaussian weighted ($\sigma = 3.3s$) Haar wavelet responses are summed up to form a first set of entries in the feature vector. The sum of the absolute values of the responses, $\left| d_x \right| $ and $\left| d_y \right| $ are also extracted to capture information about the polarity of the intensity changes. Therefore, each cell has a 4D descriptor vector for its underlying intensity structure $\left( \sum d_x, \sum d_y, \sum \left| d_x \right| , \sum \left| d_y \right|  \right)$. Concatenating this for all $4 \times 4$ cells results in a descriptor vector of length 64. Finally the descriptor vector is normalized to make it invariant to contrast.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Edges and Contours}
+\subsection{gPb Contour Extractor}
 \label{sec:shape_feature}
 
+introduction to gPb
 
-
-\subsubsection{gPb Contour Detector}
+\subsubsection{Gradient-Based Features}
 
 \cite{maire2008using}
 \cite{martin2004learning}
+
+explain BG and TG features
 
 Pb is the supervised learning approach based on local features.
 Split Pb into 2 sections: one for features the second for supervised learning.
@@ -95,6 +97,8 @@ Explain Hillbert transformation.
 %http://en.wikipedia.org/wiki/Hilbert_transform
 
 An odd symmetric filter will approximate a first derivative, and peaks in the convolution output will correspond to edges (luminance discontinuities) in the image. An even symmetric filter will approximate a second derivative operator. Zero-crossings in the output of convolution with an even symmetric filter will correspond to edges;
+
+\subsubsection{gPb Feature}
 
 \subsubsection{Measuring Contour Saliency}
 
@@ -109,7 +113,7 @@ An odd symmetric filter will approximate a first derivative, and peaks in the co
 
 pros and cons. Which descriptor is suitable for a particular case.
 
-\section{Supervised versus Unsupervised Segmentation Approaches}
+%\section{Supervised versus Unsupervised Segmentation Approaches}
 
 
 
@@ -125,11 +129,13 @@ pros and cons. Which descriptor is suitable for a particular case.
 
 \cite{tsochantaridis2006large}
 
+\paragraph{Logistic Regression}
+
 \subsubsection{Statistical Shape Model}
 
 \cite{leventon2000statistical}
 
-\subsection{Unsupervised Approaches}
+%\subsection{Unsupervised Approaches}
 
 
 
