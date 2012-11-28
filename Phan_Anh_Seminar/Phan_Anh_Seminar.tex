@@ -91,10 +91,16 @@ introduction to gPb
 \cite{maire2008using}
 \cite{martin2004learning}
 
-explain BG and TG features
+%explain BG and TG features
 
-Pb is the supervised learning approach based on local features.
-Split Pb into 2 sections: one for features the second for supervised learning.
+The gradient-based paradigm is used to detect local changes in color, texture and brightness. It works as follows. At each pixel location $(x, y)$, a circle of radius $r$ is drawn and cut along the diameter having orientation $\theta$. The gradient function $G(x, y, \theta, r)$ is used to compare the resulting two half disks. An edge is detected if there is a large difference between the two half disks along the chosen orientation.
+
+
+
+
+
+
+
 
 Explain Hillbert transformation.
 %http://en.wikipedia.org/wiki/Hilbert_transform
