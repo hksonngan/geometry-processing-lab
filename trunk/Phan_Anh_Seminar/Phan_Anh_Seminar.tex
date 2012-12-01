@@ -95,12 +95,38 @@ introduction to gPb
 
 The gradient-based paradigm was used by Martin et al. in their $Pb$ paper \cite{martin2004learning} to detect local changes in color, texture and brightness. Basically at each pixel location $(x, y)$, a circle of radius $r$ is drawn and cut half along the diameter having orientation $\theta$. The gradient function $G(x, y, \theta, r)$ is used to compare the contents of the two resulting half disks. An edge is detected if there is a large difference between the two half disks along the chosen orientation.
 
-To represent the color and brightness contents within a half disk, histograms are built by sampling the Gaussian kernel density estimates of brightness and color in CIELAB color space. The L* channel is used to compute brightness histogram and the a* and b* are used to compute color histogram. The bin size is chosen such that each bin contains at least 2 Gaussian kernels of size $2\sigma$. Figure shows an example of a Gaussian kernel density estimate. The $\chi^2$ distance is used to compute the difference between histograms:
+To represent the color and brightness contents within a half disk, histograms are built by sampling the Gaussian kernel density estimates of brightness and color in CIELAB color space. The L* channel is used to compute brightness histogram and the a* and b* are used to compute color histogram. The bin size is chosen such that each bin contains at least 2 Gaussian kernels of size $2\sigma$. Figure $\ref{fig:kde}$ shows an example of a Gaussian kernel density estimate. The $\chi^2$ distance is used to compute the difference between histograms:
 \begin{equation}
 	\chi^2(g, h) = 1/2\sum \dfrac{(g_i - h_i)^2}{g_i + h_i}
 \end{equation}
 
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+        \includegraphics[width=0.2\textwidth]{images/kde.png}
+        \label{fig:kde}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.1\textwidth]{images/filter_bank.png}
+        \label{fig:filter_bank}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.2\textwidth]{images/textons.png}
+        \label{fig:textons}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.4\textwidth]{images/texture_map.png}
+        \label{fig:texture_map}
+    }
+    \caption{  } 
+    %\label{fig:texture}
+\end{figure}
 
+A group of 13 filters is used for texture processing. It consists of six pairs of elongated, oriented filters and a center-surround filter as shown in Figure $\ref{fig:filter_bank}$. The oriented filters are in even/odd quadrature pairs
 
 
 
