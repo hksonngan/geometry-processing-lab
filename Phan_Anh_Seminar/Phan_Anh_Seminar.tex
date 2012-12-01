@@ -128,7 +128,7 @@ To represent the color and brightness contents within a half disk, histograms ar
 
 Considering the problem of computing texture gradient, a group of 13 filters covering the most probable shapes is used. Particularly, it consists of six pairs of elongated, oriented filters and a center-surround filter as shown in Figure $\ref{fig:filter_bank}$. The oriented filters are in even/odd quadrature pairs. The even symmetric filter is a Gaussian second derivative, and the odd-symmetric filter is its Hilbert transform. Finally, a difference of Gaussians is chosen to be the center-surround filter. This filter bank generates a feature vector of 13 dimensions corresponding to 13 filter responses at each pixel.
 
-
+In order to build up histograms for comparison, the $Pb$ algorithm uses the so called textons approach (or bag of textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large, diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses, and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons have been computed, each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
 
 
 
