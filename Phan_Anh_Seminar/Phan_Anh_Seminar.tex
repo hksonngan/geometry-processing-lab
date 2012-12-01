@@ -126,18 +126,13 @@ To represent the color and brightness contents within a half disk, histograms ar
     %\label{fig:texture}
 \end{figure}
 
-A group of 13 filters is used for texture processing. It consists of six pairs of elongated, oriented filters and a center-surround filter as shown in Figure $\ref{fig:filter_bank}$. The oriented filters are in even/odd quadrature pairs
+Considering the problem of computing texture gradient, a group of 13 filters covering the most probable shapes is used. Particularly, it consists of six pairs of elongated, oriented filters and a center-surround filter as shown in Figure $\ref{fig:filter_bank}$. The oriented filters are in even/odd quadrature pairs. The even symmetric filter is a Gaussian second derivative, and the odd-symmetric filter is its Hilbert transform. Finally, a difference of Gaussians is chosen to be the center-surround filter. This filter bank generates a feature vector of 13 dimensions corresponding to 13 filter responses at each pixel.
 
 
 
 
 
 
-
-Explain Hillbert transformation.
-%http://en.wikipedia.org/wiki/Hilbert_transform
-
-An odd symmetric filter will approximate a first derivative, and peaks in the convolution output will correspond to edges (luminance discontinuities) in the image. An even symmetric filter will approximate a second derivative operator. Zero-crossings in the output of convolution with an even symmetric filter will correspond to edges;
 
 \subsubsection{gPb Feature}
 
