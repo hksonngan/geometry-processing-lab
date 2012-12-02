@@ -172,13 +172,17 @@ gPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\beta_i G_i(x, y, \theta) + \gamma sP
 
 where the weights are learned by gradient ascent on the F-measure = $2\cdot Precision \cdot Recall/(Precision + Recall)$.
 
-\subsubsection{Measuring Contour Saliency}
-
-\cite{arbelaez2009contours}
-
 \subsubsection{Shape Descriptor}
 
-\cite{gu2009recognition}
+The contours detected above define over-segmented regions of the image. Gu et al. \cite{gu2009recognition} proposed a way to describe a region by subdividing evenly its bounding box into an $n \times n$ grid. The grid size n = 4 seems to be appropriate. Each cell encodes information only inside the region. Different cues are extracted from each cell, and each type of cue is encoded by concatenating cell signals into a histogram. The following region cues are included:
+
+\begin{itemize}
+\item Contour shape, given by the histogram of oriented responses of the contour detector gPb.
+\item Edge shape, computed by convolution with a [-1 0 1] filter along x and y axes. This captures high frequency information, while it has been smoothed out by gPb.
+\item Color, represented by the L*, a and b histograms in the CIELAB color space.
+\item Texture, described by texton histograms.
+\end{itemize}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Discussion}
