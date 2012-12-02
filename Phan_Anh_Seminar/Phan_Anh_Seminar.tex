@@ -127,11 +127,10 @@ In order to build up histograms for comparison, the $Pb$ algorithm uses the so c
 
 \subsubsection{gPb Feature}
 
-\cite{maire2008using}
-
-The gPb contour detector is an extension of Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which defines an affinity matrix $W$ whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
+The gPb contour detector \cite{maire2008using} is an extension of Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which defines an affinity matrix $W$ whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
 \begin{equation}
 (D-W)\mathbf{v} = \lambda D \mathbf{v}
+\label{eq:ncut}
 \end{equation}
 where $D$ is diagonal matrix with $D_{ii} = \sum_j W_{ij}$.
 Section $\ref{sec:normalized_cut}$ will explain the normalized cut algorithm in more detail.
@@ -142,13 +141,17 @@ We start by extracting the brightness, color and texture gradients in 3 differen
 mPb(x, y, \theta) = \sum\limits_{i = 1}^{9}G_i(x, y, \theta)
 \end{equation}
 
-In order to integrate global information, the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure.
+In order to integrate global information, the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure $\ref{fig:intervening_contour}$. The first $k + 1$ generalized eigenvectors $\mathbf{v_j}$ of the system $\ref{eq:ncut}$ are chosen and reshaped in the size of the original image. Contours are extracted from each eigenvector $\mathbf{v_j}$ by applying Gaussian directional derivatives at multiple orientations $\theta$, resulting in an oriented signal $sPb_{\mathbf{v_j}}(x, y, \theta)$. The information from different eigenvectors is then combined to provide the "spectral" boundary detector:
+
+\begin{equation}
+sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{\mathbf{v_j}}(x, y, \theta)
+\end{equation}
 
 \begin{figure}[htbp]
     \centering
     \subfigure[]
     {
-    	\includegraphics[width=0.2\textwidth]{images/intervening_contour.png}
+    	\includegraphics[width=0.15\textwidth]{images/intervening_contour.png}
         \label{fig:intervening_contour}
     }
     \subfigure[]
