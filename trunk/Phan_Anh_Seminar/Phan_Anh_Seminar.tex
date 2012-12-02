@@ -129,7 +129,35 @@ In order to build up histograms for comparison, the $Pb$ algorithm uses the so c
 
 \cite{maire2008using}
 
-The gPb contour detector is an extension of Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which finds the generalized eigenvectors of the linear system involving an affinity matrix whose entries encode the similarity between pixels. Section $\ref{sec:normalized_cut}$ will explain the normalized cut algorithm in more detail.
+The gPb contour detector is an extension of Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which defines an affinity matrix $W$ whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
+\begin{equation}
+(D-W)\mathbf{v} = \lambda D \mathbf{v}
+\end{equation}
+where $D$ is diagonal matrix with $D_{ii} = \sum_j W_{ij}$.
+Section $\ref{sec:normalized_cut}$ will explain the normalized cut algorithm in more detail.
+
+We start by extracting the brightness, color and texture gradients in 3 different scales: $[\sigma/2, \sigma, 2\sigma]$, where $\sigma$ is the default scale of the Pb detector. This gives 9 different responses ${G_i}$. These local cues are then linearly combined into a single multiscale oriented signal:
+
+\begin{equation}
+mPb(x, y, \theta) = \sum\limits_{i = 1}^{9}G_i(x, y, \theta)
+\end{equation}
+
+In order to integrate global information, the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure.
+
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.2\textwidth]{images/intervening_contour.png}
+        \label{fig:intervening_contour}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.8\textwidth]{images/sPb.png}
+        \label{fig:sPb}
+    }
+    \caption{}
+\end{figure}
 
 \subsubsection{Measuring Contour Saliency}
 
