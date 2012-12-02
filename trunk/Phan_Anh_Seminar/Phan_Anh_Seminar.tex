@@ -84,7 +84,8 @@ To extract the SURF descriptor, we construct a window of size $20s$ centred at t
 \subsection{gPb Contour Extractor}
 \label{sec:shape_feature}
 
-introduction to gPb
+gPb contour extractor was developed based on the predecessor Pb which uses features extracted from a local
+image patch to estimate the posterior probability of a boundary passing through the current pixel. gPb improves from Pb by introducing global information based on spectral graph theory. In this Section, we will first survey the local features used by Pb. We will then explain how gPb incorporates global information into Pb. Finally, we will show one method to extract shape descriptors from regions defined by gPb contours. The method to estimate the posterior probability of a boundary will be explained in more detail in Section $\ref{sec:logistic_regression}$.
 
 \subsubsection{Gradient-Based Features}
 
@@ -208,6 +209,7 @@ pros and cons. Which descriptor is suitable for a particular case.
 \subsection{Contour Classification}
 
 \subsubsection{Logistic Regression}
+\label{sec:logistic_regression}
 
 \subsection{Statistical Shape Model}
 
