@@ -117,7 +117,7 @@ To represent the color and brightness contents within a half disk, histograms ar
         \includegraphics[width=0.4\textwidth]{images/texture_map.png}
         \label{fig:texture_map}
     }
-    \caption{  } 
+    \caption{ (a) Kernel density estimate constructed using 6 data points. The 6 individual kernels are the red dashed curves and the kernel density estimate is the blue curves (image source: wikipedia). (b) Filter Bank: The 13-element filter bank used for computing textons. (c) Universal Textons: Example universal textons computed from the 200 training images, sorted by L1 norm for display purposes. (d) Texton Map: An image and its associated texton map.} 
     %\label{fig:texture}
 \end{figure}
 
@@ -161,7 +161,7 @@ where $0 = \lambda_0 \leq ... \leq \lambda_k$ are corresponding eigenvalues. Fig
     	\includegraphics[width=0.8\textwidth]{images/sPb.png}
         \label{fig:sPb}
     }
-    \caption{}
+    \caption{(a) Example of an intervening contour. Above is an image patch in which the intensity values at pixels $p_1, p_2$ and $p_3$ are similar. However, there is an edge in the middle suggesting that $p_1$ and $p_2$ belong to the same group while $p_3$ belongs to a different group. Below is the image computed by using the orientation energy \cite{leung1998contour}. The orientation energy somewhere on $l_2$ is strong which correctly proposes that $p_1$ and $p_3$ belong to two different partitions. (b) Top: Original image and first four generalized eigenvectors. Bottom: Maximum response over orientations $\theta$ of $sPb(x, y, \theta)$ and of $sPb_{\mathbf{v_j}}(x, y, \theta)$ for each eigenvector $\mathbf{v_j}$.}
 \end{figure}
 
 Finally, the globalized probability of boundary , i.e. gPb, is then defined as:
