@@ -147,6 +147,8 @@ In order to integrate global information, the affinity matrix $W$ is constructed
 sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{\mathbf{v_j}}(x, y, \theta)
 \end{equation}
 
+where $0 = \lambda_0 \leq ... \leq \lambda_k$ are corresponding eigenvalues. Figure $\ref{fig:sPb}$ illustrates an example of the spectral boundary detector $sPb$.
+
 \begin{figure}[htbp]
     \centering
     \subfigure[]
@@ -161,6 +163,14 @@ sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{\mathbf
     }
     \caption{}
 \end{figure}
+
+Finally, the globalized probability of boundary , i.e. gPb, is then defined as:
+
+\begin{equation}
+gPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\beta_i G_i(x, y, \theta) + \gamma sPb(x, y, \theta)
+\end{equation}
+
+where the weights are learned by gradient ascent on the F-measure = $2\cdot Precision \cdot Recall/(Precision + Recall)$.
 
 \subsubsection{Measuring Contour Saliency}
 
