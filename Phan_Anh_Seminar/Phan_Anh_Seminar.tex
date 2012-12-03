@@ -210,7 +210,7 @@ Support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995suppo
     \caption{}
 \end{figure}
 
-We first consider the case of linearly separable data. Let's $\left\lbrace (\mathbf{x_i}, t_i)\right\rbrace _{i=1}^N, \mathbf{x_i} \in R^d$ be $N$ training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $\mathbf{w^t x} + b = 0$ which separates the data with maximal margin.
+We first consider the case of linearly separable data. Let's $\left\lbrace (\mathbf{x_i}, t_i)\right\rbrace _{i=1}^N, \mathbf{x_i} \in R^d$ be $N$ training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $\mathbf{w^t x} + b = 0$ which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $\mathbf{w}$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|\mathbf{w}\|}$.
 
 \subsubsection{Structured SVM learning framework}
 
