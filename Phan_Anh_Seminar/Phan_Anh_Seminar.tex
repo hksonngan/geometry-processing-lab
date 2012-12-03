@@ -198,7 +198,7 @@ So far we have seen many ways to extract features from an image, each has its ow
 
 \subsubsection{Support Vector Machine}
 
-Support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995support} is a non-probabilistic binary linear classifier which predicts, for each given input data point, which of two possible classes the input belongs. SVM maximizes the margin between positive and negative data points thus achieving very good generalization performance as shown in Figure $\ref{fig:svm}$.
+Support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995support} is a non-probabilistic binary linear classifier which predicts, for each input data point, which of the two possible classes the input belongs. SVM maximizes the margin between positive and negative data points (as shown in Figure $\ref{fig:svm}$), thereby achieving very good generalization performance.
 
 \begin{figure}[htbp]
     \centering
@@ -207,10 +207,32 @@ Support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995suppo
     	\includegraphics[width=0.60\textwidth]{images/svm.png}
         \label{fig:svm}
     }
-    \caption{}
+    \caption{Linear separating hyperplanes for the separable case. The support vectors are circled.}
 \end{figure}
 
-We first consider the case of linearly separable data. Let's $\left\lbrace (\mathbf{x_i}, t_i)\right\rbrace _{i=1}^N, \mathbf{x_i} \in R^d$ be $N$ training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $\mathbf{w^t x} + b = 0$ which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $\mathbf{w}$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|\mathbf{w}\|}$.
+In this paper we only consider the case of linearly separable data. Let's $\left\lbrace (\mathbf{x_i}, t_i)\right\rbrace _{i=1}^N, \mathbf{x_i} \in R^d$ be $N$ training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $\mathbf{w^T x} + b = 0$ which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $\mathbf{w}$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|\mathbf{w}\|}$. Since the data is linearly separable, there exists a
+hyperplane with:
+
+\begin{equation}
+	\begin{array}{lcl}
+	\mathbf{w^T x_n} + b \geq +1\ for\ t_n = +1\\
+	\mathbf{w^T x_n} + b \leq -1\ for\ t_n = -1
+	\end{array}
+\end{equation}
+
+Combined in one equation, this can be written as:
+\begin{equation}
+t_n(\mathbf{w^T x_n} + b) \geq 1\ \forall n
+\label{eq:margin}
+\end{equation}
+
+The equality in equation $\ref{eq:margin}$ will hold exactly for the points on the margin. In order to maximize the margin $M = d_- + d_+ = \dfrac{2}{\|\mathbf{w}\|}$, we need to minimize $\|\mathbf{w}\|$. This can be formally stated as the following optimization problem: find the hyperplane satisfying
+
+\begin{equation}
+\operatorname*{arg\,min}_{\mathbf{w}, b} \dfrac{1}{2}\|\mathbf{w}\|^2
+\end{equation}
+
+subject to the constraint in equation $\ref{eq:margin}$. This quadratic programming problem with linear constraints can be solved efficiently using Lagrange multipliers. More detail on how to solve the above optimization problem and extensions to the non-separable case as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
 
 \subsubsection{Structured SVM learning framework}
 
