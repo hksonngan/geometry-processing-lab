@@ -88,6 +88,7 @@ gPb contour extractor was developed based on the predecessor Pb which uses featu
 image patch to estimate the posterior probability of a boundary passing through the current pixel. gPb improves from Pb by introducing global information based on spectral graph theory. In this Section, we will first survey the local features used by Pb. We will then explain how gPb incorporates global information into Pb. Finally, we will show one method to extract shape descriptors from regions defined by gPb contours. The method to estimate the posterior probability of a boundary will be explained in more detail in Section $\ref{sec:logistic_regression}$.
 
 \subsubsection{Gradient-Based Features}
+\label{sec:textons}
 
 The gradient-based paradigm was used by Martin et al. in their $Pb$ paper \cite{martin2004learning} to detect local changes in color, texture and brightness. Basically at each pixel location $(x, y)$, a circle of radius $r$ is drawn and cut half along the diameter having orientation $\theta$. The gradient function $G(x, y, \theta, r)$ is used to compare the contents of the two resulting half disks. An edge is detected if there is a large difference between the two half disks along the chosen orientation.
 
@@ -124,7 +125,7 @@ To represent the color and brightness contents within a half disk, histograms ar
 
 Considering the problem of computing texture gradient, a group of 13 filters covering the most probable shapes is used. Particularly, it consists of six pairs of elongated, oriented filters and a center-surround filter as shown in Figure $\ref{fig:filter_bank}$. The oriented filters are in even/odd quadrature pairs. The even symmetric filter is a Gaussian second derivative, and the odd-symmetric filter is its Hilbert transform. Finally, a difference of Gaussians is chosen to be the center-surround filter. This filter bank generates a feature vector of 13 dimensions corresponding to 13 filter responses at each pixel.
 
-In order to build up histograms for comparison, the $Pb$ algorithm uses the so called textons approach (or bag of textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large, diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses, and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons have been computed, each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
+In order to build up histograms for comparison, the $Pb$ algorithm uses the so called textons approach (or bag-of-textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large, diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses, and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons have been computed, each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
 
 \subsubsection{gPb Feature}
 
@@ -257,7 +258,11 @@ More detail on extensions to the  case of non-separable data as well as non-line
 
 %\cite{tsochantaridis2006large}
 
-\subsubsection{SVM for region classification}
+\subsubsection{SVM for region ranking}
+
+In this section we will formulate a SVM classifier in a way that it can reliably score a region of arbitrary shape according to how strongly it belongs to a particular object category. It is desirable that features extracted from local image regions can be combined additively to obtain the classifier response for a larger region. It has been proven \cite{lampert2008beyond} that a linear kernel SVM applied to a bag-of-features representation (recall the concept of bag-of-textures from Section $\ref{fig:textons}$) has this additive property.
+
+
 
 \subsection{Logistic Regression}
 
