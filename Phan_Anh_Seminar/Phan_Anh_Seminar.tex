@@ -224,7 +224,7 @@ t_i(\mathbf{w^T x_i} + b) \geq 1\ \forall i
 \label{eq:margin}
 \end{equation}
 
-The equality in equation $\ref{eq:margin}$ will hold exactly for the points on the margin. In order to maximize the margin $M = d_- + d_+ = \dfrac{2}{\|\mathbf{w}\|}$, we need to minimize $\|\mathbf{w}\|$. This can be formally stated as the following optimization problem: find the hyperplane satisfying
+The equality in Equation $\ref{eq:margin}$ will hold exactly for the points on the margin. In order to maximize the margin $M = d_- + d_+ = \dfrac{2}{\|\mathbf{w}\|}$, we need to minimize $\|\mathbf{w}\|$. This can be formally stated as the following optimization problem: find the hyperplane satisfying
 
 \begin{equation}
 \operatorname*{arg\,min}_{\mathbf{w}, b} \dfrac{1}{2}\|\mathbf{w}\|^2
@@ -236,13 +236,20 @@ subject to the constraint in equation $\ref{eq:margin}$. This quadratic programm
 L_p(\mathbf{w}, b, \mathbf{a}) = \dfrac{1}{2} \|\mathbf{w}\|^2 - \sum\limits_{i = 1}^{N}a_i\left( t_i(\mathbf{w}^T \mathbf{x_i} + b) - 1 \right) 
 \end{equation}
 
-The solution for $\mathbf{w}$ is nothing more than a linear combination of training examples:
+By taking the derivative of the Lagrangian with respect to $w$ and set it to zero, i.e. $\frac{\partial L}{\partial w} = 0$, we get the solution for $\mathbf{w}$ which is nothing more than a linear combination of training examples:
 
 \begin{equation}
-\mathbf{w} = 
+\mathbf{w} = \sum\limits_{i = 1}^{N} a_i t_i x_i
 \end{equation}
 
-Note that $a_i > 0$ only for training data points on the margin called support vectors.
+Note that $a_i > 0$ only for training data points on the margin called support vectors. We get the solution for $b$ by observing that any support vector $x_j$ satisfies the equality condition in Equation $\ref{eq:margin}$:
+
+\begin{equation}
+\begin{array}{lcl}
+t_j \left( \sum\limits_{i = 1}^{N} a_i t_i x_i^t x_j + b \right) = 1\\
+b = t_j - \sum\limits_{i = 1}^{N} a_i t_i x_i^t x_j
+\end{array}
+\end{equation}
 
 More detail on extensions to the  case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
 
