@@ -213,14 +213,14 @@ hyperplane with:
 
 \begin{equation}
 	\begin{array}{lcl}
-	\mathbf{w^T x_n} + b \geq +1\ for\ t_n = +1\\
-	\mathbf{w^T x_n} + b \leq -1\ for\ t_n = -1
+	\mathbf{w^T x_i} + b \geq +1\ for\ t_i = +1\\
+	\mathbf{w^T x_i} + b \leq -1\ for\ t_i = -1
 	\end{array}
 \end{equation}
 
 Combined in one equation, this can be written as:
 \begin{equation}
-t_n(\mathbf{w^T x_n} + b) \geq 1\ \forall n
+t_i(\mathbf{w^T x_i} + b) \geq 1\ \forall i
 \label{eq:margin}
 \end{equation}
 
@@ -230,11 +230,27 @@ The equality in equation $\ref{eq:margin}$ will hold exactly for the points on t
 \operatorname*{arg\,min}_{\mathbf{w}, b} \dfrac{1}{2}\|\mathbf{w}\|^2
 \end{equation}
 
-subject to the constraint in equation $\ref{eq:margin}$. This quadratic programming problem with linear constraints can be solved efficiently using Lagrange multipliers. More detail on how to solve the above optimization problem and extensions to the non-separable case as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
+subject to the constraint in equation $\ref{eq:margin}$. This quadratic programming problem with linear constraints can be solved efficiently using Lagrange multipliers. Particularly, if we introduce positive Lagrange multipliers $a_i \geq 0\ \forall i$ then the above constrained optimization problem boils down to the problem of minimizing the primal form of the following Lagrangian:
 
-\subsubsection{Structured SVM learning framework}
+\begin{equation}
+L_p(\mathbf{w}, b, \mathbf{a}) = \dfrac{1}{2} \|\mathbf{w}\|^2 - \sum\limits_{i = 1}^{N}a_i\left( t_i(\mathbf{w}^T \mathbf{x_i} + b) - 1 \right) 
+\end{equation}
 
-\cite{tsochantaridis2006large}
+The solution for $\mathbf{w}$ is nothing more than a linear combination of training examples:
+
+\begin{equation}
+\mathbf{w} = 
+\end{equation}
+
+Note that $a_i > 0$ only for training data points on the margin called support vectors.
+
+More detail on extensions to the  case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
+
+%\subsubsection{Structured SVM learning framework}
+
+%\cite{tsochantaridis2006large}
+
+\subsubsection{SVM for region classification}
 
 \subsection{Logistic Regression}
 
