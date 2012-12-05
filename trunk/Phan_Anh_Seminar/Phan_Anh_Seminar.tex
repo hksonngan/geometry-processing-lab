@@ -274,7 +274,7 @@ f(R) & = & b + \sum_{i}\alpha_i h(R_i) \cdot h(R)
 \end{array}
 \end{equation}
 
-where $b$ and $\alpha_i$ denote the learned weights and bias. Since the Equation $\ref{eq:svm_classifier}$ only involves linear operations, we can rearrange the terms to express $f(R)$ as a sum over per-feature contributions. Let $h_j(R)$ be the count in the $j$-th bin of the region histogram $h(R)$. We associate each $j$-word in the vocabulary with a weight $w_j$: $w_j = \sum_i \alpha_i h_j(R_i)$. Therefore, the classifier response for a region can be rewritten as:
+where $b$ and $\alpha_i = a_i t_i$ denote the learned weights and bias. Since the Equation $\ref{eq:svm_classifier}$ only involves linear operations, we can rearrange the terms to express $f(R)$ as a sum over per-feature contributions. Let $h_j(R)$ be the count in the $j$-th bin of the region histogram $h(R)$. We associate each $j$-word in the vocabulary with a weight $w_j$: $w_j = \sum_i \alpha_i h_j(R_i)$. Therefore, the classifier response for a region can be rewritten as:
 
 \begin{equation}
 f(R) = b + \sum\limits_{j = 1}^{K} w_j h_j(R) = b + \sum\limits_{i = 1}^{N}w_{c_i}
