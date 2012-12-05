@@ -196,6 +196,7 @@ So far we have seen many ways to extract features from an image, each has its ow
 \section{Supervised Learning Segmentation}
 
 \subsection{Support Vector Machine}
+\label{sec:svm}
 
 Support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995support} is a non-probabilistic binary linear classifier which predicts, for each input data point, which of the two possible classes the input belongs. SVM maximizes the margin between positive and negative data points (as shown in Figure $\ref{fig:svm}$), thereby achieving very good generalization performance.
 
@@ -252,7 +253,7 @@ b = t_j - \sum\limits_{i = 1}^{N} a_i t_i x_i^t x_j
 \end{array}
 \end{equation}
 
-More detail on extensions to the  case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
+In practice, it is more robust to average the solution for $b$ over all support vectors. The primal form of the Lagrangian $L_p$ can be transformed into the dual form to avoid the dependency on the dimensionality. This makes it possible to work with infinite-dimensional feature spaces by using some kernel tricks. More detail on extensions to the case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
 
 %\subsubsection{Structured SVM learning framework}
 
@@ -260,9 +261,9 @@ More detail on extensions to the  case of non-separable data as well as non-line
 
 \subsubsection{SVM for region ranking}
 
-In this section we will formulate a SVM classifier in a way that it can reliably score a region of arbitrary shape according to how strongly it belongs to a particular object category. It is desirable that features extracted from local image regions can be combined additively to obtain the classifier response for a larger region. It has been proven \cite{lampert2008beyond} that a linear kernel SVM applied to a bag-of-features representation (recall the concept of bag-of-textures from Section $\ref{fig:textons}$) has this additive property. Similar to the textons approach, we obtain a vocabulary of K visual words by clustering
+In this section we will formulate a SVM classifier in a way that it can reliably score a region of arbitrary shape according to how strongly it belongs to a particular object category. It is desirable that features extracted from local image regions can be combined additively to obtain the classifier response for a larger region. It has been proven \cite{lampert2008beyond} that a linear kernel SVM applied to a bag-of-features representation (recall the concept of bag-of-textures from Section $\ref{fig:textons}$) has this additive property. Similar to the textons approach, we obtain a vocabulary of K visual words by clustering a sample of local features (e.g. SURF) from the training images. We represent a region by its set of local features $R = \left\lbrace (x_i, v_i) \right\rbrace _{i=1} ^ N$, where $x_i$ being the feature position and $v_i$ the local descriptor. A histogram can be built from this bag-of-features, denoted $h(R)$, by mapping each feature $v_i$ to its closest visual word $c_i$ and recording the frequency of words in a K-dimensional vector.
 
-
+A linear SVM classifier is learned from the segmented training examples according to the principle described in Section $\ref{sec:svm}$.
 
 \subsection{Logistic Regression}
 
