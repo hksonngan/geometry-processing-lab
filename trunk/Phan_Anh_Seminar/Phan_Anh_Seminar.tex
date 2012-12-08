@@ -286,6 +286,26 @@ where $c_i$ is the index of the visual word that feature $v_i$ maps to, $c_i \in
 
 \label{sec:logistic_regression}
 
+In the problem of two-class classification, the logistic regression method models the posterior probability of class $C_1$ by applying a logistic sigmoid function $\sigma$ on a linear discriminant function of the feature vector $\phi$ so that
+
+\begin{equation}
+\label{eq:logistic}
+p(C_1|\phi) = y(\phi) = \sigma(w^T\phi)
+\end{equation}
+
+with $p(C_2|\phi) = 1 - p(C_1|\phi)$. The logistic sigmoid function $\sigma$ is derived from the Bayes decision theory as follows:
+
+\begin{equation}
+\label{eq:Bayes}
+\begin{array}{lcl}
+p(C_1|x) & = & \dfrac{p(x|C_1)p(C_1)}{p(x|C_1)p(C_1) + p(x|C_2)p(C_2)}\\
+		 & = & \dfrac{1}{1 + \dfrac{p(x|C_2)p(C_2)}{p(x|C_1)p(C_1)}}\\
+		 & = & \dfrac{1}{1 + e^{-a}} \equiv \sigma(a)
+\end{array}
+\end{equation}
+
+with $a = \ln \dfrac{p(x|C_1)p(C_1)}{p(x|C_2)p(C_2)} = \ln(p(C_1|x) - p(C_2|x))$ represents the decision boundary corresponding to the decision boundary $w^T\phi$ in Equation $\ref{eq:logistic}$. The advantage of using Equation $\ref{eq:logistic}$ as opposed to Equation $\ref{eq:Bayes}$ is to avoid density estimation for all of its factors.
+
 \subsection{Statistical Shape Model}
 
 \cite{leventon2000statistical}
