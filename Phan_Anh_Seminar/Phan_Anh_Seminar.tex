@@ -361,11 +361,53 @@ Because the weighing matrix $R$ is not constant but depends on the parameter vec
 
 \subsection{Statistical Shape Model}
 
-\cite{leventon2000statistical}
+To incorporate shape information into the process of segmenting an object in an image, Leventon et al. \cite{leventon2000statistical} introduced a statistical shape model in which a prior on shape variation can be computed based on a set of training instances. Normally a shape is stored in a label image in which each voxel value contains a class label of the shape. However, in active contour models we are interested in modelling the shape boundary rather than the whole shape volume. Therefore, in this case each shape is represented as the zero level set of a signed distance function in a distance map image whose value stores the distance to the boundary of the shape. Nevertheless, for all representations we need $N^d$ samples in a $d$-dimensional image of size $N$ to represent a shape. If we consider each voxel as one dimension, then a shape $u$ is a point in a high dimensional shape space $u \in R^{N^d}$.
 
-%\subsection{Unsupervised Approaches}
+Given the training set $T = \left\lbrace u_1, ..., u_n \right\rbrace$, Our goal is to build a shape model over this distribution of surfaces. Since the collection of curves in the training set represent objects of the same class, they are highly correlated thereby introducing large amount of redundancy. The cloud of training points is approximated to have a Gaussian distribution, where most of the dimensions of the Gaussian collapse, leaving the principal modes of shape variation. We can thus reduce redundant dimensions by using Principal Component Analysis (PCA) which only keeps the most relevant shape variances.
 
+The first step in performing PCA is to subtract the mean shape $\mu = \frac{1}{n} \sum u_i$ from each $u_i$ to create an mean-offset map $\hat{u_i}$. Each $\hat{u_i}$ vector is then placed next to each other as a column in an $N^d \times n$ matrix $M$. After that, a Singular Value Decomposition (SVD) is applied on the covariance matrix $\frac{1}{n} MM^T$:
 
+\begin{equation}
+U \Sigma U^T = \frac{1}{n}MM^T
+\end{equation}
+
+where column vectors of the matrix $U$ form a set of orthogonal modes of shape variation and $\Sigma$ is a diagonal matrix of corresponding singular values. Given a novel shape $u$, we can compress its dimensions by projecting it into the eigen-subspace formed by $k$ principal components corresponding to the first $k$ columns of $U$:
+
+\begin{equation}
+\alpha = U^T_k(u - \mu)
+\label{eq:eigen}
+\end{equation}
+
+where $U_k$ is a projection matrix with $k$ principal components being its columns and $\alpha$ is a vector of coefficients in the $k$-dimensional eigen-subspace. From the coefficients $\alpha$ we can reconstruct an estimate of the shape $u$, namely $\tilde{u}$, by reversing the action in equation $\ref{eq:eigen}$ with some minor loss of information in the least important principal components:
+
+\begin{equation}
+\tilde{u} = U_k\alpha + \mu
+\end{equation}
+
+Under the assumption of a Gaussian distribution of shape represented by $\alpha$, we can compute the probability of a certain curve as:
+
+\begin{equation}
+P(\alpha) = \dfrac{1}{\sqrt{(2\pi)^k |\Sigma_k|}} \exp\left( -\dfrac{1}{2} \alpha^T \Sigma^{-1}_k \alpha \right) 
+\end{equation}
+
+where $\Sigma_k$ contains the first $k$ rows and columns of $\Sigma$.
+
+Figure $\ref{fig:shape_training}$ illustrates some training curves used to estimate the shape models of the corpus callosum. The original segmentations are shown as white curves overlaid on the signed-distance map. Figure $\ref{fig:shape_variance}$ shows the means and three primary modes of variance of the shape distribution of the corpus callosum.
+
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.45\textwidth]{images/shape_model1.png}
+        \label{fig:shape_training}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.45\textwidth]{images/shape_model2.png}
+        \label{fig:shape_variance}
+    }
+    \caption{(a) some training signed distance maps of Corpus callosum overlaid by the original segmentations. (b) The three primary modes of variance of the corpus callosum training dataset.}
+\end{figure}
 
 \section{Graph Construction}
 
