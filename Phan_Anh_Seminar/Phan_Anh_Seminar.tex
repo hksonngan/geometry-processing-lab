@@ -128,7 +128,7 @@ In order to build up histograms for comparison, the $Pb$ algorithm uses the so c
 
 The gPb contour detector \cite{maire2008using} is an extension of the Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which defines an affinity matrix $W$ whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
 \begin{equation}
-(D-W)\mathbf{v} = \lambda D \mathbf{v}
+(D-W)v = \lambda D v
 \label{eq:ncut}
 \end{equation}
 where $D$ is diagonal matrix with $D_{ii} = \sum_j W_{ij}$.
@@ -140,10 +140,10 @@ We start by extracting the brightness, color and texture gradients in 3 differen
 mPb(x, y, \theta) = \sum\limits_{i = 1}^{9}G_i(x, y, \theta)
 \end{equation}
 
-In order to integrate global information, the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure $\ref{fig:intervening_contour}$. The first $k + 1$ generalized eigenvectors $\mathbf{v_j}$ of the system $\ref{eq:ncut}$ are chosen and reshaped in the size of the original image. Contours are extracted from each eigenvector $\mathbf{v_j}$ by applying Gaussian directional derivatives at multiple orientations $\theta$, resulting in an oriented signal $sPb_{\mathbf{v_j}}(x, y, \theta)$. The information from different eigenvectors is then combined to provide the "spectral" boundary detector:
+In order to integrate global information, the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure $\ref{fig:intervening_contour}$. The first $k + 1$ generalized eigenvectors $v_j$ of the system $\ref{eq:ncut}$ are chosen and reshaped in the size of the original image. Contours are extracted from each eigenvector $v_j$ by applying Gaussian directional derivatives at multiple orientations $\theta$, resulting in an oriented signal $sPb_{\mathbf{v_j}}(x, y, \theta)$. The information from different eigenvectors is then combined to provide the spectral boundary detector:
 
 \begin{equation}
-sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{\mathbf{v_j}}(x, y, \theta)
+sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{v_j}(x, y, \theta)
 \end{equation}
 
 where $0 = \lambda_0 \leq ... \leq \lambda_k$ are corresponding eigenvalues. Figure $\ref{fig:sPb}$ illustrates an example of the spectral boundary detector $sPb$.
@@ -160,7 +160,7 @@ where $0 = \lambda_0 \leq ... \leq \lambda_k$ are corresponding eigenvalues. Fig
     	\includegraphics[width=0.8\textwidth]{images/sPb.png}
         \label{fig:sPb}
     }
-    \caption{(a) Example of an intervening contour. Above is an image patch in which the intensity values at pixels $p_1, p_2$ and $p_3$ are similar. However, there is an edge in the middle suggesting that $p_1$ and $p_2$ belong to the same group while $p_3$ belongs to a different group. Below is the image computed by using the orientation energy \cite{leung1998contour}. The orientation energy somewhere on $l_2$ is strong which correctly proposes that $p_1$ and $p_3$ belong to two different partitions. (b) Top: Original image and first four generalized eigenvectors. Bottom: Maximum response over orientations $\theta$ of $sPb(x, y, \theta)$ and of $sPb_{\mathbf{v_j}}(x, y, \theta)$ for each eigenvector $\mathbf{v_j}$.}
+    \caption{(a) Example of an intervening contour. Above is an image patch in which the intensity values at pixels $p_1, p_2$ and $p_3$ are similar. However, there is an edge in the middle suggesting that $p_1$ and $p_2$ belong to the same group while $p_3$ belongs to a different group. Below is the image computed by using the orientation energy \cite{leung1998contour}. The orientation energy somewhere on $l_2$ is strong which correctly proposes that $p_1$ and $p_3$ belong to two different partitions. (b) Examples from the spectral boundary detector \cite{maire2008using}. Top: Original image and first four generalized eigenvectors. Bottom: Maximum response over orientations $\theta$ of $sPb(x, y, \theta)$ and of $sPb_{v_j}(x, y, \theta)$ for each eigenvector $v_j$.}
 \end{figure}
 
 Finally, the globalized probability of boundary , i.e. gPb, is then defined as:
@@ -169,7 +169,11 @@ Finally, the globalized probability of boundary , i.e. gPb, is then defined as:
 gPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\beta_i G_i(x, y, \theta) + \gamma sPb(x, y, \theta)
 \end{equation}
 
-where the weights are learned by gradient ascent on the F-measure = $2\cdot Precision \cdot Recall/(Precision + Recall)$.
+where the weights are learned by gradient ascent on the F-measure
+
+\begin{equation}
+\mathrm{F} \operatorname{-} \mathrm{measure} = 2\cdot \mathrm{Precision} \cdot \mathrm{Recall}/(\mathrm{Precision + Recall}).
+\end{equation} 
 
 \subsubsection{Shape Descriptor}
 
