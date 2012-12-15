@@ -424,7 +424,13 @@ The region graph $G = (V, E)$ is built with the set of vertices $V$ being the ov
 \item Shape features: In this case, each superpixel is mapped to a single shape descriptor described in Section $\ref{sec:shape_descriptor}$. Thus, we get the vertex weight $w(v) = w^v_{c_i}$, where $c_i$ is the single visual word associated with that superpixel's shape descriptor.
 \end{itemize}
 
-To avoid background regions incorrectly getting included into the result, we consider edge weights between pairs of adjacent superpixels based on saliency measures of the wartershed arcs. Since we would like to compute the edge weights by ranking contours within a region just like we did for the vertex weights, we introduce a bag-of-contour-strengths histogram vector that captures the statistics of the internal contours within an object.
+To avoid background regions incorrectly getting included into the result, we consider edge weights between pairs of adjacent superpixels based on saliency measures of the wartershed arcs. Since we would like to compute the edge weights by ranking contours within a region just like we did for the vertex weights, we introduce a bag-of-contour-strengths histogram vector that captures the statistics of the internal contours within an object. Intuitively, the contours between an object and its background are expected to be highly salient. Therefore, the weights should be learned in such a way that the scores of segmentations that cross object boundaries decrease.
+
+Formally, the distribution of contour strengths $h^e(R)$ for an object region $R$ is an $L$-bin histogram, where each bin represents a given range in the contour saliency measure. Having learned the edge weights $w^e$ as described in the structured SVM learning framework \cite{tsochantaridis2006large}, we can now extend the region ranking score $\ref{eq:svm_rank}$ as follows:
+
+\begin{equation}
+f^{\prime}(R) = \sum\limits_{i = 1}^{N} w^v_{c_i} - \sum\limits_{j = 1}^{M} w^e_{s_j}
+\end{equation}
 
 \subsection{Contour Graph}
 
