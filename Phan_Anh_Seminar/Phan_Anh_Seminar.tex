@@ -435,9 +435,9 @@ Formally, the distribution of contour strengths $h^e(R)$ for an object region $R
 f^{\prime}(R) = \sum\limits_{i = 1}^{N} w^v_{c_i} - \sum\limits_{j = 1}^{M} w^e_{s_j}
 \end{equation}
 
-where $s_j \in [1, L]$ is the bin index of $h^e(R)$ into which the contour strength of the $j^{th}$ contour within the region falls, and $M$ denotes the total number of contours in the region $R$.
+where $s_j \in [1, L]$ is the bin index of $h^e(R)$ into which the contour strength of the $j^{th}$ contour within the region falls, and $M$ denotes the total number of contours in the region $R$. Note that by subtracting the contour term, $f^{\prime}(R)$ returns lower scores for regions crossing strong object boundaries, thereby helping exclude background regions from the optimal solution.
 
-Having constructed a region graph from the input image, our goal now is to find a subgraph $R$ maximizing the region ranking score $f^\prime(R)$. This can be transformed into the prize-collecting Steiner tree problem (PCST) which is defined as follows:
+Having constructed a region graph from the input image, our goal now is to find a subgraph $R$ maximizing the region ranking score $f^\prime(R)$. The best-scoring subgraph identifies the most likely region for the object of interest. This problem can be transformed into the prize-collecting Steiner tree problem (PCST) which is defined as follows:
 
 \begin{definition}
 PCST PROBLEM: Given a connected undirected vertex and edge weighted graph G = (V, E, c, p) with vertex profits $p: V \rightarrow \mathbb{R}^{\geq 0}$ and edge costs $c: E \rightarrow \mathbb{R}^{\geq 0}$, find a connected subgraph T = ($V_T \subseteq V, E_T \subseteq E$) of G that maximizes the profit:
@@ -446,7 +446,14 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \end{equation}
 \end{definition}
 
+Note that in the PCST problem, both vertex profits and edge costs must be positive while our region ranking scores give both positive and negative values. To circumvent this issue, we map $p(v) = w^v(v) - \mu$ and $c(e) = w^e(e) - \mu$, where $\mu$ being the minimum of both vertex and edge weights. The advantage of transforming the region graph into the PCST problem is that we can use a mathematical programming approach, in this case the branch-and-cut algorithm \cite{ljubic2006algorithmic}, to efficiently solve for the optimal solution. Section $\ref{sec:branch_and_cut}$ discusses this problem in more detail. Figure $\ref{fig:region_graph}$ shows the entire pipeline of this region graph approach.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/region_graph.png}
+    \caption{.}
+    \label{fig:region_graph}
+\end{figure}
 
 \subsection{Contour Graph}
 
@@ -459,7 +466,7 @@ Circulation and Circle Embedding
 comparison of cut algorithms, could them be used interchangeably in different situations.
 
 \subsection{Prize-Collecting Steiner Tree}
-
+\label{sec:branch_and_cut}
 \cite{ljubic2006algorithmic}
 
 \subsubsection{Branch-and-Cut Algorithm}
