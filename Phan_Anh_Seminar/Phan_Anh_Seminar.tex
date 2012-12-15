@@ -452,13 +452,15 @@ Note that in the PCST problem, both vertex profits and edge costs must be positi
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{images/region_graph1.png}
-    \caption{Region graph pipeline. (a) We oversegment the test image, and construct a region-graph. (b) A region\textquotesingle s node weight is its contribution to the classifier response. The optimal contiguous set of regions is equivalent to the maximum-weight connected subgraph problem (MWCS) on the vertex weighted region-graph. (c) We incorporate class-specific inter-region contour cues by adding edge costs leading to the PCST problem. (d) The best scoring region is obtained by efficiently solving the PCST instance with a branch-and-cut algorithm.}
+    \caption{Region graph pipeline. (a) We oversegment the test image, and construct a region-graph. (b) A region\textquotesingle s node weight is its contribution to the classifier response. The optimal contiguous set of regions is equivalent to the maximum-weight connected subgraph problem (MWCS) on the vertex weighted region-graph. (c) We incorporate class-specific inter-region contour cues by adding edge costs leading to the PCST problem. (d) The best scoring region is obtained by efficiently solving the PCST instance with a branch-and-cut algorithm. Image source \cite{VijayGrauman2011}.}
     \label{fig:region_graph}
 \end{figure}
 
 \subsection{Contour Graph}
 
-Circulation and Circle Embedding
+In this section, we present a method to construct a directed contour grouping graph \cite{zhu2007untangling} based on which salient contours can be extracted from the otherwise 2D image clutter. Firstly, the output of an edge detector (e.g. gPb) is thresholded to obtain a discrete set of edgels. A directed graph $G = (V,E,W)$ is then defined as follows. Graph nodes V correspond to all edgels. Since the edge orientation is ambiguous up to $\pi$, we duplicate every edgel into two copies $i$ and $\bar{i}$ with opposite directions $\theta$, $\theta + \pi$.
+
+circular embedding
 
 \subsection{Markov Random Field}
 
@@ -472,17 +474,23 @@ comparison of cut algorithms, could them be used interchangeably in different si
 
 \subsubsection{Branch-and-Cut Algorithm}
 
-\subsection{Hermitian Eigenvalue Problem}
+\subsection{Contour Cut}
 
-\subsubsection{Normalized Cut}
+\subsubsection{Graph Circulations}
 \label{sec:normalized_cut}
 
 \cite{shi2000normalized}
 
-\subsubsection{Contour Cut}
+random walk matrix P, circulation matrix F
+
+\subsubsection{Contour Cut Cost}
+
+Ccut
 
 \cite{zhu2007untangling}
 \cite{KenGalShi2011}
+
+\subsubsection{Computational Solution}
 
 \subsection{Graph-Cut}
 
