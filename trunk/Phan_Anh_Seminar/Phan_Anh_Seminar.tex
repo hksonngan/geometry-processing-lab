@@ -5,6 +5,7 @@
 \setcounter{tocdepth}{5} %to make it appears in TOC
 \setcounter{secnumdepth}{5} %to make it numbered
 
+\usepackage{textcomp}
 \usepackage{amsthm}
 \newtheorem{definition}{}
 
@@ -450,8 +451,8 @@ Note that in the PCST problem, both vertex profits and edge costs must be positi
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{images/region_graph.png}
-    \caption{.}
+    \includegraphics[width=\textwidth]{images/region_graph1.png}
+    \caption{Region graph pipeline. (a) We oversegment the test image, and construct a region-graph. (b) A region\textquotesingle s node weight is its contribution to the classifier response. The optimal contiguous set of regions is equivalent to the maximum-weight connected subgraph problem (MWCS) on the vertex weighted region-graph. (c) We incorporate class-specific inter-region contour cues by adding edge costs leading to the PCST problem. (d) The best scoring region is obtained by efficiently solving the PCST instance with a branch-and-cut algorithm.}
     \label{fig:region_graph}
 \end{figure}
 
