@@ -5,6 +5,9 @@
 \setcounter{tocdepth}{5} %to make it appears in TOC
 \setcounter{secnumdepth}{5} %to make it numbered
 
+\usepackage{amsthm}
+\newtheorem{definition}{}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
 % Hier beginnt das eigentliche Dokument
@@ -431,6 +434,19 @@ Formally, the distribution of contour strengths $h^e(R)$ for an object region $R
 \begin{equation}
 f^{\prime}(R) = \sum\limits_{i = 1}^{N} w^v_{c_i} - \sum\limits_{j = 1}^{M} w^e_{s_j}
 \end{equation}
+
+where $s_j \in [1, L]$ is the bin index of $h^e(R)$ into which the contour strength of the $j^{th}$ contour within the region falls, and $M$ denotes the total number of contours in the region $R$.
+
+Having constructed a region graph from the input image, our goal now is to find a subgraph $R$ maximizing the region ranking score $f^\prime(R)$. This can be transformed into the prize-collecting Steiner tree problem (PCST) which is defined as follows:
+
+\begin{definition}
+PCST PROBLEM: Given a connected undirected vertex and edge weighted graph G = (V, E, c, p) with vertex profits $p: V \rightarrow \mathbb{R}^{\geq 0}$ and edge costs $c: E \rightarrow \mathbb{R}^{\geq 0}$, find a connected subgraph T = ($V_T \subseteq V, E_T \subseteq E$) of G that maximizes the profit:
+\begin{equation}
+P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
+\end{equation}
+\end{definition}
+
+
 
 \subsection{Contour Graph}
 
