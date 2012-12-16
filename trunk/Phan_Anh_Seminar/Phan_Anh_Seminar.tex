@@ -512,18 +512,33 @@ other nodes from the graph in the set without it ceasing to be a clique. Figure 
     \centering
     \subfigure[]
     {
-    	\includegraphics[width=0.25\textwidth]{images/clique.png}
+    	\includegraphics[width=0.2\textwidth]{images/clique.png}
         \label{fig:clique}
     }
     \subfigure[]
     {
-    	\includegraphics[width=0.35\textwidth]{images/shape_energy.png}
+    	\includegraphics[width=0.25\textwidth]{images/mrf.png}
+        \label{fig:mrf}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.3\textwidth]{images/shape_energy.png}
         \label{fig:shape_energy}
     }
-    \caption{(a) Image source: \cite{bishop2006pattern}. (b)Image source: \cite{shimizu2011automated}.}
+    \caption{(a) Image source: \cite{bishop2006pattern}. (b) Image source: \cite{bishop2006pattern}. (c)Image source: \cite{shimizu2011automated}.}
 \end{figure}
 
 Given a clique C, we denote the set of variables in that clique by $x_C$. Then the joint distribution is written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques of the graph
+
+\begin{equation}
+p(x) = \frac{1}{Z} \prod\limits_{C} \psi_C(x_C)
+\end{equation}
+
+Here the quantity $Z$, sometimes called the partition function, is a normalization constant and is given by
+
+\begin{equation}
+Z = \sum\limits_{x} \prod\limits_{C} \psi_C(x_C)
+\end{equation}
 
 \section{Graph Cut Algorithms}
 
