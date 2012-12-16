@@ -506,7 +506,7 @@ with $r_j = 1$ if $j \in C$ and $0$ otherwise, and $\theta_j = O(j) \delta$ spec
 \subsection{Markov Random Fields}
 
 Markov Random Fields (MRFs) are undirected graphical models which formalize and visualize the structure of a probabilistic model through a graph. In MRFs, the nodes correspond to a set of random variables $\left\lbrace x_1, ..., x_n\right\rbrace $, the edges represent soft constraints between them and the graph as a whole can be understood as a joint distribution $p(x)$ over the set of random variables. It is advantageous to express the joint distribution $p(x)$ as a product of functions defined over sets of variables that are local to the graph since this so-called factorized representation conveys interesting information about the properties of the class of distributions that the graph represents. We therefore need to define the appropriate notion of locality through a graphical concept called a clique. A clique is defined as a subset of the nodes in a graph such that there exists a link between all pairs of nodes in the subset. In other words, the set of nodes in a clique is fully connected. Furthermore, a maximal clique is a clique such that it is not possible to include any
-other nodes from the graph in the set without it ceasing to be a clique. Figure shows an example of cliques.
+other nodes from the graph in the set without it ceasing to be a clique. Figure $\ref{fig:clique}$ shows an example of cliques.
 
 \begin{figure}[htbp]
     \centering
@@ -525,13 +525,14 @@ other nodes from the graph in the set without it ceasing to be a clique. Figure 
     	\includegraphics[width=0.3\textwidth]{images/shape_energy.png}
         \label{fig:shape_energy}
     }
-    \caption{(a) Image source: \cite{bishop2006pattern}. (b) Image source: \cite{bishop2006pattern}. (c)Image source: \cite{shimizu2011automated}.}
+    \caption{(a) A four-node undirected graph showing a clique (in green) and a maximal clique (in blue). Image source: \cite{bishop2006pattern}. (b) An undirected graphical model representing a Markov random field in which $x_i$ is a variable denoting the hidden true state of pixel $i$ and $y_i$ denotes the corresponding value of pixel $i$ in the observed image data. Image source: \cite{bishop2006pattern}. (c)Image source: \cite{shimizu2011automated}.}
 \end{figure}
 
 Given a clique C, we denote the set of variables in that clique by $x_C$. Then the joint distribution is written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques of the graph
 
 \begin{equation}
 p(x) = \frac{1}{Z} \prod\limits_{C} \psi_C(x_C)
+\label{eq:joint_distribution}
 \end{equation}
 
 Here the quantity $Z$, sometimes called the partition function, is a normalization constant and is given by
@@ -539,6 +540,16 @@ Here the quantity $Z$, sometimes called the partition function, is a normalizati
 \begin{equation}
 Z = \sum\limits_{x} \prod\limits_{C} \psi_C(x_C)
 \end{equation}
+
+which ensures that the distribution $p(x)$ given by $\ref{eq:joint_distribution}$ is correctly normalized. By considering only potential functions which satisfy $\psi_C(x_C) \geq 0$ we ensure that $p(x) \geq 0$. It is convenient to express $\psi_C(x_C)$ as exponential functions, so that
+
+\begin{equation}
+\psi_C(x_C) = \exp \left( -E(x_C) \right) 
+\end{equation}
+
+where $E(x_C)$ is called an energy function. The joint distribution is defined as the product of potentials, and so the total energy is obtained by adding the energies of each of the maximal cliques.
+
+In the field of image processing, we often use MRF to capture the correlation between hidden true states of pixels and the observed image data. The spatial coherent of the image content can also be modeled using the neighborhood relationships between pixels\textquotesingle \ state variables as shown in Figure $\ref{fig:mrf}$.
 
 \section{Graph Cut Algorithms}
 
