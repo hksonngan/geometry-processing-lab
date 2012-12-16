@@ -549,8 +549,13 @@ which ensures that the distribution $p(x)$ given by $\ref{eq:joint_distribution}
 
 where $E(x_C)$ is called an energy function. The joint distribution is defined as the product of potentials, and so the total energy is obtained by adding the energies of each of the maximal cliques.
 
-In the field of image processing, we often use MRF to capture the correlation between hidden true states of pixels and the observed image data. The spatial coherent of the image content can also be modeled using the neighborhood relationships between pixels\textquotesingle \ state variables as shown in Figure $\ref{fig:mrf}$.
-For the image segmentation problem, our goal is to minimize the energy function associated with a MRF constructed from the training data and the observed input image.
+In the field of image processing, MRFs are used to capture, for each pixel, the correlation between the hidden state variable and the observed image data. The spatial coherent of the image content can also be modelled using the neighborhood relationships between pixels\textquotesingle \ state variables as shown in Figure $\ref{fig:mrf}$. 
+
+For the image segmentation problem, our goal is to minimize the energy function associated with a MRF constructed from the training data and the observed input image. Particularly, we need to find a labelling configuration $A = (A_1, ..., A_{\lvert P \rvert})$ that minimizes an energy $E(A)$ given by
+
+\begin{equation}
+E(A) = \lambda R(A) + B(A) = 
+\end{equation}
 
 \section{Graph Cut Algorithms}
 
