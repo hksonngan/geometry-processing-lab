@@ -458,7 +458,38 @@ Note that in the PCST problem, both vertex profits and edge costs must be positi
 
 \subsection{Contour Graph}
 
-In this section, we present a method to construct a directed contour grouping graph \cite{zhu2007untangling} based on which salient contours can be extracted from the otherwise 2D image clutter. Firstly, the output of an edge detector (e.g. gPb) is thresholded to obtain a discrete set of edgels. A directed graph $G = (V,E,W)$ is then defined as follows. Graph nodes V correspond to all edgels. Since the edge orientation is ambiguous up to $\pi$, we duplicate every edgel into two copies $i$ and $\bar{i}$ with opposite directions $\theta$, $\theta + \pi$.
+In this section, we present a method to construct a directed contour grouping graph \cite{zhu2007untangling} based on which salient contours can be extracted from the otherwise 2D image clutter. Firstly, the output of an edge detector (e.g. gPb) is thresholded to obtain a discrete set of edgels. A directed graph $G = (V,E,W)$ is then defined as follows. Graph nodes $V$ correspond to all edgels. Since the edge orientation is ambiguous up to $\pi$, we duplicate every edgel into two copies $i$ and $\bar{i}$ with opposite directions $\theta$, $\theta + \pi$. Graph edges $E$ include all the pairs of edgels within some distance $r_e$: $E = \left\lbrace (i, j): \| (x_i, y_i) - (x_j, y_j) \| \leq r_e \right\rbrace$. Since every edgel is directed, we connect each edgel $i$ only to the neighbors in the its direction. Graph weights $W$ measure directed collinearity using the elastic energy between neighboring edgels, which describes how much bending is needed to complete a curve between $i$ and $j$:
+
+\begin{equation}
+W_{ij} = e^{-(1 - cos(\mid \phi_i \mid + \mid \phi_j \mid))/\sigma^2}\ \mathrm{if}\ i \rightarrow j
+\end{equation}
+
+Here $i \rightarrow j$ means that $j$ is in forward direction of $i$ and $\sigma$ is the scaling factor. $W_{ij} \geq 0$ implies that $W_{ji} = 0$. $\phi_i$ and $\phi_j$ denote the turning angles of $i$ and $j$ w.r.t. the line connecting them as shown in Figure.
+
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.23\textwidth]{images/contour_graph1.png}
+        \label{fig:contour_graph1}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.23\textwidth]{images/contour_graph2.png}
+        \label{fig:contour_graph2}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.23\textwidth]{images/contour_graph3.png}
+        \label{fig:contour_graph3}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.23\textwidth]{images/contour_graph4.png}
+        \label{fig:contour_graph4}
+    }
+    \caption{.}
+\end{figure}
 
 circular embedding
 
