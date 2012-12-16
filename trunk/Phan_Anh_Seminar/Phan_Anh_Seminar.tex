@@ -365,7 +365,7 @@ z = \Phi w^{old} - R^{-1}(y - t)
 Because the weighing matrix $R$ is not constant but depends on the parameter vector $w$, we need to apply Equation $\ref{eq:normal_equations}$ iteratively, each time using the new weight vector $w$ to compute a revised weighing matrix $R$. Therefore, this algorithm is known as iterative reweighted least squares, or IRLS.
 
 \subsection{Statistical Shape Model}
-
+\label{sec:SSM}
 To incorporate shape information into the process of segmenting an object in an image, Leventon et al. \cite{leventon2000statistical} introduced a statistical shape model in which a prior on shape variation can be computed based on a set of training instances. Normally a shape is stored in a label image in which each voxel value contains a class label of the shape. However, in active contour models we are interested in modelling the shape boundary rather than the whole shape volume. Therefore, in this case each shape is represented as the zero level set of a signed distance function in a distance map image whose value stores the distance to the boundary of the shape. Nevertheless, for all representations we need $N^d$ samples in a $d$-dimensional image of size $N$ to represent a shape. If we consider each voxel as one dimension, then a shape $u$ is a point in a high dimensional shape space $u \in R^{N^d}$.
 
 Given the training set $T = \left\lbrace u_1, ..., u_n \right\rbrace$, Our goal is to build a shape model over this distribution of surfaces. Since the collection of curves in the training set represent objects of the same class, they are highly correlated thereby introducing large amount of redundancy. The cloud of training points is approximated to have a Gaussian distribution, where most of the dimensions of the Gaussian collapse, leaving the principal modes of shape variation. We can thus reduce redundant dimensions by using Principal Component Analysis (PCA) which only keeps the most relevant shape variances.
@@ -551,11 +551,24 @@ where $E(x_C)$ is called an energy function. The joint distribution is defined a
 
 In the field of image processing, MRFs are used to capture, for each pixel, the correlation between the hidden state variable and the observed image data. The spatial coherent of the image content can also be modelled using the neighborhood relationships between pixels\textquotesingle \ state variables as shown in Figure $\ref{fig:mrf}$. 
 
-For the image segmentation problem, our goal is to minimize the energy function associated with a MRF constructed from the training data and the observed input image. Particularly, we need to find a labelling configuration $A = (A_1, ..., A_{\lvert P \rvert})$ that minimizes an energy $E(A)$ given by
+For the image segmentation problem, our goal is to minimize the energy function associated with a MRF constructed from the training data and the observed input image. Particularly, given a set of labels $L = \left\lbrace 0, ..., n \right\rbrace $ we need to find a labelling configuration $A = (A_1, ..., A_{\lvert P \rvert})$ for a set of voxels $P$ that minimizes an energy $E(A)$ given by
 
 \begin{equation}
-E(A) = \lambda R(A) + B(A) = 
+E(A) = \lambda R(A) + B(A) = \lambda \sum_{p \in P} R_p(A_p) + \sum_{(p, q) \in N} B_{p, q} \delta_{A_p \neq A_q}
+\label{eq:mrf_energy}
 \end{equation}
+
+where the set $N$ is a collection of neighboring voxel pairs, the function $\delta$ is 1 if $A_p \neq A_q$ and 0 otherwise and $\lambda$ is a balancing parameter. There are two types of energy terms in Equation $\ref{eq:mrf_energy}$. The first term $R_p(A_p)$ is a data term which expresses a penalty for assigning label $A_p$ to voxel $p$. Normally, we use the negative log likelihood of the gray value for this term. The second term $B_{p, q}$ is a boundary term which punishes the assignment of labels $A_p$ and $A_q$ to the two neighboring voxels $p$ and $q$. In the context of lung segmentation, Shimizu and Nakagomi \cite{shimizu2011automated} \cite{nakagomimulti} proposed a novel energy function incorporating shape energy term $S_{p, q}$ based on multiple shape priors learned with the statistical shape model described in Section $\ref{sec:SSM}$:
+
+\begin{equation}
+E(A) = \lambda R(A) + B(A) = \lambda \sum_{p \in P} \left\lbrace  R_p(A_p) + NB_p(A_p) \right\rbrace + \sum_{(p, q) \in N} \left\lbrace B_{p, q} + S_{p, q} \right\rbrace \delta_{A_p \neq A_q}
+\end{equation}
+
+\begin{equation}
+S_{p, q} = \min(\mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_p})]/2 \right\rbrace, \mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_q})]/2 \right\rbrace )
+\end{equation}
+
+where $\theta_{A_p}$ represents an angle between a vector connecting voxels $p$ and $q$ and a gradient vector of a signed distance $\phi_{A_p}(p)$ from the boundary of a shape corresponding to a label $A_p \in L$ as shown in Figure $\ref{fig:shape_energy}$. $NB_p(A_p)$ is defined by the distance from the dorsal ribs. This multiple shape MRF problem can be solved using the combination of fusion move and min-cut algorithms explained in Section $\ref{sec:graph_cut}$.
 
 \section{Graph Cut Algorithms}
 
@@ -568,11 +581,13 @@ comparison of cut algorithms, could them be used interchangeably in different si
 \subsubsection{Branch-and-Cut Algorithm}
 
 \subsection{Contour Cut}
-
-\subsubsection{Graph Circulations}
 \label{sec:normalized_cut}
 
 \cite{shi2000normalized}
+
+\subsubsection{Graph Circulations}
+
+
 
 random walk matrix P, circulation matrix F
 
@@ -586,7 +601,7 @@ Ccut
 \subsubsection{Computational Solution}
 
 \subsection{Graph-Cut}
-
+\label{sec:graph_cut}
 \subsubsection{Min-Cut}
 
 \subsubsection{Alpha-Expansion and Fusion Move}
