@@ -489,7 +489,7 @@ Here $i \rightarrow j$ means that $j$ is in forward direction of $i$ and $\sigma
     	\includegraphics[width=0.23\textwidth]{images/contour_graph4.png}
         \label{fig:contour_graph4}
     }
-    \caption{Directed graph for contour grouping. (a) Horse image. (b) Edge map extracted from Pb. (c) Zoom-in view of graph connection in window A. Each edge node is duplicated in two opposite orientations. Oriented nodes are connected according to elastic energy and their orientation consistency. Here $W_{ij} \gg W_{ik}$. Salient contours form 1D topological chain or cycle in this graph. (d) In window B, adding $W^{back}$ to duplicated nodes $i, \bar{i}$ turns a topological chain into a cycle.}
+    \caption{Directed graph for contour grouping. (a) Horse image. (b) Edge map extracted from Pb. (c) Zoom-in view of graph connection in window A. Each edge node is duplicated in two opposite orientations. Oriented nodes are connected according to elastic energy and their orientation consistency. Here $W_{ij} \gg W_{ik}$. Salient contours form 1D topological chain or cycle in this graph. (d) In window B, adding $W^{back}$ to duplicated nodes $i, \bar{i}$ turns a topological chain into a cycle. Image source: \cite{zhu2007untangling}.}
 \end{figure}
 
 In this graph, an ideal curve leads to two chains while random clutter produces fragmented clusters in the graph. Our goal is to detect such topological differences, and extract 1D topological structures only. To simplify the topological classification task and reduce the search to only cyclic structures, we transform two duplicated chains into a cycle by adding a small amount of connection $W^{back}$ between the duplicated nodes $i$ and $\bar{i}$. For open contours, $W^{back}$ connects the termination points back to the opposite direction to create a cycle as illustrated in Figure $\ref{fig:contour_graph4}$.
@@ -520,7 +520,7 @@ other nodes from the graph in the set without it ceasing to be a clique. Figure 
     	\includegraphics[width=0.35\textwidth]{images/shape_energy.png}
         \label{fig:shape_energy}
     }
-    \caption{}
+    \caption{(a) Image source: \cite{bishop2006pattern}. (b)Image source: \cite{shimizu2011automated}.}
 \end{figure}
 
 Given a clique C, we denote the set of variables in that clique by $x_C$. Then the joint distribution is written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques of the graph
