@@ -464,7 +464,7 @@ In this section, we present a method to construct a directed contour grouping gr
 W_{ij} = e^{-(1 - cos(\mid \phi_i \mid + \mid \phi_j \mid))/\sigma^2}\ \mathrm{if}\ i \rightarrow j
 \end{equation}
 
-Here $i \rightarrow j$ means that $j$ is in forward direction of $i$ and $\sigma$ is the scaling factor. $W_{ij} \geq 0$ implies that $W_{ji} = 0$. $\phi_i$ and $\phi_j$ denote the turning angles of $i$ and $j$ w.r.t. the line connecting them as shown in Figure.
+Here $i \rightarrow j$ means that $j$ is in forward direction of $i$ and $\sigma$ is the scaling factor. $W_{ij} \geq 0$ implies that $W_{ji} = 0$. $\phi_i$ and $\phi_j$ denote the turning angles of $i$ and $j$ w.r.t. the line connecting them as shown in Figure $\ref{fig:contour_graph3}$.
 
 \begin{figure}[htbp]
     \centering
@@ -488,7 +488,7 @@ Here $i \rightarrow j$ means that $j$ is in forward direction of $i$ and $\sigma
     	\includegraphics[width=0.23\textwidth]{images/contour_graph4.png}
         \label{fig:contour_graph4}
     }
-    \caption{.}
+    \caption{Directed graph for contour grouping. (a) Horse image. (b) Edge map extracted from Pb. (c) Zoom-in view of graph connection in window A. Each edge node is duplicated in two opposite orientations. Oriented nodes are connected according to elastic energy and their orientation consistency. Here $W_{ij} \gg W_{ik}$. Salient contours form 1D topological chain or cycle in this graph. (d) In window B, adding $W^{back}$ to duplicated nodes $i, \bar{i}$ turns a topological chain into a cycle.}
 \end{figure}
 
 circular embedding
