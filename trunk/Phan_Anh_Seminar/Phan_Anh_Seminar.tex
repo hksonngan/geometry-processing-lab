@@ -503,7 +503,9 @@ x_j = r_j \exp(i \theta_j)
 
 with $r_j = 1$ if $j \in C$ and $0$ otherwise, and $\theta_j = O(j) \delta$ specifies the ordering with $\delta = \frac{2\pi}{\lvert C \rvert}$ is a phase step. The radius $r_j$ of each point encodes whether it is part of the contour.
 
-\subsection{Markov Random Field}
+\subsection{Markov Random Fields}
+
+Markov Random Fields (MRFs) are undirected graphical models which formalize and visualize the structure of a probabilistic model through a graph. In MRFs, the nodes correspond to a set of random variables $\left\lbrace x_1, ..., x_n\right\rbrace $, the edges represent soft constraints between them and the graph as a whole can be understood as a joint distribution $p(x)$ over the set of random variables. It is advantageous to express the joint distribution $p(x)$ as a product of functions defined over sets of variables that are local to the graph since this so-called factorized representation conveys interesting information about the properties of the class of distributions that the graph represents.
 
 \section{Graph Cut Algorithms}
 
