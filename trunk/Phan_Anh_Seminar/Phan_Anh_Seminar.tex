@@ -505,7 +505,25 @@ with $r_j = 1$ if $j \in C$ and $0$ otherwise, and $\theta_j = O(j) \delta$ spec
 
 \subsection{Markov Random Fields}
 
-Markov Random Fields (MRFs) are undirected graphical models which formalize and visualize the structure of a probabilistic model through a graph. In MRFs, the nodes correspond to a set of random variables $\left\lbrace x_1, ..., x_n\right\rbrace $, the edges represent soft constraints between them and the graph as a whole can be understood as a joint distribution $p(x)$ over the set of random variables. It is advantageous to express the joint distribution $p(x)$ as a product of functions defined over sets of variables that are local to the graph since this so-called factorized representation conveys interesting information about the properties of the class of distributions that the graph represents.
+Markov Random Fields (MRFs) are undirected graphical models which formalize and visualize the structure of a probabilistic model through a graph. In MRFs, the nodes correspond to a set of random variables $\left\lbrace x_1, ..., x_n\right\rbrace $, the edges represent soft constraints between them and the graph as a whole can be understood as a joint distribution $p(x)$ over the set of random variables. It is advantageous to express the joint distribution $p(x)$ as a product of functions defined over sets of variables that are local to the graph since this so-called factorized representation conveys interesting information about the properties of the class of distributions that the graph represents. We therefore need to define the appropriate notion of locality through a graphical concept called a clique. A clique is defined as a subset of the nodes in a graph such that there exists a link between all pairs of nodes in the subset. In other words, the set of nodes in a clique is fully connected. Furthermore, a maximal clique is a clique such that it is not possible to include any
+other nodes from the graph in the set without it ceasing to be a clique. Figure shows an example of cliques.
+
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.25\textwidth]{images/clique.png}
+        \label{fig:clique}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.35\textwidth]{images/shape_energy.png}
+        \label{fig:shape_energy}
+    }
+    \caption{}
+\end{figure}
+
+Given a clique C, we denote the set of variables in that clique by $x_C$. Then the joint distribution is written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques of the graph
 
 \section{Graph Cut Algorithms}
 
