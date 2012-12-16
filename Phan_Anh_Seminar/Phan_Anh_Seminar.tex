@@ -6,6 +6,7 @@
 \setcounter{secnumdepth}{5} %to make it numbered
 
 \usepackage{textcomp}
+\usepackage{amsmath}
 \usepackage{amsthm}
 \newtheorem{definition}{}
 
@@ -491,7 +492,16 @@ Here $i \rightarrow j$ means that $j$ is in forward direction of $i$ and $\sigma
     \caption{Directed graph for contour grouping. (a) Horse image. (b) Edge map extracted from Pb. (c) Zoom-in view of graph connection in window A. Each edge node is duplicated in two opposite orientations. Oriented nodes are connected according to elastic energy and their orientation consistency. Here $W_{ij} \gg W_{ik}$. Salient contours form 1D topological chain or cycle in this graph. (d) In window B, adding $W^{back}$ to duplicated nodes $i, \bar{i}$ turns a topological chain into a cycle.}
 \end{figure}
 
-circular embedding
+In this graph, an ideal curve leads to two chains while random clutter produces fragmented clusters in the graph. Our goal is to detect such topological differences, and extract 1D topological structures only. To simplify the topological classification task and reduce the search to only cyclic structures, we transform two duplicated chains into a cycle by adding a small amount of connection $W^{back}$ between the duplicated nodes $i$ and $\bar{i}$. For open contours, $W^{back}$ connects the termination points back to the opposite direction to create a cycle as illustrated in Figure $\ref{fig:contour_graph4}$.
+
+A contour $(C, O)$ is defined by a set of vertices $C \subseteq V$ and a function $O: C \rightarrow \left\lbrace 1, ..., \lvert C \rvert \right\rbrace$ which specifies a unique ordering of these vertices. To represent a contour $(C, O)$, we must encode nodes which are part of the contour as well as the ordering
+of these points. This is accomplished by using a circular embedding where each node of the contour is mapped to a point on a circle about the origin in the complex plane and all other points are mapped to the origin. In this way, each point is represented as complex number
+
+\begin{equation}
+x_j = r_j \exp(i \theta_j)
+\end{equation}
+
+with $r_j = 1$ if $j \in C$ and $0$ otherwise, and $\theta_j = O(j) \delta$ specifies the ordering with $\delta = \frac{2\pi}{\lvert C \rvert}$ is a phase step. The radius $r_j$ of each point encodes whether it is part of the contour.
 
 \subsection{Markov Random Field}
 
