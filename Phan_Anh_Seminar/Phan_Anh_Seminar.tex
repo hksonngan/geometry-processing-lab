@@ -587,7 +587,11 @@ GW(T) = \sum\limits_{v \notin V_T} p(v) + \sum\limits_{e \in E_T} c(e)
 Here, $p(v)$ is interpreted as penalty for not connecting a vertex $v$. Furthermore, we can formulate this problem in terms of integer linear program (ILP) by transforming the reduced graph $G^{\prime} = (V^{\prime}, E^{\prime}, c^{\prime}, p^{\prime)}$ resulting from the application of preprocessing into the directed edge-weighted graph $G_{SA} = (V_{SA}, A_{SA}, c^{\prime \prime})$. The vertex set $V_{SA} = V^{\prime} \cup \left\lbrace r \right\rbrace $ contains the vertices of the input graph $G^{\prime}$ and an artificial root vertex $r$. The arc set $A_{SA}$ contains two directed arcs $(i, j)$ and $(j, i)$ for each edge $(i, j) \in E^{\prime}$ plus a set of arcs from the root $r$ to the customer vertices $R_{SA} = \left\lbrace i \in V^{\prime} \lvert p_i^{\prime} > 0 \right\rbrace $ which are the vertices having positive profit. The cost vector $c^{\prime \prime}$ is defined as follows:
 
 \begin{equation}
-content...
+c_{ij}^{\prime \prime} = 
+	\begin{cases} 
+		c_{ij}^{\prime} - p_j^{\prime} & \forall (i, j) \in A_{SA}, i \neq r \\ 
+		- p_j^{\prime} &  \forall (r, j) \in A_{SA} .
+	\end{cases}
 \end{equation}
 
 \subsubsection{Branch-and-Cut Algorithm}
