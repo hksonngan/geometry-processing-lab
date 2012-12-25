@@ -611,6 +611,14 @@ y_i =
 	\forall i \in V_{SA}, i \neq r.
 \end{equation}
 
+Given a set of vertices $S \subset V_{SA}$ and its complement $\bar{S} = V_{SA} \backslash S$, we define two directed cuts: $\delta^+(S) = \left\lbrace (i, j) \lvert i \in S, j \in \bar{S} \right\rbrace $ and $\delta^-(S) = \left\lbrace (i, j) \lvert i \in \bar{S}, j \in S \right\rbrace $. We also write $x(A) = \sum\limits_{ij \in A} x_{ij}$ for any subset of arcs $A \subset A_{SA}$. The corresponding ILP model then reads as follows:
+
+\begin{equation}
+\label{eq:ilp_cut}
+\end{equation}
+
+Note that the profits from the solution$^{\prime}$s vertices have been absorbed into the cost formulation. Therefore, in Equation $\ref{eq:ilp_cut}$ we only penalize those vertices not getting included into the solution.
+
 \subsubsection{Branch-and-Cut Algorithm}
 
 A cutting plane is nothing but a linear inequality that is valid for PI but not for P. No need to explain branch-and-bound and simplex algorithm, explain based on the slides and wiki.
