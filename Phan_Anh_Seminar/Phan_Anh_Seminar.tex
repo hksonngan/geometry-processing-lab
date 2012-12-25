@@ -615,9 +615,29 @@ Given a set of vertices $S \subset V_{SA}$ and its complement $\bar{S} = V_{SA} 
 
 \begin{equation}
 \label{eq:ilp_cut}
+\mbox{(CUT)} \qquad \min \sum\limits_{ij \in A_{SA}} c_{ij}^{\prime \prime} x_{ij} + \sum\limits_{i \in V_{SA}} p_i^{\prime}
 \end{equation}
 
-Note that the profits from the solution$^{\prime}$s vertices have been absorbed into the cost formulation. Therefore, in Equation $\ref{eq:ilp_cut}$ we only penalize those vertices not getting included into the solution.
+\begin{equation}
+\label{eq:tree}
+\mbox{subject to} \qquad \sum\limits_{ji \in A_{SA}} x_{ji} = y_i \qquad \qquad \forall i \in V_{SA} \backslash \left\lbrace r \right\rbrace 
+\end{equation}
+
+\begin{equation}
+\qquad \qquad \qquad \qquad \qquad x(\delta^-(S)) \geq y_k \qquad \qquad k \in S, r \notin S, \forall S \subset V_{SA}
+\label{eq:connectivity}
+\end{equation}
+
+\begin{equation}
+\sum\limits_{ri \in A_{SA}} x_{ri} = 1
+\label{eq:root}
+\end{equation}
+
+\begin{equation}
+x_{ij}, y_i \in \left\lbrace 0, 1 \right\rbrace \qquad \qquad \qquad \forall (i, j) \in A_{SA}, \forall i \in V_{SA} \backslash \left\lbrace r \right\rbrace 
+\end{equation}
+
+Note that the profits from the solution$^{\prime}$s vertices have been absorbed into the cost formulation. Therefore, in Equation $\ref{eq:ilp_cut}$ we only penalize those vertices not getting included into the solution. The condition in Equation $\ref{eq:tree}$ is required to ensure a tree structure of the solution. The cut constraints $\ref{eq:connectivity}$ guarantee that for each vertex $v$ in the solution, there must be a directed path from $r$ to $v$. The constraint in Equation $\ref{eq:root}$ is used to ensure the existence and uniqueness of a connection to the root.
 
 \subsubsection{Branch-and-Cut Algorithm}
 
