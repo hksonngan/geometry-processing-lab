@@ -584,7 +584,7 @@ In this section, we discuss a method to solve the Prize-Collecting Steiner Tree 
 GW(T) = \sum\limits_{v \notin V_T} p(v) + \sum\limits_{e \in E_T} c(e)
 \end{equation}
 
-Here, $p(v)$ is interpreted as penalty for not connecting a vertex $v$. Furthermore, we can formulate this problem by means of an integer linear program (ILP) by transforming the reduced graph $G^{\prime} = (V^{\prime}, E^{\prime}, c^{\prime}, p^{\prime)}$ resulting from the application of preprocessing into the directed edge-weighted graph $G_{SA} = (V_{SA}, A_{SA}, c^{\prime \prime})$. The vertex set $V_{SA} = V^{\prime} \cup \left\lbrace r \right\rbrace $ contains the vertices of the input graph $G^{\prime}$ and an artificial root vertex $r$. The arc set $A_{SA}$ contains two directed arcs $(i, j)$ and $(j, i)$ for each edge $(i, j) \in E^{\prime}$ plus a set of arcs from the root $r$ to the customer vertices $R_{SA} = \left\lbrace i \in V^{\prime} \lvert p_i^{\prime} > 0 \right\rbrace $ which are the vertices having positive profit. The cost vector $c^{\prime \prime}$ is defined as follows:
+Here, $p(v)$ is interpreted as penalty for not connecting a vertex $v$. Furthermore, we can formulate this problem by means of an integer linear program (ILP) by transforming the reduced graph $G^{\prime} = (V^{\prime}, E^{\prime}, c^{\prime}, p^{\prime)}$ resulting from the application of preprocessing into a directed edge-weighted graph $G_{SA} = (V_{SA}, A_{SA}, c^{\prime \prime})$ which is called Steiner arborescence. The vertex set $V_{SA} = V^{\prime} \cup \left\lbrace r \right\rbrace $ contains the vertices of the input graph $G^{\prime}$ and an artificial root vertex $r$. The arc set $A_{SA}$ contains two directed arcs $(i, j)$ and $(j, i)$ for each edge $(i, j) \in E^{\prime}$ plus a set of arcs from the root $r$ to the customer vertices $R_{SA} = \left\lbrace i \in V^{\prime} \lvert p_i^{\prime} > 0 \right\rbrace $ which are the vertices having positive profit. The cost vector $c^{\prime \prime}$ is defined as follows:
 
 \begin{equation}
 c_{ij}^{\prime \prime} = 
@@ -638,6 +638,20 @@ x_{ij}, y_i \in \left\lbrace 0, 1 \right\rbrace \qquad \qquad \qquad \forall (i,
 \end{equation}
 
 Note that the profits from the solution$^{\prime}$s vertices have been absorbed into the cost formulation. Therefore, in Equation $\ref{eq:ilp_cut}$ we only penalize those vertices not getting included into the solution. The condition in Equation $\ref{eq:tree}$ is required to ensure a tree structure of the solution. The cut constraints $\ref{eq:connectivity}$ guarantee that for each vertex $v$ in the solution, there must be a directed path from $r$ to $v$. The constraint in Equation $\ref{eq:root}$ is used to ensure the existence and uniqueness of a connection to the root.
+
+In order to create a bijection between arborescence and PCST solutions, we introduce the so-called asymmetry
+constraints:
+
+\begin{equation}
+x_{rj} \leq 1 - y_i, \forall i < j, i \in R
+\end{equation}
+
+These inequalities assure that for each PCST solution the customer vertex adjacent to root is the one with the
+smallest index. Note further that in every non-customer vertex, which is not a branching vertex in the Steiner arborescence, in-degree and out-degree must be equal, whereas in a branching non-customer vertex in-degree is always less than outgoing degree. Thus, we have the following flow-balance constraints:
+
+\begin{equation}
+\sum\limits_{ji \in A_{SA}} x_{ji} \leq \sum\limits_{ij \in A_{SA}} x_{ij}, \qquad \forall i \notin R, i \neq r.
+\end{equation}
 
 \subsubsection{Branch-and-Cut Algorithm}
 
