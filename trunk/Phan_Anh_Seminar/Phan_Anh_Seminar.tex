@@ -660,6 +660,14 @@ This ILP problem can be solved efficiently in practice with a branch-and-cut alg
 The branch-and-cut algorithm is a very successful technique for solving a wide variety of integer programming problems to optimality. In essence, it is a combination of a cutting plane method with a branch-and-bound algorithm. These methods work by solving a sequence of linear programming relaxations of the integer programming
 problem. Cutting plane methods improve the relaxation of the problem to more closely approximate the integer programming problem, and branch-and-bound algorithms proceed by a sophisticated divide and conquer approach to solve problems.
 
+We consider a general ILP problem with $n$ variables and $m$ constraints stated as follows
+
+\begin{equation}
+\min \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{Z}_+^n \right\rbrace 
+\end{equation}
+
+where $x \in \mathbb{Z}_+^n$ is a vector of integer decision variables, $c \in \mathbb{Z}^n$ is the objective function vector, $b \in \mathbb{Z}^m$ is the right hand side vector and $A \in \mathbb{Z}^{m \times n}$ is the matrix of constraint coefficients.
+
 A cutting plane is nothing but a linear inequality that is valid for PI but not for P. Do not mention the PCST problem any more, 3 Outline of an algorithm.
 
 \subsection{Contour Cut}
