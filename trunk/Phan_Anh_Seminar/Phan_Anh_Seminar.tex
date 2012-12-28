@@ -668,7 +668,55 @@ We consider a general ILP problem with $n$ variables and $m$ constraints stated 
 
 where $x \in \mathbb{Z}_+^n$ is a vector of integer decision variables, $c \in \mathbb{Z}^n$ is the objective function vector, $b \in \mathbb{Z}^m$ is the right hand side vector and $A \in \mathbb{Z}^{m \times n}$ is the matrix of constraint coefficients.
 
-A cutting plane is nothing but a linear inequality that is valid for PI but not for P. Do not mention the PCST problem any more, 3 Outline of an algorithm.
+The LP-relaxation (CUT) is obtained by replacing the integrality requirements by their corresponding real-value constraints:
+
+\begin{equation}
+\min \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{R}_+^n \right\rbrace 
+\end{equation}
+
+Its feasible region is the polyhedron:
+
+\begin{equation}
+P = \left\lbrace x \in \mathbb{R}_+^n : Ax \geq b \right\rbrace 
+\end{equation}
+
+The integral hull is the convex hull of the set of integer solutions, i.e., the polyhedron:
+
+\begin{equation}
+P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace 
+\end{equation}
+
+We define a cutting plane as a linear inequality that is valid for $P_I$ but not for $P$ as shown in Figure $\ref{fig:cutting_plane}$.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.3\textwidth]{images/cutting_plane.png}
+\label{fig:cutting_plane}
+\caption{A cutting plane cuts through the polygon $P$ while trying to get as close to $P_I$ as possible.}
+\end{figure}
+A branch-and-cut algorithm is outlined as follows:
+
+\begin{enumerate}
+
+\item Initialization: Denote the initial integer programming problem by $ILP^0$ and set the active nodes to be $L = \left\lbrace ILP^0 \right\rbrace $. Set the upper bound to be $\bar{z} = + \infty$ and set the lower bound $\underline{z}_l = - \infty$ for the problem $l \in L$.
+
+\item Termination: If $L = \emptyset$, then the solution $x^*$ which yielded the incumbent objective value $\bar{z}$ is optimal. If no such $x^*$ exists (i.e., $\bar{z} = + \infty$) then ILP is infeasible.
+
+\item Problem selection: Select and delete a problem $ILP^l$ from $L$.
+
+\item Relaxation: Solve the linear programming relaxation of $ILP^l$. If the relaxation is infeasible, set $\underline{z}_l = + \infty$ and go to Step 6. Let $\underline{z}_l$ denote the optimal objective value of the relaxation if it is finite and let $x^{lR}$ be an optimal solution; otherwise set $\underline{z}_l = - \infty$.
+
+\item Add cutting planes: If desired, search for cutting planes that are violated by $x^{lR}$; if any are found, add them to the relaxation and return to Step 4.
+
+\item Fathoming and Pruning:
+
+\begin{enumerate}
+\item If $\underline{z}_l \geq \bar{z}$ go to Step 2.
+\item If $\underline{z}_l < \bar{z}$ and $x^{lR}$ is integral feasible, update $\bar{z} = \underline{z}_l$ , delete from $L$ all problems with $\underline{z}_l \geq \bar{z}$, and go to Step 2.
+\end{enumerate}
+
+\item Partitioning: Let $\left\lbrace S^{lj} \right\rbrace _{j = 1} ^ {j = k}$ be a partition of the constraint set $S^l$ of problem $ILP^l$. Add problems $\left\lbrace ILP^{lj} \right\rbrace _{j = 1} ^ {j = k}$ to $L$, where $ILP^{lj}$ is $ILP^l$ with feasible region restricted to $S^{lj}$ and $\underline{z}_{lj}$ for $j = 1, ..., k$ is set to the value of $\underline{z}_l$ for the parent problem $l$. Go to Step 2.
+
+\end{enumerate}
 
 \subsection{Contour Cut}
 \label{sec:normalized_cut}
