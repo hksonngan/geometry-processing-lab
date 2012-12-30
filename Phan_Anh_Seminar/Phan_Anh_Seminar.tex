@@ -721,13 +721,31 @@ A branch-and-cut algorithm is outlined as follows:
 \subsection{Contour Cut}
 \label{sec:normalized_cut}
 
-\cite{shi2000normalized}
+
 
 \subsubsection{Graph Circulations}
 
+%\cite{shi2000normalized}
 
+Given a weighted directed graph $G = (V, E, W)$, a random walk on $G$ is a Markov process with transition matrix $P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$ is a diagonal matrix with the row-sums of $W$ along the diagonal. Let $\pi$ be the unique left eigenvector such that $\pi P = \pi$. The row-vector $\pi$ corresponds to the stationary distribution of the random walk. This means:
+\begin{equation}
+\pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu},
+\end{equation}
+that is, the probability of finding the random walk at $u$ is the sum of all the incoming probabilities from vertices $v$ that have a directed edges to $u$.
 
-random walk matrix P, circulation matrix F
+A circulation on a directed graph $G$ is defined as follows.
+\begin{definition}
+A matrix $F \in (\mathbb{R}^+ \cup \left\lbrace 0 \right\rbrace )^{\lvert V \rvert \times \lvert V \rvert}$ that assigns each directed edge to a non-negative value is called a circulation if
+\begin{equation}
+\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{w, v \rightarrow w} F_{vw}
+\end{equation}
+for each vertex $v$.
+\end{definition}
+One interpretation of a circulation is a flow in the graph. The flow at each vertex must be conserved, hence, the flow in is equal to the flow out. It is easy to show that $F = \Pi P$ is a circulation in the graph $G$, where $\Pi = \mbox{diag}(\pi)$. This is because the conservation property follows directly from the stationarity property of $\pi$:
+\begin{equation}
+\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{u, u \rightarrow v} \pi_u P_{uv} = \pi_v \cdot 1 = \sum\limits_{w, v \rightarrow w} \pi_v P_{vw} = \sum\limits_{w, v \rightarrow w} F_{vw}
+\end{equation}
+This circulation is advantageous because if $W$ is symmetric then the directed versions of cut and volume that we will define reduce to the original undirected versions \cite{gleich2006hierarchical}.
 
 \subsubsection{Contour Cut Cost}
 
