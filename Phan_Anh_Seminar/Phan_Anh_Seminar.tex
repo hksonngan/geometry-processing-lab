@@ -756,8 +756,40 @@ We define the external cut of a contour $(C, O)$ to measure its separation from 
 Ecut(C) = \sum\limits_{i \in C, j \notin C} F_{ij}.
 \end{equation}
 
-We use the internal cut to measure the entanglement caused by graph edges within the contour that violate the
-ordering $O$. Intuitively, the internal cut measures how much the contour deviates from an ideal one-dimensional contour toward a 2-dimensional clique.
+The internal cut is used to measure the entanglement caused by graph edges within the contour that violate the
+ordering $O$. Intuitively, the internal cut measures how much the contour deviates from an ideal one-dimensional contour toward a 2-dimensional clique. Let $k \in \mathbb{Z}^+$ be the width of the contour. Nodes $i, j \in C$ with $\lvert O(i) - O(j) \rvert > k$ are beyond the width of the contour hence they are included into the internal cut:
+\begin{equation}
+Icut(C, O) = \sum\limits_{(i, j) \in C, \lvert O(i) - O(j) \rvert > k} F_{ij}.
+\end{equation}
+
+Having defined the external and internal cuts, we can now define the cost function for the contour cut as follows:
+\begin{equation}
+Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{Vol(C)},
+\end{equation}
+where $Vol(C) = \sum_{i \in C, j \in E} F_{ij}$ is the sum of the weights of all edges incident with the contour. This cost function will be small for contours having small internal and external cuts.
+
+The internal and external cuts can be encoded with respect to the circular embedding. Given a the circular embedding of a contour, $x \in \mathbb{C}^{\lvert C \rvert}$, the external cut is:
+\begin{equation}
+Ecut(x) = \sum\limits_{(i, j) \in E: r_i \neq 0, r_j = 0} F_{ij} = \sum\limits_{(i, j) \in E} F_{ij}r_i(1 - r_j)
+\end{equation}
+
+Instead of using the hard-bound of $k$ for the internal cut, a soft version of the internal cut is applied by using the cosine function:
+\begin{equation}
+Icut(x) = \sum\limits_{(i, j) \in C}F_{ij} r_ir_j(1 - \cos(\theta_j - \theta_i - \delta)).
+\end{equation}
+
+The volume of the contour is defined as
+\begin{equation}
+\mbox{Vol}(x) = \sum\limits_{(i, j) \in E}F_{ij}r_i.
+\end{equation}
+
+The contour cut in terms of the circular embedding $x$ is then
+\begin{equation}
+\begin{array}{lcl}
+Ccut(x) & = & \dfrac{Icut(x) + Ecut(x)}{Vol(x)} = 1 - \dfrac{\sum\limits_{(i, j) \in E}F_{ij}r_ir_j\cos(\theta_j - \theta_i - \delta)}{\sum\limits_{(i, j) \in E}F_{ij}r_i} = ... \\
+& = & \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x)
+\end{array}
+\end{equation}
 
 \subsubsection{Computational Solution}
 
