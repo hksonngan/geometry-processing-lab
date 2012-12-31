@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}[section]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
@@ -749,8 +750,7 @@ This circulation is advantageous because if $W$ is symmetric then the directed v
 
 \subsubsection{Contour Cut}
 %\cite{zhu2007untangling}
-\cite{KenGalShi2011}
-
+%\cite{KenGalShi2011}
 We define the external cut of a contour $(C, O)$ to measure its separation from the rest of the graph, $V \backslash C$:
 \begin{equation}
 Ecut(C) = \sum\limits_{i \in C, j \notin C} F_{ij}.
@@ -787,11 +787,30 @@ The contour cut in terms of the circular embedding $x$ is then
 \begin{equation}
 \begin{array}{lcl}
 Ccut(x) & = & \dfrac{Icut(x) + Ecut(x)}{Vol(x)} = 1 - \dfrac{\sum\limits_{(i, j) \in E}F_{ij}r_ir_j\cos(\theta_j - \theta_i - \delta)}{\sum\limits_{(i, j) \in E}F_{ij}r_i} = ... \\
-& = & \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x)
+& = & \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x),
 \end{array}
 \end{equation}
+where $H(\delta) = \frac{F\exp(-i\delta) + F^T\exp(i\delta)}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient. It follows that the problem of minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
 
 \subsubsection{Computational Solution}
+
+In order to minimize the contour cut, we would like to solve
+\begin{equation}
+\max_x \dfrac{x^*H(\delta)x}{x^* \Pi x} 
+\end{equation}
+\begin{equation*}
+ \mbox{such that} \qquad x_i = r_i\exp(i\theta_i), \qquad r_i \in \left\lbrace 0, 1 \right\rbrace, \qquad \theta_i = O(i)\delta,
+\end{equation*}
+where we seek not just the global maximum but all critical points which correspond to different contours. By requiring $r_i$ and $\theta_i$ to take on discrete values the problem is computationally infeasible since it requires searching over not only an exponential number of subsets sets of vertices but also over orderings on each of these sets. We relax the problem by allowing $x$ to take on arbitrary complex values: $x \in \mathbb{C}^{\lvert C \rvert}$. Note that we now must maximize over $\delta$ in addition to $x$. The main result for solving the problem is based on the following theorem:
+\begin{theorem}
+The critical points of the relaxed contour cut problem
+\begin{equation}
+\max_{x, \delta} \dfrac{x^*H(\delta)x}{x^* \Pi x} \qquad \mbox{s.t.} \qquad x_i \in \mathbb{C}
+\end{equation}
+can be found by searching over $\delta$ and finding the eigenvectors of the corresponding matrices $\Pi^{-1}H(\delta)$; any eigenvectors for which $x^*H(\delta)x = \lvert x^*Fx \rvert$ are critical points
+with respect to both $x$ and $\delta$.
+\end{theorem}
+The proof for this theorem can be found in \cite{KenGalShi2011}. In practice it might be difficult to search over all values of $\delta$ with a small enough step size such that $x^*H(\delta)x = \lvert x^*Fx \rvert$ to a high enough precision. Instead a different algorithm is used based on the observation that as $\delta$ changes, the eigenvalues of $H(\delta)$ rarely cross. To determine the critical points with respect to $\delta$, we make the assumption that the $k^{th}$ largest eigenvalue of $H(\delta)$ remains the $k^{th}$ largest over all values of $\delta$, in which case it suffices to directly find the local maxima of the $k^{th}$ eigenvalue over all $\delta$. This leads to the following algorithm:
 
 \subsection{Graph-Cut}
 \label{sec:graph_cut}
@@ -831,10 +850,10 @@ some criticisms e.g. time consuming, dataset used. Recommendation: what to use, 
 
 %\end{thebibliography}
 
-\newpage
-\noindent
-\begin{picture}(160,242)
-\put(0,0){\framebox(160,242){}}
-\end{picture}
+%\newpage
+%\noindent
+%\begin{picture}(160,242)
+%\put(0,0){\framebox(160,242){}}
+%\end{picture}
 
 \end{document}
