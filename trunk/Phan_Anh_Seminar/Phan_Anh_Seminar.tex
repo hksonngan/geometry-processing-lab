@@ -747,12 +747,17 @@ One interpretation of a circulation is a flow in the graph. The flow at each ver
 \end{equation}
 This circulation is advantageous because if $W$ is symmetric then the directed versions of cut and volume that we will define reduce to the original undirected versions \cite{gleich2006hierarchical}.
 
-\subsubsection{Contour Cut Cost}
-
-Ccut
-
-\cite{zhu2007untangling}
+\subsubsection{Contour Cut}
+%\cite{zhu2007untangling}
 \cite{KenGalShi2011}
+
+We define the external cut of a contour $(C, O)$ to measure its separation from the rest of the graph, $V \backslash C$:
+\begin{equation}
+Ecut(C) = \sum\limits_{i \in C, j \notin C} F_{ij}.
+\end{equation}
+
+We use the internal cut to measure the entanglement caused by graph edges within the contour that violate the
+ordering $O$. Intuitively, the internal cut measures how much the contour deviates from an ideal one-dimensional contour toward a 2-dimensional clique.
 
 \subsubsection{Computational Solution}
 
