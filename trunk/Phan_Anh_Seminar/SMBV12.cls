@@ -83,8 +83,8 @@ You should not use \verb|\subparagraph| with this class.\vskip0.5cm}
 %\AtBeginDocument{\RequirePackage{graphics}}
 %\AtBeginDocument{\RequirePackage{graphicx}}
 \AtBeginDocument{\RequirePackage{subfigure}}
-\AtBeginDocument{\RequirePackage{algorithm}}
-\AtBeginDocument{\RequirePackage{algorithmic}}
+%\AtBeginDocument{\RequirePackage{algorithm}}
+%\AtBeginDocument{\RequirePackage{algorithmic}}
 
 \AtBeginDocument{\raggedbottom}
 

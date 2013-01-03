@@ -10,6 +10,8 @@
 \usepackage{amsthm}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}[section]
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
@@ -811,6 +813,18 @@ can be found by searching over $\delta$ and finding the eigenvectors of the corr
 with respect to both $x$ and $\delta$.
 \end{theorem}
 The proof for this theorem can be found in \cite{KenGalShi2011}. In practice it might be difficult to search over all values of $\delta$ with a small enough step size such that $x^*H(\delta)x = \lvert x^*Fx \rvert$ to a high enough precision. Instead a different algorithm is used based on the observation that as $\delta$ changes, the eigenvalues of $H(\delta)$ rarely cross. To determine the critical points with respect to $\delta$, we make the assumption that the $k^{th}$ largest eigenvalue of $H(\delta)$ remains the $k^{th}$ largest over all values of $\delta$, in which case it suffices to directly find the local maxima of the $k^{th}$ eigenvalue over all $\delta$. This leads to the following algorithm:
+
+\begin{algorithm}
+\caption{Contour cut}
+Calculate matrices $P$ and $\Pi$ from $W$.
+\begin{algorithmic}
+\For {$\delta = \delta_{min}\ to\ \delta_{max}$}\\
+\qquad $H(\delta) \leftarrow (\Pi P \exp(-i\delta) + P^T \Pi \exp(i\delta))/2$\\
+\qquad Solve $\Pi^{-1} H(\delta)x = \lambda x$ for top $k$ eigenvectors.
+\EndFor
+\end{algorithmic}
+Find local maxima of each $\lambda_i$ over all $\delta$. The associated $x^\prime$s are critical points with respect to both $x$ and $\delta$.
+\end{algorithm}
 
 \subsection{Graph-Cut}
 \label{sec:graph_cut}
