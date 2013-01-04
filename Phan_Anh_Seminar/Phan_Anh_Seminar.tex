@@ -830,7 +830,13 @@ Find local maxima of each $\lambda_i$ over all $\delta$. The associated $x^\prim
 \label{sec:graph_cut}
 \subsubsection{Min-Cut}
 
-Given a undirected graph constructed from Section $\ref{sec:mrf}$, we convert it to a directed graph by introducing terminal nodes corresponding to the set of labels that can be assigned to pixels. For the two-class problem, there are two terminal nodes called source and sink. For each node in the original graph we insert a directed edge from the source to it and another directed edge from that node to the sink with the edge weight being the data term
+Given a undirected graph constructed from Section $\ref{sec:mrf}$, we convert it to a directed graph by introducing terminal nodes corresponding to the set of labels that can be assigned to pixels. For the two-class problem, there are two terminal nodes called the source, $s$, and sink, $t$. For each node in the original graph we insert a directed edge from the source to it and another directed edge from that node to the sink with the edge weight being the data term evaluated at the label values of the source or sink accordingly. Each existing edge from the original graph is replaced by 2 directed edges with the weights being the boundary term. Figure shows an example of a two-terminal graph that can be used to minimize the energy function as in Equation $\ref{eq:mrf_energy}$ on a $3 \times 3$ image with two labels.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/mincut.png}
+    \caption{title}
+\end{figure}
 
 \subsubsection{The QPBOP Algorithm}
 
