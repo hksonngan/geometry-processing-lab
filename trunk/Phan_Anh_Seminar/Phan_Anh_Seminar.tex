@@ -840,7 +840,11 @@ Given an undirected graph constructed from Section $\ref{sec:mrf}$, we convert i
     \label{fig:mrf_mincut}
 \end{figure}
 
+An $s/t$ cut $C$ on a graph with two terminals is a partitioning of the nodes in the graph into two disjoint subsets $S$ and $T$ such that the source $s$ is in $S$ and the sink $t$ is in $T$. The cost of a cut $C = \left\lbrace S, T \right\rbrace $ is defined as the sum of the costs of boundary edges $(p, q)$ where $p \in S$ and $q \in T$. One of the fundamental results in combinatorial optimization is that the minimum $s/t$ cut problem can be solved by finding a maximum flow from the source $s$ to the sink $t$. Loosely speaking, maximum flow is the maximum amount of water that can be sent from the source to the sink by interpreting graph edges as directed pipes with capacities equal to edge weights.
 
+The max-flow problem can be solved in polynomial time by using the augmenting paths-based algorithm which pushes flow along non-saturated paths from the source to the sink until the maximum flow in the graph $G$ is reached. A typical augmenting path algorithm stores information about the distribution of the current $s \rightarrow t$ flow $f$ among the edges of $G$ using a residual graph $G_f$. The topology of $G_f$ is identical to $G$, but the capacity of an edge in $G_f$ reflects the residual capacity of the same edge in $G$ given the amount of flow already in the edge. At the initialization, there is no flow from the source to the sink $(f = 0)$ and edge capacities in the residual graph $G_0$ are equal to the original capacities in $G$. At each new
+iteration, the algorithm finds the shortest $s \rightarrow t$ path along non-saturated edges of the residual graph. If a path is found, then the algorithm augments it by pushing the maximum possible flow $df$ that saturates at least one of the edges in the path. The residual capacities of edges in the path are reduced
+by $df$ while the residual capacities of the reverse edges are increased by $df$. Each augmentation increases the total flow from the source to the sink $f = f + df$. The maximum flow is reached when any $s \rightarrow t$ path crosses at least one saturated edge in the residual graph $G_f$.
 
 \subsubsection{The QPBOP Algorithm}
 
