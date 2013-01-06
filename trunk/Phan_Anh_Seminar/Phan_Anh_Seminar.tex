@@ -902,7 +902,22 @@ Figure $\ref{fig:ers_result}$ shows the results on ETHZ, scored for the full det
 
 This section demonstrates the result from the contour cut algorithm developed by Kennedy et al. \cite{KenGalShi2011}. This approach first identifies edgels from the output of a contour detector, it then constructs a contour grouping graph whose vertices are the edgels duplicated in opposite directions and edges connecting the edgels within a small radius. Cycles are formed by connecting the duplicated nodes. The contour cut cost function is formulated based on the internal and external cuts normalized by the volume of the contour. The minimization of the contour cut cost can be formulated as a Hermitian eigenvalue problem as stated in Theorem $\ref{theorem:hermitian}$.
 
-We compare the algorithm which finds the exact critical points of Equation $\ref{eq:hermitian}$ by searching over all $\delta$ to the algorithms that give approximations by finding the right eigenvectors of $P$ and the left eigenvectors of $P$ scaled by $\Pi^{-1}$.
+The algorithm is tested on the Berkeley Segmentation dataset. We compare the algorithm which finds the exact critical points of Equation $\ref{eq:hermitian}$ by searching over all $\delta$ to the algorithms that give approximations by finding the right eigenvectors of $P$ and the left eigenvectors of $P$ scaled by $\Pi^{-1}$. The algorithms we compare are $H(F)$, $H(P)$, $P$, and $P^T$, where the name designates which matrix is used in the eigenvector computation. Specifically, $H(F)$ is the algorithm which finds the exact critical points of Equation $\ref{eq:hermitian}$ using the circulation matrix $F = \Pi P$; $H(P)$ is the exact algorithm using $P$ rather than $F$; $P$ is the approximation given by the right eigenvectors of $P$; $P^T$ is the approximation given by the left eigenvectors of $P$ and scaled by $\Pi^{-1}$. Note that $P$ is the algorithm given by Zhu \cite{zhu2007untangling}. We also compare between using the full graph and clustering the nodes to $n = 1000$ clusters using normalized cut \cite{shi2000normalized} and running the algorithms on this reduced graph.
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.30\textwidth]{images/contour_cut_n1000_top20.png}
+        \label{fig:contour_cut_pr}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.65\textwidth]{images/contour_cut_vs_others.png}
+        \label{fig:contour_cut_example}
+    }
+    \caption{(a) Comparison of algorithms for the Berkeley Segmentation dataset with $n = 1000$, top 20 contours. (b) Results of $H(F)$ on various images using an aggregated graph with $n = 1000$ vertices. The top 20 contours, as ranked by the cost function (Equation ), are plotted. Observe that the contour cut algorithm ($H(F)$) finds significantly longer contours than Zhu$^\prime$s algorithm ($P$). Left: image with extracted contours. Middle: all thresholded Pb edges (black) and contours (white). Right: difference between $H(F)$ and $P$. Contours only $H(F)$ found are white and contours only $P$ found are black. Image source \cite{KenGalShi2011}.}
+\end{figure}
+A comparison between algorithms is shown in Figure $\ref{fig:contour_cut_pr}$. Using a graph of size $n = 1000$, the precision values are similar for low recall, but for higher recall the algorithm $H(F)$ significantly outperforms the other algorithms. Because all algorithms are producing the same number of contours, this indicates that $H(F)$ is producing longer contours, which is a better result. Figures $\ref{fig:contour_cut_example}$ shows that $H(F)$ finds significantly longer contours than $P$.
 
 \subsection{Multi-Shape Graph-Cut for Lung Segmentation}
 
