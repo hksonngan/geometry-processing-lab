@@ -887,6 +887,15 @@ In this section, we describe the efficient region search (ERS) system developed 
 
 The ERS system is compared with the state-of-the-art efficient subwindow search (ESS) method \cite{lampert2008beyond} which efficiently provides the best result possible with bounding box search. Three datasets are used to test the system with the base-line ESS: the PASCAL VOC 2007, the ETHZ Shapes, and the PASCAL VOC 2008. For point features, the system uses SURF extracted at Canny edge points, and quantizes the training points into $K = 1000$ visual words using K-means. To construct the region-graph, 100 regions per image are extracted by using the technique in \cite{arbelaez2009contours}. For shape features, each region is described with a $4 \times 4$ spatial grid scaled to the region size, where each cell bins the normalized gPb and Canny edge responses according to their orientations. To collect responses at multiple scales, the responses from blurring the gPb map with Gaussians of two scales $(\sigma = 5, 10)$ are also collected.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/ERS_result.png}
+    \caption{Detection accuracy (top row) and example detections by the ERS method (bottom row) on the ETHZ categories. Image source: \cite{VijayGrauman2011}.}
+    \label{fig:ers_result}
+\end{figure}
+
+Figure $\ref{fig:ers_result}$ shows the results on ETHZ, scored for the full detection task where the ERS method is run on all images (positive or negative). The ERS method is applied using either the point features (blue curves), or the shape features (green curves). ESS is only applicable to the point features (red curves). Comparing both methods using the point features, we see the most significant gains for the Giraffes and Swans, both of which are poorly captured with a rectangular window. For Applelogos and Mugs, ERS-point$^\prime$s accuracy is close to ESS$^\prime$s, which makes sense as these objects are more boxy. Overall, the mAP of ERS is from 9\% to 90\% better than ESS using the same features. Using shape features, we see dramatic gains for almost all objects, since the ETHZ objects have parts well-described by their shape (e.g.,mug handle, bottle neck). Again, even with the bounding box metric the ERS approach is 19\% better than ESS (30.1 vs. 25.3 mAP).
+
 \subsection{Salient Contour Detection}
 
 \cite{KenGalShi2011}
