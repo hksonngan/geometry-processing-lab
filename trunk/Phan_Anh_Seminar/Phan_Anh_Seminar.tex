@@ -808,9 +808,11 @@ In order to minimize the contour cut, we would like to solve
 \end{equation*}
 where we seek not just the global maximum but all critical points which correspond to different contours. By requiring $r_i$ and $\theta_i$ to take on discrete values the problem is computationally infeasible since it requires searching over not only an exponential number of subsets sets of vertices but also over orderings on each of these sets. We relax the problem by allowing $x$ to take on arbitrary complex values: $x \in \mathbb{C}^{\lvert C \rvert}$. Note that we now must maximize over $\delta$ in addition to $x$. The main result for solving the problem is based on the following theorem:
 \begin{theorem}
+\label{theorem:hermitian}
 The critical points of the relaxed contour cut problem
 \begin{equation}
 \max_{x, \delta} \dfrac{x^*H(\delta)x}{x^* \Pi x} \qquad \mbox{s.t.} \qquad x_i \in \mathbb{C}
+\label{eq:hermitian}
 \end{equation}
 can be found by searching over $\delta$ and finding the eigenvectors of the corresponding matrices $\Pi^{-1}H(\delta)$; any eigenvectors for which $x^*H(\delta)x = \lvert x^*Fx \rvert$ are critical points
 with respect to both $x$ and $\delta$.
@@ -898,7 +900,9 @@ Figure $\ref{fig:ers_result}$ shows the results on ETHZ, scored for the full det
 
 \subsection{Salient Contour Detection}
 
-\cite{KenGalShi2011}
+This section demonstrates the result from the contour cut algorithm developed by Kennedy et al. \cite{KenGalShi2011}. This approach first identifies edgels from the output of a contour detector, it then constructs a contour grouping graph whose vertices are the edgels duplicated in opposite directions and edges connecting the edgels within a small radius. Cycles are formed by connecting the duplicated nodes. The contour cut cost function is formulated based on the internal and external cuts normalized by the volume of the contour. The minimization of the contour cut cost can be formulated as a Hermitian eigenvalue problem as stated in Theorem $\ref{theorem:hermitian}$.
+
+We compare the algorithm which finds the exact critical points of Equation $\ref{eq:hermitian}$ by searching over all $\delta$ to the algorithms that give approximations by finding the right eigenvectors of $P$ and the left eigenvectors of $P$ scaled by $\Pi^{-1}$.
 
 \subsection{Multi-Shape Graph-Cut for Lung Segmentation}
 
