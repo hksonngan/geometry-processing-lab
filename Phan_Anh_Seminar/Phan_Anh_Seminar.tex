@@ -846,9 +846,16 @@ The max-flow problem can be solved in polynomial time by using the augmenting pa
 iteration, the algorithm finds the shortest $s \rightarrow t$ path along non-saturated edges of the residual graph. If a path is found, then the algorithm augments it by pushing the maximum possible flow $df$ that saturates at least one of the edges in the path. The residual capacities of edges in the path are reduced
 by $df$ while the residual capacities of the reverse edges are increased by $df$. Each augmentation increases the total flow from the source to the sink $f = f + df$. The maximum flow is reached when any $s \rightarrow t$ path crosses at least one saturated edge in the residual graph $G_f$.
 
-\subsubsection{The QPBOP Algorithm}
+Note that a minimum $s-t$ cut in $G$ yields a global minimum of the energy $E$. However, the global minimum can only be reached if the energy function satisfies the submodular property:
+\begin{equation}
+E(s, s) + E(t,t) \leq E(s,t) + E(t, s),
+\end{equation}
+where $s, t$ are the labels of the corresponding source or sink. In the non-submodular case, Kolmogorov and Rother propose a quadratic pseudo-boolean optimization method (QPBO) which produce optimal solution based on the roof duality and the probing methods. More detail can be found in \cite{kolmogorov2007minimizing}.
+%\subsubsection{The Quadratic Pseudo-Boolean Optimization Algorithm}
 
-\subsubsection{Fusion Move}
+\subsubsection{Multi-shape graph-cuts}
+
+
 
 \section{Applications}
 
