@@ -855,7 +855,9 @@ where $s, t$ are the labels of the corresponding source or sink. In the non-subm
 
 \subsubsection{Multi-shape graph-cuts}
 
+In order to solve the multi-label problem posed in Section $\ref{sec:mrf}$, we use an approximation algorithm called fusion move \cite{lempitsky2010fusion} which iteratively solves a series of problems between a set of current labels and a set of proposed labels using the QPBO min-cut algorithm.
 
+Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of proposed labels. We divided the current labels into object labels and background labels. First, the fusion move algorithm proposes an object label, $l$, against voxels whose current labels, $X^{cur}$, are background, and proposes the same labels as current for other voxels $(X^{pro} \leftarrow X^{cur})$. The QPBO min-cut algorithm can find a combinatorial optimal solution of labels, or shape. This step can reduce false negatives, but cannot deal with false positives. The second step focuses on false positives, based on the same analogy. It proposes a background label $l$ against voxels whose current labels $X^{cur}$ are object. To compute the shape energy $S_{p,q}$ in the case of a background proposal, we extend the set of labels $L$ to $L = \left\lbrace 1, -1, 2, -2, ..., n, -n \right\rbrace$, where the absolute value of a label refers to the number of a shape, and its sign represents the state of a voxel. Here, positive labels represent object labels and negative labels represent background labels.
 
 \section{Applications}
 
