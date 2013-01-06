@@ -883,7 +883,9 @@ System pipeline, result: accuracy, efficiency, benefits.
 
 \subsection{Efficient Region Search for Object Detection}
 
-\cite{VijayGrauman2011}
+In this section, we describe the efficient region search (ERS) system developed by Vijayanarasimhan and Grauman \cite{VijayGrauman2011}. Given training images in which the spatial extent of the object of interest is marked at the pixel level, an additive classifier is trained to distinguish that object category from any other. Given a new image, we oversegment it into subregions, extract the image features associated with each subregion, and pre-compute its resulting contribution to the classifier response. This yields a vertex-weighted region-graph, where the weights are the components of the classifier score. To incorporate inter-region contour cues, we introduce learned edge costs into the graph leading to the PCST problem which can be solved with a branch-and-cut algorithm. The resulting detection method rapidly determines the region within the image that yields the maximal classifier response.
+
+The ERS system is compared with the state-of-the-art efficient subwindow search (ESS) method \cite{lampert2008beyond} which efficiently provides the best result possible with bounding box search. Three datasets are used to test the system with the base-line ESS: the PASCAL VOC 2007, the ETHZ Shapes, and the PASCAL VOC 2008. For point features, the system uses SURF extracted at Canny edge points, and quantizes the training points into $K = 1000$ visual words using K-means. To construct the region-graph, 100 regions per image are extracted by using the technique in \cite{arbelaez2009contours}. For shape features, each region is described with a $4 \times 4$ spatial grid scaled to the region size, where each cell bins the normalized gPb and Canny edge responses according to their orientations. To collect responses at multiple scales, the responses from blurring the gPb map with Gaussians of two scales $(\sigma = 5, 10)$ are also collected.
 
 \subsection{Salient Contour Detection}
 
