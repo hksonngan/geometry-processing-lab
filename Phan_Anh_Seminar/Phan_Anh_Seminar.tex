@@ -207,6 +207,8 @@ So far we have seen many ways to extract features from an image, each has its ow
 
 \section{Supervised Learning Segmentation}
 
+In image processing, it is very important that algorithms can get some knowledge from the tasks they are going to perform. The knowledge often comes from the training process using pre-defined datasets so that the algorithms can learn from our experiences. This section introduce some supervised learning techniques that are often used in computer vision tasks.
+
 \subsection{Support Vector Machine}
 \label{sec:svm}
 
@@ -420,8 +422,7 @@ Figure $\ref{fig:shape_training}$ illustrates some training curves used to estim
 \end{figure}
 
 \section{Graph Construction}
-
-
+\label{sec:graph_cunstruction}
 
 \subsection{Region Graph}
 \label{sec:region_graph}
@@ -579,7 +580,7 @@ where $\theta_{A_p}$ represents an angle between a vector connecting voxels $p$ 
 
 \section{Graph Cut Algorithms}
 
-comparison of cut algorithms, could they be used interchangeably in different situations.
+This part will concentrate on some of the state-of-the-art graph-cut algorithms which can find a cut that separating the optimal subgraph from those kinds of graphs constructed in Section $\ref{sec:graph_cunstruction}$.
 
 \subsection{Prize-Collecting Steiner Tree}
 \label{sec:branch_and_cut}
@@ -881,7 +882,7 @@ Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of propos
 
 \section{Applications}
 
-System pipeline, result: accuracy, efficiency, benefits.
+This section is devoted to illustrate some applications of the algorithms described above to real-world image segmentation as well as in the field of medical image processing.
 
 \subsection{Efficient Region Search for Object Detection}
 
