@@ -1,0 +1,97 @@
+\documentclass[11pt, a4paper, landscape]{article}
+\usepackage[german, userlastpage, triangle, vertical]{NeyDreuwSlides_Nov07}
+ 
+\renewcommand*{\title}{Titel des Vortrages}                               % main title of the work (used for \TitlePage)
+\renewcommand*{\titleshort}{(Kurz)titel des Vortrages}                    % short title (used for \lfoot)
+\renewcommand*{\occasion}{Seminartitellang im WS 200x/200x --}            % (used for \TitlePage)
+\renewcommand*{\occasionshort}{Seminarkurz WS 200x/200x}                  % short occasion title (used for \rfoot)
+\renewcommand*{\date}{Datum des Vortrages}
+\renewcommand*{\author}{Vorname Name}                                     % all the authors of the work, can be long (used for \TitlePage)
+\renewcommand*{\authorshort}{Name: }                                       % all the authors of the work, should be short (used for \lfoot)
+\renewcommand*{\email}{\url{vorname.nachname@rwth-aachen.de}}             % all email address(es) of the authors (used for \TitlePage)
+\renewcommand*{\mainauthor}{Vorname Name}                                 % the author(s) who presented the work (used for \FinalPage)
+\renewcommand*{\mainauthoremail}{\email}                                  % presenter mail address(es) (used for \FinalPage)
+\renewcommand*{\www}{http://www-i6.informatik.rwth-aachen.de/}            % web address (used for \TitlePage _and_ \FinalPage)
+\newcommand*{\keywords}{Titel des Vortrages, usw.}                        % keywords for pdf summary
+
+
+% will be set into the PDF document summary
+\hypersetup{
+  pdftitle={\title}, 
+  pdfsubject={\occasion},  
+  pdfauthor={\author}, 
+  pdfkeywords={\keywords}
+}
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\TitlePage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Gliederung}
+\vfill
+\begin{itemize}
+\item[] \hyperlink{sli:introduction}{Einführung und Motivation}
+\item[] \hyperlink{sli:literature}{Literatur}
+\item[] ...
+\item[] \hyperlink{sli:results}{Ergebnisse}
+\item[] \hyperlink{sli:summary}{Zusammenfassung}
+\end{itemize}
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Einführung und Motivation}
+\hypertarget{sli:introduction}
+\vfill
+...
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Literatur}
+\hypertarget{sli:literature}
+\vfill
+...
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{DeineFolien}
+\begin{block}
+... \usw
+\end{block}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Ergebnisse}
+\hypertarget{sli:results}{}
+
+\begin{block}
+  \centering
+  \begin{tabular}{l l}
+    \hline
+    Methode & Fehlerrate [\%] \\
+    \hline
+    Andere & x\% \\
+    Deine  & x\% \\
+    \hline
+  \end{tabular}
+\end{block}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Zusammenfassung}
+\hypertarget{sli:summary}
+\vfill
+...
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FinalPage
+
+\end{document}
