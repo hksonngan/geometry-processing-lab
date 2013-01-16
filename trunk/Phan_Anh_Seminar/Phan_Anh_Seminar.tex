@@ -41,19 +41,19 @@ This seminar paper reviews several different graph-based approaches to the image
 %
 \section{Introduction}
 
-Graph-based segmentation is currently emerging as a promising method and has been applied successfully to many image processing applications ranging from real-world image understanding and segmentation to medical image analysis. Formulating segmentation problems by means of graph-cut problems has a twofold advantage: firstly, graph representation is an abstract way to encode generic, complex relationships between entities, thereby opening up to a wide variety of approaches and interpretations for the segmentation problems; secondly, graph representation often leads to well-known graph problems which can be solved exactly under some conditions.
+Graph-based segmentation is currently emerging as a promising method and has been applied successfully to many image processing applications ranging from real-world image understanding and segmentation to medical image analysis. Formulating segmentation problems by means of graph theory has a twofold advantage: firstly, graph representation is an abstract way to encode generic, complex relationships between entities, thereby opening up to a wide variety of interpretations for the segmentation problems provided that they provide some metrics to measure the relationships; secondly, graph representation often leads to well-known graph problems which have been studied for a while and therefore can be solved very efficiently under some conditions.
 
 In general, a graph-based segmentation method often follows the following pipeline. First, image features, which are signal responses from some filters describing important image properties are extracted from an input image. These features serve as numerical elements used to construct a graph often based on supervised learning algorithms. Once we have built a graph to represent the image segmentation problem, we can apply state-of-the-art graph-cut algorithms to solve the problem to optimality efficiently. 
 
-This seminar paper presents several different graph-based approaches to the image segmentation problem and demonstrates some applications of these techniques to real-world problems. It also discusses pros and cons and gives some comparisons between these graph-cut methods.
+This seminar paper presents several different graph-based approaches to the image segmentation problem and demonstrates some applications of these techniques to real-world problems. Particularly, Section $\ref{sec:features}$ describes several methods to extract features from images notably Speeded Up Robust Features (SURF) \cite{bay2006surf} used to describe local image information around a feature point and a shape descriptor \cite{gu2009recognition} based on the Globalized Probability of Boundary (gPb) \cite{martin2004learning} \cite{maire2008using}. Section $\ref{sec:supervised_learning}$ introduces some supervised learning techniques which is used in Section $\ref{sec:graph_cunstruction}$ to construct a graph. Section $\ref{sec:graph_cut_algorithms}$ presents powerful graph-cut algorithms used to select optimal subgraphs as segmentation solutions. The applications of graph-cut algorithms to solve the segmentation problem are illustrated in Section $\ref{sec:applications}$ in three different systems namely ``Efficient Region Search'' \cite{VijayGrauman2011} to search for an object of arbitrary shape, ``Contour Cut'' \cite{KenGalShi2011} to identify salient contours in images and ``Multi-Shape Graph-Cut'' \cite{nakagomimulti} to perform lung segmentation based on multiple shape priors. Finally, Section $\ref{sec:conclusion}$ discusses pros and cons and gives some comparisons between these graph-cut methods.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
 %
 \section{Image Features}
-
+\label{sec:features}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Image Feature Overview}
+\subsection{Image Features Overview}
 %What are image features? How can we describe/represent them?
 Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. Normally, raw features are extracted at each pixel by applying various kinds of filters. Each filter response contributes one dimension in the feature vector space. The shape and size of filters reflect local structure around each pixel. Raw features at each pixel can be collected to form region descriptors which can be used to represent shapes, contours etc. In this section we present methods to extract raw features and various ways of constructing region descriptors. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art feature named Speeded Up Robust Features (SURF) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ explains the globalized probability of boundary (gPb) contour extractor \cite{maire2008using}.
 
@@ -138,7 +138,7 @@ Considering the problem of computing texture gradient, a group of 13 filters cov
 
 In order to build up histograms for comparison, the $Pb$ algorithm uses the so called textons approach (or bag-of-textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large, diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses, and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons has been computed, each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
 
-\subsubsection{gPb Feature}
+\subsubsection{Globalized Probability of Boundary}
 
 The gPb contour detector \cite{maire2008using} is an extension of the Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which defines an affinity matrix $W$ whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
 \begin{equation}
@@ -209,9 +209,9 @@ There are some advantages of this representation which were pointed out by Gu et
 
 So far we have seen many ways to extract features from an image, each has its own primary purpose. SURF feature was originally developed for the problem of image matching but it is also suitable for compact representation of local, isotropic image patches. The advantage of using SURF for object detection is its local nature, thereby being invariant to great viewpoint change having the capability of detecting deformable objects \cite{VijayGrauman2011}. gPb, however, was developed to detect contours hence suitable for segmentation tasks \cite{arbelaez2009contours} \cite{gu2009recognition}. It can also be used to detect objects with parts defined by their shape \cite{VijayGrauman2011} \cite{gu2009recognition}.
 
-\section{Supervised Learning Segmentation}
-
-In image processing, it is very important that algorithms can get some knowledge from the tasks they are going to perform. The knowledge often comes from the training process using pre-defined datasets so that the algorithms can learn from our experiences. This section introduce some supervised learning techniques that are often used in computer vision tasks.
+\section{Supervised Learning Methods}
+\label{sec:supervised_learning}
+In image processing, it is very important that algorithms can get some knowledge from the tasks they are going to perform. The knowledge often comes from the training process using pre-defined datasets so that the algorithms can learn from our experiences. This section introduces some supervised learning techniques that are often used in computer vision tasks.
 
 \subsection{Support Vector Machine}
 \label{sec:svm}
@@ -433,7 +433,7 @@ Figure $\ref{fig:shape_training}$ illustrates some training curves used to estim
 
 In this section, we introduce a method to construct a region graph from an input image which in turn serves as an input to a graph cut algorithm to find a sub-graph corresponding to the object of interest. This method was proposed by Vijayannarasimhan and Grauman in the object detection context \cite{VijayGrauman2011}. We get the image regions with very high level of detail by applying the oriented watershed transform on the output signal of the gPb contour detector \cite{arbelaez2009contours}. Particularly, a gradient image, which is generated by the gPb contour detector and can be seen as a topographic surface, is pierced at its minima and progressively immersed in water. The water fills the surrounding regions of the minima and forms lakes. When two lakes meet, the level of the water (the height of the saddle point) determines the saliency of the corresponding watershed arc.
 
-The region graph $G = (V, E)$ is built with the set of vertices $V$ being the oversegmented regions, also called superpixels, and the set of edges $E$ connecting any two superpixels that share a boundary. A vertex is weighted with the region ranking formula $\ref{eq:svm_rank}$. Vijayannarasimhan considered two ways to weight a superpixel vertex depending on the type of feature used to construct the histogram $h^v(R)$:
+The region graph $G = (V, E)$ is built with the set of vertices $V$ being the oversegmented regions, also called superpixels, and the set of edges $E$ connecting any two superpixels that share a boundary. A vertex is weighted with the region ranking formula given in Equation $\ref{eq:svm_rank}$. Vijayannarasimhan considered two ways to weight a superpixel vertex depending on the type of feature used to construct the histogram $h^v(R)$:
 
 \begin{itemize}
 \item Point features: In this representation, each descriptor $v_i$ is a SURF feature and the weight assigned to a superpixel vertex is the sum of the visual word weights for all local features located within that superpixel: $w(v) = \sum_{x_i \in v} w^v_{c_i}$.
@@ -583,7 +583,7 @@ S_{p, q} = \min(\mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_p})]/2 \right\rbra
 where $\theta_{A_p}$ represents an angle between a vector connecting voxels $p$ and $q$ and a gradient vector of a signed distance $\phi_{A_p}(p)$ from the boundary of a shape corresponding to a label $A_p \in L$ as shown in Figure $\ref{fig:shape_energy}$. $NB_p(A_p)$ is defined by the distance from the dorsal ribs. This multiple shape MRF problem can be solved using the combination of fusion move and min-cut algorithms explained in Section $\ref{sec:graph_cut}$.
 
 \section{Graph Cut Algorithms}
-
+\label{sec:graph_cut_algorithms}
 This part will concentrate on some of the state-of-the-art graph-cut algorithms which can find a cut that separating the optimal subgraph from those kinds of graphs constructed in Section $\ref{sec:graph_cunstruction}$.
 
 \subsection{Prize-Collecting Steiner Tree}
@@ -885,7 +885,7 @@ Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of propos
 \end{algorithm}
 
 \section{Applications}
-
+\label{sec:applications}
 This section is devoted to illustrate some applications of the algorithms described above to real-world image segmentation as well as in the field of medical image processing.
 
 \subsection{Efficient Region Search for Object Detection}
@@ -948,7 +948,7 @@ Figure $\ref{fig:graphcut_result2}$ (a)-(c) show cases in which the single-shape
 evaluate the results quantitatively, we compare average distances between an extracted surface and a manually delineated surface. The average distance of this case is improved from 0.835 to 0.523 [mm]. Figure $\ref{fig:graphcut_result2}$ (d)-(f) show failure cases, using both methods, in which the average distances are 0.862 [mm] for the single-shape graph-cuts and 0.732 [mm] for the multi-shape graph-cuts.
 
 \section{Conclusion}
-
+\label{sec:conclusion}
 We have seen that both the efficient region search system and the contour cut algorithm heavily depend on the output of an edge detector therefore it is obvious that the performance of the edge detector can affect the accuracies of these system. The multi-shape graph-cut algorithm also depends on the shape priors. Hence given the wrong assumptions about the shape of the object we will end up at the wrong resulting shape similar to the shape priors. This leads to the problem of tuning the parameters such that the shape priors can partly influence the result. Depending on the goal each system is addressing, an appropriate graph construction algorithm is needed. The contour cut algorithm tries to improve the result of an edge detector and it can spot out the most salient contours from the image, as the consequence edge segments are suitable candidates for graph construction. The purpose of the efficient region search system is to detect and segment an object hence object fragments detected by an edge detector together with the water shred algorithm are appropriate to build the graph. On the other hand, the multi-shape graph-cut algorithm operates on the pixel/voxel level which are the smallest image elements. In fact, both the contour cut and the efficient region search system can be formulated on the pixel level but this will rapidly slow down the efficiencies. Furthermore, since the edge detector perform well enough in the real-world images, we can safely rely on it. Finally, for each type of graph constructed by a different system, we need to use a different graph-cut algorithm to find the optimal solution thanks to the advancement in graph theory.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
