@@ -77,16 +77,16 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Outline}
-\small
+%\small
 \vfill
 \begin{enumerate}
-\item \hyperlink{sli:introduction}{Introduction - Motivation}
+\item \hyperlink{sli:introduction}{Introduction and Motivation}
 \item \hyperlink{sli:features}{Image Features}
-\begin{itemize}
-	\item \hyperlink{sli:surf}{Speeded Up Robust Features}
-	\item \hyperlink{sli:gPb}{Globalized Probability of Boundary}
-\end{itemize}
-\item \hyperlink{sli:supervised}{Segmentation with Supervised Learning}
+%\begin{itemize}
+%	\item \hyperlink{sli:surf}{Speeded Up Robust Features}
+%	\item \hyperlink{sli:gPb}{Globalized Probability of Boundary}
+%\end{itemize}
+\item \hyperlink{sli:supervised}{Segmentation with Supervised Training}
 %\begin{itemize}
 %	\item \hyperlink{sli:svm}{Support Vector Machine for Region Ranking}
 %	\item \hyperlink{sli:logistic}{Logistic Regression}
@@ -99,23 +99,23 @@
 	\item \hyperlink{sli:mrf}{Markov Random Field}
 \end{itemize}
 \item \hyperlink{sli:algorithms}{Graph Cut Algorithms}
-\begin{itemize}
-	\item \hyperlink{sli:PCST}{Prize-Collecting Steiner Tree}
+%\begin{itemize}
+%	\item \hyperlink{sli:PCST}{Prize-Collecting Steiner Tree}
 %	\begin{itemize}
 %		\item \hyperlink{sli:branch_and_cut}{Branch-and-Cut Algorithm}
 %	\end{itemize}
-	\item \hyperlink{sli:contour_cut}{Contour Cut}
+%	\item \hyperlink{sli:contour_cut}{Contour Cut}
 %	\begin{itemize}
 %		\item \hyperlink{sli:circulation}{Graph Circulations}
 %		\item \hyperlink{sli:cost}{The Cost Function}
 %		\item \hyperlink{sli:solution}{Computational Solution}
 %	\end{itemize}
-	\item \hyperlink{sli:graph_cut}{Graph-Cut}
+%	\item \hyperlink{sli:graph_cut}{Graph-Cut}
 %	\begin{itemize}
 %		\item \hyperlink{sli:min_cut}{Min-Cut Algorithm}
 %		\item \hyperlink{sli:multi_shape}{Multi-Shape Graph-Cuts}
 %	\end{itemize}
-\end{itemize}
+%\end{itemize}
 \item \hyperlink{sli:application}{Applications}
 %\begin{itemize}
 %	\item \hyperlink{sli:ERS}{Efficient Region Search for Object Detection}
@@ -124,7 +124,7 @@
 %\end{itemize}
 \item \hyperlink{sli:conclusion}{Conclusion}
 \end{enumerate}
-%\vfill
+\vfill
 %\centerline{\footnotesize PS: the outline should not have more than 5-7 items
 %  without any subitems}
 %\normalsize
@@ -132,87 +132,57 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Introduction} 
+\NewPage\headline{Literature} 
+\vfill 
+\begin{itemize}
+\item S. Vijayanarasimhan and K. Grauman. \alert{Efficient region search for object detection.} Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference, pages 1401--1408, June 2011.
+\item R. Kennedy, J. Gallier, and Jianbo Shi. \alert{Contour cut: Identifying salient contours in images
+by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference, pages 2065--2072, June 2011.
+\item Nakagomi, K. and Shimizu, A. and Kobatake, H. and Yakami, M. and Fujimoto, K. and Togashi, K. \alert{Multi-shape graph-cuts and its application to lung segmentation from a chest CT volume.}
+\end{itemize}
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Introduction and Motivation} 
 \hypertarget{sli:introduction}
 \vfill
-This latex beamer slide style was created by Philippe Dreuw and Thomas
-Deselaers and should be used for talks presented at the Lehrstuhl fuer
-Informatik 6 at the RWTH Aachen University.
-\vfill
-Any requests or comments should be sent to
 \begin{itemize}
-\item \url{mailto:{deselaers,dreuw}@informatik.rwth-aachen.de}
-\item \url{http://www-i6.informatik.rwth-aachen.de/}
+\item Purposes of segmentation
+\begin{itemize}
+	\item Computer-aided diagnoses
+	\item Object detection and segmentation for autonomous systems
+	\item Shape alignments
+\end{itemize}
+\item Current problems
+\begin{itemize}
+	\item deformable shapes
+	\item time constraint
+	\item no clear boundaries
+\end{itemize}
+\item Advantages of Graph Representation
+%\begin{itemize}
+%	\item Flexible expression of constraints 
+%	\item Powerful graph algorithms exist\\
+%	\includegraphics[width=.6\linewidth]{region_graph_intro}
+%\end{itemize}
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.4\linewidth} M{.6\linewidth} @{}}
+  	\begin{itemize}
+  		\item Flexible expression of constraints 
+  		\item Powerful graph algorithms exist
+    \end{itemize}
+      &
+    \includegraphics[width=.9\linewidth]{region_graph_intro}
+  \end{tabular}
+\end{table}
+
 \end{itemize}
 \vfill
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Literature} 
-\vfill
-\begin{itemize}
-\item Talks presented at the
-  \href{http://www-i6.rwth-aachen.de/}{\isechsicon}
-  should always have a literature part in front of the talk. 
-\item You should \red{not just copy} bibitems from your \texttt{*.bbl} files
-  into a minipage and an \texttt{\textbackslash itemize} environment.
-\item Depending on the public where you will present your talk you should adapt
-  your literature slide.
-\item you should describe the content of the SOTA literature with your
-  own words
-\end{itemize}
-\vfill 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Literature Examples} 
-\vfill 
-\begin{description}
-\item [T.~Starner, J.~Weaver, A.~Pentland:] Real-time american sign-language
-  recognition using desk and wearable computer based video. {\em PAMI 1998}.
-  \begin{itemize}
-  \item HMM based isolated sign language recognition. Explain the main content here.
-  \end{itemize}
-\item [Povey:] Papertitle. {\em ICASSP 2007}.
-  \begin{itemize}
-  \item something new in speech recognition. Explain the main content here.
-  \end{itemize}
-\item \cite{loupias:_wavel_salien_point_image_retriev}: Papertitle. {\em CONFNAME 2007}.
-  \begin{itemize}
-  \item image retrieval. Explain the main content here.
-  \end{itemize}
-\end{description}
-\vfill
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{State of the Art} 
-\vfill 
-\begin{itemize}
-\item Talks presented at the
-  \href{http:://www-i6.rwth-aachen.de/}{\includegraphics[height=\baselineskip]{logos/i6-hks44}}
-  should also always have a state of the art part in front of the talk.
-\item Depending on the public where you will present your talk you should
-adapt your state of the art slide.
-\item This can be in relation with literature section
-\end{itemize}
-\vfill
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Results} 
-\vfill 
-\begin{itemize}
-\item Talks presented at the
-  \href{http:://www-i6.rwth-aachen.de/}{\includegraphics[height=\baselineskip]{logos/i6-hks44}}
-  should always have a result section somewhere at the end of the talk.
-\item Depending on the public should highlight the
-  advantages/disadvantages of your presented work in comparison to
-  other results achieved by other groups on the same (publicly
-  available) benchmark database
-\end{itemize}
-\vfill
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{The \texttt{HyperSlides} Style}
 \hypertarget{sli:style}
