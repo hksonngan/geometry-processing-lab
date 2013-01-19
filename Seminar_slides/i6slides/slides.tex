@@ -184,17 +184,50 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{The \texttt{HyperSlides} Style}
+\NewPage\headline{Image Features: Speeded Up Robust Features}
 \hypertarget{sli:style}
 \vfill
-The following slides will explain how to use the HyperSlides style.
+\begin{itemize}
+\item Detect interest points: $det(Hessian(I)) = I_{xx}I_{yy} - I^2_{xy}$
+\item Orientation assignment (rotation invariant): select the dominant direction of Haar wavelet response vectors $(d_x, d_y)$.
+\item SURF is computed within a window of size $20s$.
+\item Further split the window into $4 \times 4$ sub-windows.
+\item[]
+  \begin{figure}
+    \centering
+    \begin{tabularx}{600pt}{Z Z Z}
+      \includegraphics[height=2.0cm]{haar_wavelet}%
+      \caption{Haar wavelet filters}%
+      &
+      \includegraphics[height=5.5cm]{orientation_window}%
+      \caption{sum $(d_x, d_y)$ over a window size $\frac{\pi}{3}$}%
+      &
+      \includegraphics[height=5.5cm]{feature_neighborhood}%
+      \caption{windows defining neighborhood}%
+    \end{tabularx}
+  \end{figure}
+\end{itemize}
 \vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Style Parameters}
+\NewPage\headline{Image Features: Speeded Up Robust Features}
 \vfill
-TODO
+\begin{itemize}
+\item 4D descriptor vector $v = (\sum d_x, \sum d_y, \sum \lvert d_x \rvert, \sum \lvert d_y \rvert)$ for each sub-window $\Rightarrow$ 64D SURF descriptor.
+\item Normalize to make it invariant to contrast (a scale factor).
+%\item[]
+\end{itemize}
+  \begin{figure}
+    \centering
+    \begin{tabularx}{600pt}{Z Z}
+      \includegraphics[width=0.4\textwidth]{surf}%
+      \caption{Wavelet responses extracted from neighborhood}%
+      &
+      \includegraphics[width=0.4\textwidth]{surf_vector}%
+      \caption{The descriptor entries represent the underlying intensity pattern.}%
+    \end{tabularx}
+  \end{figure}
 \vfill
 
 
