@@ -239,12 +239,49 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \item Draw a circle with radius $r$, divide it along the diameter at orientation $\theta$.
 \item Build histograms of brightness, color and texture for each disc half.
 \item Compares histograms of the two disc halves: $G(x, y, \theta, r) = \chi ^ 2 (g, h) = \frac{1}{2} \sum_i \frac{(g_i - h_i)^2}{(g_i + h_i)}$
+\item Use logistic regression trained on human segmentation dataset to get the result $Pb_{\sigma}(x, y, \theta)$.
 \end{itemize}
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{gradient_features}
+	\includegraphics[width=0.45\textwidth]{gradient_features}
 \end{figure}
 \vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Globalized Probability of Boundary}
+\small
+\vfill
+\begin{itemize}
+\item Brightness, color and texture gradients in 3 different scales: $mPb(x, y, \theta) = \sum\limits_{i = 1}^{9} G_i(x, y, \theta)$.
+\item Define affinity matrix $W$ using intervening contour cue $mPb$. Solve the generalized eigenvectors problem: $(D - W)v = \lambda D v$, $D_{ii} = \sum_j W_{ij}$.
+\item Edges from generalized eigenvectors $v_j$: $sPb(x, y, \theta) = \sum\limits_{j = 1}^{k} \frac{1}{\sqrt{\lambda_j}} sPb_{v_j} (x, y, \theta)$.
+\item Globalized probability of boundary: $gPb(x, y, \theta) = \sum\limits_{i = 1}^{9} \beta_iG_i(x, y, \theta) + \gamma sPb(x, y, \theta)$.
+\end{itemize}
+%  \begin{figure}
+%    \centering
+%    \begin{tabularx}{600pt}{Z Z}
+%      \includegraphics[width=0.15\textwidth]{intervening_contour2}%
+%      \caption{Intervening contour}%
+%      &
+%      \includegraphics[width=0.55\textwidth]{sPb}%
+%      \caption{Eigenvectors and their edges}%
+%    \end{tabularx}
+%  \end{figure}
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.3\linewidth} M{.7\linewidth} @{}}
+      \includegraphics[width=0.15\textwidth]{intervening_contour2}%
+      \caption{Intervening contour}%
+      &
+      \includegraphics[width=0.65\textwidth]{sPb}%
+      \caption{Eigenvectors and their edges}%
+  \end{tabular}
+\end{table}
+\vfill
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
