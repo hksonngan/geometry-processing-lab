@@ -281,7 +281,36 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \vfill
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Support Vector Machine}
+\vfill
+\begin{itemize}
+\item Given training data $\left\lbrace (h_i, t_i) \right\rbrace _{i = 1} ^M$, find a classifier $f(h) = w^Th + b$ that maximizes the margin.
+\item Equivalent to find a hyperplane satisfying: $\arg\min\limits_{w, b} \frac{1}{2} \|w\| ^2, \qquad t_i(w^Th_i + b) \geq 1 \forall i$.
+\item The solution for $w$ is a linear combination of training examples: $w = \sum\limits_{i = 1}^{M} a_it_ih_i = \sum\limits_{i = 1}^{M} \alpha_ih_i$.
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{svm}
+\end{figure}
+\vfill
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{SVM for Region Ranking}
+\vfill
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\textwidth]{bag_of_features}
+	\caption{Bag of visual words}
+\end{figure}
+\begin{itemize}
+\item Region $R = \left\lbrace (x_i, v_i) \right\rbrace _{i = 1} ^N$, its ranking score $f(R) = b + (\sum_i\alpha_ih(R_i)) \cdot h(R)$.
+\item Associate each $j$-th word with a weight $w_j = \sum_i\alpha_ih_j(R_i)$.
+\item $f(R) = b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i}$, 
+\item $d_i \in \left[ 1, K \right] $ the index of the visual word that feature $v_i$ maps to.
+\end{itemize}
+\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
