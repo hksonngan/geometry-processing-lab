@@ -385,6 +385,40 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \vfill
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Markov Random Field}
+\vfill
+\begin{itemize}
+\item Nodes are random variables $\left\lbrace x_1, ..., x_n \right\rbrace $ corresponding to pixels.
+\item Two types of edges: neighborhood relations, observation model
+\item A graph represents a joint distribution $p(x)$
+\item Can be written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques:
+\item[]
+	\begin{center}
+		$p(x) = \frac{1}{Z} \prod\limits_{C}\psi_C(x_C)$
+	\end{center}
+\item Conveniently expressed as energy functions: $\psi_C(x_C) = \exp(-E(x_C))$.
+\item Maximize $p(x)$ equals to minimize $E$.
+\end{itemize}
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.5\linewidth} M{.5\linewidth} @{}}
+      \includegraphics[width=0.2\textwidth]{clique}%
+      \caption{Cliques}%
+      &
+      \includegraphics[width=0.2\textwidth]{mrf}%
+      \caption{MRF}%
+  \end{tabular}
+\end{table}
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Shape Energy}
+\vfill
+
+\vfill
+
 
 
 
