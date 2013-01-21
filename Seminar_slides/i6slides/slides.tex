@@ -19,6 +19,13 @@
 \documentclass[11pt, a4paper, landscape]{article}
 \usepackage{NeyDreuwSlides_Nov07}
 
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}[section]
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% flyspell can read the local ispelldict variable to automatically change the dictionary, 
@@ -329,10 +336,29 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \vfill
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Prize-Collecting Steiner Tree Problem}
+\vfill
+\begin{definition}
+PCST PROBLEM: Given a connected undirected vertex and edge weighted graph G = (V, E, c, p) with vertex profits $p: V \rightarrow \mathbb{R}^{\geq 0}$ and edge costs $c: E \rightarrow \mathbb{R}^{\geq 0}$, find a connected subgraph T = ($V_T \subseteq V, E_T \subseteq E$) of G that maximizes the profit:
+\begin{equation}
+P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
+\end{equation}
+\end{definition}
+\begin{itemize}
+\item Optimal solution: branch-and-cut algorithm
+\item Efficient for hundreds of nodes
+\end{itemize}
+\vfill
 
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Contour Graph}
+\vfill
+\begin{itemize}
+\item
+\end{itemize}
+\vfill
 
 
 
