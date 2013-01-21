@@ -285,9 +285,9 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \NewPage\headline{Support Vector Machine}
 \vfill
 \begin{itemize}
-\item Given training data $\left\lbrace (h_i, t_i) \right\rbrace _{i = 1} ^M$, find a classifier $f(h) = w^Th + b$ that maximizes the margin.
+\item Given training data $\left\lbrace (h_i, t_i) \right\rbrace _{i = 1} ^S$, find a classifier $f(h) = w^Th + b$ that maximizes the margin.
 \item Equivalent to find a hyperplane satisfying: $\arg\min\limits_{w, b} \frac{1}{2} \|w\| ^2, \qquad t_i(w^Th_i + b) \geq 1 \forall i$.
-\item The solution for $w$ is a linear combination of training examples: $w = \sum\limits_{i = 1}^{M} a_it_ih_i = \sum\limits_{i = 1}^{M} \alpha_ih_i$.
+\item The solution for $w$ is a linear combination of training examples: $w = \sum\limits_{i = 1}^{S} a_it_ih_i = \sum\limits_{i = 1}^{S} \alpha_ih_i$.
 \end{itemize}
 \begin{figure}
 	\centering
@@ -311,6 +311,35 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \item $d_i \in \left[ 1, K \right] $ the index of the visual word that feature $v_i$ maps to.
 \end{itemize}
 \vfill
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Region Graph}
+\vfill
+\begin{itemize}
+\item Watershed to define regions from gPb contours
+\item Vertex weights: SVM on SURF and Shape descriptors. Edge weights: intervening contour strengths
+\item $f^{\prime}(R) = \sum\limits_{i = 1}^{N}w^v_{d_i} - \sum\limits_{j = 1}^{M} w^e_{s_j}$, $s_j \in \left[ 1, L \right] $ is the bin index of the contour strength histogram for the $j^{th}$ contour.
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{region_graph}
+\end{figure}
+\vfill
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
