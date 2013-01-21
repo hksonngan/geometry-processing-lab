@@ -369,7 +369,20 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \vfill
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Circular Embedding}
+\vfill
+\begin{itemize}
+\item A contour $(C, O)$ consists of a set of vertices $C$ and an ordering function $O: C \rightarrow \left\lbrace 1, ..., \lvert C \rvert \right\rbrace $
+\item Each node of the contour is mapped to a point on a complex circle, all other points are mapped to the origin.
+\item $x_j = r_j\exp(i\theta_j)$, $r_j = 1$ if $j \in C$ and 0 otherwise,
+\item $\theta_j = O(j)\delta$, where $\delta = \frac{2\pi}{\lvert C \rvert}$ is a phase step.
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{circular_embedding}
+\end{figure}
+\vfill
 
 
 
