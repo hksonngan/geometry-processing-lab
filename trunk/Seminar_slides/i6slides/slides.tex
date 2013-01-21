@@ -356,8 +356,16 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \NewPage\headline{Contour Graph}
 \vfill
 \begin{itemize}
-\item
+\item Threshold edge detector output to get edge segments: edgels.
+\item Duplicate each edgel into $i$ and $\bar{i}$ with opposite directions $\theta, \theta + \pi$.
+\item Connect pairs of edgels within some distance $r_e$: $E = \left\lbrace (i, j) : \| (x_i, y_i) - (x_j, y_j) \| \leq r_e \right\rbrace $.
+\item Weights measure directed collinearity: $W_{ij} = e^{-(1 - cos(\mid \phi_i \mid + \mid \phi_j \mid))/\sigma^2}\ \mathrm{if}\ i \rightarrow j$.
+\item Curve $\Rightarrow$ two chains $\Rightarrow$ convert into a cycle by adding an edge between terminal points.
 \end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.95\textwidth]{contour_graph}
+\end{figure}
 \vfill
 
 
