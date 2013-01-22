@@ -523,11 +523,17 @@ A matrix $F \in (\mathbb{R}^+ \cup \left\lbrace 0 \right\rbrace )^{\lvert V \rve
 \end{equation}
 for each vertex $v$.
 \end{definition}
-\begin{definition}
-A random walk on graph $G = (V, E, W)$ is a Markov process with transition matrix $P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$.
-\end{definition}
 \begin{itemize}
-\item $\pi$ is a stationary distribution on graph $G$ if $\pi P = \pi \Leftrightarrow \pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu}$
+\item A random walk on graph $G = (V, E, W)$ is a Markov process with transition matrix $P$:
+\item[] 
+\begin{center}
+$P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$.
+\end{center}
+\item $\pi$ is a stationary distribution on graph $G$ if $\pi P = \pi$:
+\item[]
+\begin{center}
+$\pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu}$
+\end{center}
 \item $F = \Pi P, \Pi = \mbox{diag}(\pi)$ is a circulation on graph $G$ since:
 \begin{center}
 $\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{u, u \rightarrow v} \pi_u P_{uv} = \pi_v \cdot 1 = \sum\limits_{w, v \rightarrow w} \pi_v P_{vw} = \sum\limits_{w, v \rightarrow w} F_{vw}$
@@ -536,7 +542,34 @@ $\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{u, u \rightarrow v} \pi_
 \vfill
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Contour Cut}
+\vfill
+\begin{itemize}
+\item An external cut of a contour $(C, O)$ measures its separation from the rest of the graph:
+\item[]
+\begin{center}
+$Ecut(C) = \sum\limits_{i \in C, j \notin C} F_{ij}$
+\end{center}
+\item An internal cut measures the deviation of the contour toward a 2-dimensional clique:
+\item[]
+\begin{center}
+$Icut(C, O) = \sum\limits_{(i, j) \in C, \lvert O(i) - O(j) \rvert > k} F_{ij}$
+\end{center}
+\item The contour cut cost:
+\item[]
+\begin{center}
+$Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)}, \qquad \mathrm{Vol}(C) = \sum_{i \in C, (i, j) \in E} F_{ij}$
+\end{center}
+\item The contour cut cost written in terms of the circular embedding $x$:
+\item[]
+\begin{center}
+$Ccut(x) = \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x)$
+\end{center}
+\item $H(\delta) = \frac{F\exp(-i\delta) + F^T\exp(i\delta)}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient.
+\item Minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
+\end{itemize}
+\vfill
 
 
 
