@@ -512,6 +512,30 @@ $P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace $
 \vfill
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Contour Cut: Graph Circulations}
+\small
+\vfill
+\begin{definition}
+A matrix $F \in (\mathbb{R}^+ \cup \left\lbrace 0 \right\rbrace )^{\lvert V \rvert \times \lvert V \rvert}$ that assigns each directed edge to a non-negative value is called a circulation if
+\begin{equation}
+\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{w, v \rightarrow w} F_{vw}
+\end{equation}
+for each vertex $v$.
+\end{definition}
+\begin{definition}
+A random walk on graph $G = (V, E, W)$ is a Markov process with transition matrix $P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$.
+\end{definition}
+\begin{itemize}
+\item $\pi$ is a stationary distribution on graph $G$ if $\pi P = \pi \Leftrightarrow \pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu}$
+\item $F = \Pi P, \Pi = \mbox{diag}(\pi)$ is a circulation on graph $G$ since:
+\begin{center}
+$\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{u, u \rightarrow v} \pi_u P_{uv} = \pi_v \cdot 1 = \sum\limits_{w, v \rightarrow w} \pi_v P_{vw} = \sum\limits_{w, v \rightarrow w} F_{vw}$
+\end{center}
+\end{itemize}
+\vfill
+
+
 
 
 
