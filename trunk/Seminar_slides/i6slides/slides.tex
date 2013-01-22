@@ -476,15 +476,40 @@ $P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace $
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Branch-and-Cut Algorithm}
+\NewPage\headline{Branch-and-Cut Example}
 \vfill
 \begin{itemize}
-\item 
+\item The integer programming problem (Eg0):
+%\item[]
+\begin{table}
+  \centering
+  \begin{tabular}{l l}
+  	$\min$ 		& $z = -6x_1 - 5x_2$\\
+	subject to  & $3x_1 + x_2 \leq 11$\\
+                & $-x_1 + 2x_2 \leq 5$\\
+                & $x_1, x_2 \geq 0$, interger.
+  \end{tabular}
+\end{table}
+\item Solve the linear programming relaxation.
+\item Branch on $x_1$ to get two new problems:
+\begin{itemize}
+\item Add constraint $x_1 \geq 3$ to Eg0 to get Eg1 $\Rightarrow$ integral solution (3, 2), with value -28.
+\item Add constraint $x_1 \leq 2$ to Eg0 to get Eg2 $\Rightarrow$ solution (2, 3.5), with value -29.5.
+\end{itemize}
+\item Add a cutting plane $2x_1 + x2 \leq 7$ to Eg2 to get Eg3 $\Rightarrow$ solution (1.8, 3.4), with value -27.8.
+\item The solution of Eg3 is larger than the integral solution of Eg1 $\Rightarrow$ terminate.
 \end{itemize}
 \vfill
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Branch-and-Cut Example}
+\vfill
+\begin{figure}
+	\centering
+	\includegraphics[width=0.55\textwidth]{branch_and_cut}
+\end{figure}
+\vfill
 
 
 
