@@ -572,7 +572,32 @@ $Ccut(x) = \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x
 \vfill
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Contour Cut: Computational Solution}
+\vfill
+\begin{itemize}
+\item Minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$:
+\end{itemize}
+\begin{equation}
+\max_x \dfrac{x^*H(\delta)x}{x^* \Pi x} 
+\end{equation}
+\begin{equation*}
+ \mbox{such that} \qquad x_i = r_i\exp(i\theta_i), \qquad r_i \in \left\lbrace 0, 1 \right\rbrace, \qquad \theta_i = O(i)\delta,
+\end{equation*}
+\begin{itemize}
+\item Relax the problem by allowing $x$ to take on arbitrary complex values: $x \in \mathbb{C}^{\lvert C \rvert}$.
+\end{itemize}
+\begin{theorem}
+\label{theorem:hermitian}
+The critical points of the relaxed contour cut problem
+\begin{equation}
+\max_{x, \delta} \dfrac{x^*H(\delta)x}{x^* \Pi x} \qquad \mbox{s.t.} \qquad x_i \in \mathbb{C}
+\label{eq:hermitian}
+\end{equation}
+can be found by searching over $\delta$ and finding the eigenvectors of the corresponding matrices $\Pi^{-1}H(\delta)$; any eigenvectors for which $x^*H(\delta)x = \lvert x^*Fx \rvert$ are critical points
+with respect to both $x$ and $\delta$.
+\end{theorem}
+\vfill
 
 
 
