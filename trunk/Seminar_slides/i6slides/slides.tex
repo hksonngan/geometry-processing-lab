@@ -434,26 +434,64 @@ $S_{p, q} = \min(\mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_p})]/2 \right\rbr
 \vfill
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Integer Linear Programing formulation of PCST}
+\vfill
+\begin{itemize}
+\item The PCST can be formulated as an ILP problem with $n$ variables and $m$ constraints:
+\item[]
+\begin{center}
+$\min \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{Z}_+^n \right\rbrace $
+\end{center}
+\item $x \in \mathbb{Z}_+^n$ integer decision variables, $c \in \mathbb{Z}^n$ objective function vector and $A \in \mathbb{Z}^{m \times n}$ the matrix of constraint coefficients.
+\item The LP-relaxation (CUT) is obtained by using real-value constraints $x \in \mathbb{R}_+^n$.
+\item Its feasible region is the polyhedron:
+\item[]
+\begin{center}
+$P = \left\lbrace x \in \mathbb{R}_+^n : Ax \geq b \right\rbrace $
+\end{center}
+\item The integral hull of the set of integer solutions, i.e., the polyhedron:
+\item[]
+\begin{center}
+$P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace $
+\end{center}
+%\item A cutting plane as a linear inequality that is valid for $P_I$ but not for $P$.
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.5\linewidth} M{.5\linewidth} @{}}
+  \begin{itemize}
+  	\item A cutting plane is a linear inequality that is valid for $P_I$ but not for $P$.
+  \end{itemize}
+      &
+    \includegraphics[width=0.25\textwidth]{cutting_plane}
+  \end{tabular}
+\end{table}
+\end{itemize}
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.2\textwidth]{cutting_plane}
+%\end{figure}
+\vfill
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Including Images}
+\NewPage\headline{Branch-and-Cut Algorithm}
 \vfill
 \begin{itemize}
-\item free positioning of images or texts using textboxes, look at the z-index
+\item 
 \end{itemize}
 \vfill
-\begin{textblock}{4}(2,-1) % in runden Klammern die Koordinaten, von der jeweiligen Textstelle aus berechnet
-  \scalebox{0.8}{\includegraphics{airplane}}
-\end{textblock} 
-\begin{itemize}
-\item \red{free positioning of images or texts using textboxes}
-\end{itemize}
-\begin{textblock}{4}(15,-2) % in runden Klammern die Koordinaten, von der jeweiligen Textstelle aus berechnet
-  \scalebox{0.8}{\includegraphics{motorbike}}
-\end{textblock} 
-\vfill
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -492,11 +530,6 @@ Some \LaTeX\xspace tricks
 Look at the current page number.
 \vfill
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{\appendixname: Table Data}
-\vfill
-\hypertarget{table_data}{Table Data} on the second appendix slide.
-Look at the current page number.
-\vfill
+
 
 \end{document}
