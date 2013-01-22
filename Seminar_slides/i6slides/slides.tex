@@ -390,7 +390,7 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \vfill
 \begin{itemize}
 \item Nodes are random variables $\left\lbrace x_1, ..., x_n \right\rbrace $ corresponding to pixels.
-\item Two types of edges: neighborhood relations, observation model
+\item Two types of edges: neighborhood relation, correlation between true state and observed data
 \item A graph represents a joint distribution $p(x)$
 \item Can be written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques:
 \item[]
@@ -416,7 +416,21 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Shape Energy}
 \vfill
-
+\begin{itemize}
+\item Given label set $L = \left\lbrace 1, ..., l \right\rbrace $, find labelling $A = (A_1, ..., A_{\lvert P \rvert})$ minimizing energy:
+\begin{center}
+$E(A) = \lambda \sum\limits_{p \in P} R_p(A_p) + \sum\limits_{(p, q) \in \mathcal{N}} (B_{p, q} + S_{p, q})\delta_{A_p \neq A_q}$,
+\end{center}
+\item[]
+\begin{center}
+$S_{p, q} = \min(\mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_p})]/2 \right\rbrace, \mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_q})]/2 \right\rbrace )$
+\end{center}
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\textwidth]{shape_energy}
+	\caption{True shape $C^{\prime}$ is similar to shape prior $C$}
+\end{figure}
 \vfill
 
 
