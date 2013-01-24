@@ -626,7 +626,35 @@ with respect to both $x$ and $\delta$.
 \vfill
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Multi-Shape Graph-Cut}
+\vfill
+\begin{itemize}
+\item Given 2 labelling configurations $X^0 \in L^{\lvert P \rvert}$ and $X^1 \in L^{\lvert P \rvert}$
+\item Combine labels s.t. the label of each node is taken either from $X^0$ or from $X^1$:
+\item[]
+\begin{center}
+$X^c(Y) = X^0 \bullet (1 - Y) + X^1 \bullet Y, \qquad Y \in \left\lbrace 0, 1 \right\rbrace^{\lvert P \rvert}$
+\end{center}
+\item Fusion move minimizes the energy of combination:
+\item[]
+\begin{center}
+$E(X^c(Y)) = \sum\limits_{p \in P}U^f_p(Y_p) + \sum\limits_{p, q \in \mathcal{N}}V^f_{pq} (Y_p, Y_q)$
+\end{center}
+\item[]
+\begin{center}
+$U^f_p(i) = U_p(X^i_p), \qquad V^f_{pq}(i, j) = V_{pq}(X^i_p, X^j_q)$
+\end{center}
+\item Multi-Shape Graph-Cut Algorithm:
+\begin{enumerate}
+\item Given current labelling $X^{cur}$, propose label $l$ for background voxels to get $X^{pro}$
+\item Fusion two labelling configurations: $X^{cur} \leftarrow X^{cur} \odot X^{pro}$
+\item Propose background label for foreground voxels in $X^{cur}$ to get $X^{pro}$
+\item $X^{cur} \leftarrow X^{cur} \odot X^{pro}$
+\item Until convergence.
+\end{enumerate}
+\end{itemize}
+\vfill
 
 
 
