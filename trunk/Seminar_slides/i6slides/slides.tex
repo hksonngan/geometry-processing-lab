@@ -600,6 +600,39 @@ with respect to both $x$ and $\delta$.
 \vfill
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Min-Cut Algorithm}
+\vfill
+\begin{itemize}
+\item MRF $\Rightarrow$ directed weighted graph: terminal nodes $\equiv$ labels, weights $\equiv$ energy.
+\item Min-Cut $\equiv$ Max-Flow
+\item Augmenting Path Algorithm:
+\begin{enumerate}
+\item Find path from source to sink with positive capacity
+\item Push maximum possible flow through this path
+\item Repeat until no path can be found
+\end{enumerate}
+\end{itemize}
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.3\linewidth} M{.3\linewidth} M{.3\linewidth} @{}}
+      \includegraphics[width=0.3\textwidth]{mincut}%
+      &
+      \includegraphics[width=0.2\textwidth]{min_cut}%
+      &
+      \includegraphics[width=0.2\textwidth]{max_flow}%
+  \end{tabular}
+\end{table}
+\vfill
+
+
+
+
+
+
+
+
+
 
 
 
