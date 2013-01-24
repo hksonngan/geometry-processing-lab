@@ -100,11 +100,11 @@
 %	\item \hyperlink{sli:ssm}{Statistical Shape Model}
 %\end{itemize}
 \item \hyperlink{sli:construction}{Graph Construction}
-\begin{itemize}
-	\item \hyperlink{sli:region_graph}{Region Graph}
-	\item \hyperlink{sli:contour_graph}{Contour Graph}
-	\item \hyperlink{sli:mrf}{Markov Random Field}
-\end{itemize}
+%\begin{itemize}
+%	\item \hyperlink{sli:region_graph}{Region Graph}
+%	\item \hyperlink{sli:contour_graph}{Contour Graph}
+%	\item \hyperlink{sli:mrf}{Markov Random Field}
+%\end{itemize}
 \item \hyperlink{sli:algorithms}{Graph Cut Algorithms}
 %\begin{itemize}
 %	\item \hyperlink{sli:PCST}{Prize-Collecting Steiner Tree}
@@ -163,65 +163,70 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \hypertarget{sli:introduction}
 \vfill
 \begin{itemize}
-\item Purposes of segmentation
-\begin{itemize}
-	\item Computer-aided diagnoses
-	\item Object detection and segmentation for autonomous systems
-	\item Shape alignments
+	\item Purposes of segmentation
+	\begin{itemize}
+		\item Computer-aided diagnoses
+		\item Object detection and segmentation for autonomous systems
+		\item Shape alignments
+	\end{itemize}
+	\item Current problems
+	\begin{itemize}
+		\item deformable shapes
+		\item time constraint
+		\item no clear boundaries
+	\end{itemize}
+	\item Advantages of Graph Representation
+	\begin{itemize}
+		\item Different approaches can be expressed in terms of graph theory
+		\item Powerful graph algorithms exist
+	\end{itemize}
 \end{itemize}
-\item Current problems
-\begin{itemize}
-	\item deformable shapes
-	\item time constraint
-	\item no clear boundaries
-\end{itemize}
-\item Advantages of Graph Representation
-%\begin{itemize}
-%	\item Flexible expression of constraints 
-%	\item Powerful graph algorithms exist\\
-%	\includegraphics[width=.6\linewidth]{region_graph_intro}
-%\end{itemize}
-\begin{table}
-  \centering
-  \begin{tabular}{@{} M{.4\linewidth} M{.6\linewidth} @{}}
-  	\begin{itemize}
-  		\item Flexible expression of constraints 
-  		\item Powerful graph algorithms exist
-    \end{itemize}
-      &
-    \includegraphics[width=.9\linewidth]{region_graph_intro}
-  \end{tabular}
-\end{table}
-
-\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[width=.5\linewidth]{region_graph_intro}
+\end{figure}
 \vfill
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Image Features}
+\vfill
+\begin{itemize}
+\item Capture important properties in local regions
+\item Represented as high dimensional vectors
+\item Point features: Speeded Up Robust Features
+\item Shape features: Probability of Boundary
+\end{itemize}
+\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Image Features: Speeded Up Robust Features}
 \hypertarget{sli:style}
 \vfill
-\begin{itemize}
+\begin{enumerate}
 \item Detect interest points: $det(Hessian(I)) = I_{xx}I_{yy} - I^2_{xy}$
-\item Orientation assignment (rotation invariant): select the dominant direction of Haar wavelet response vectors $(d_x, d_y)$.
+\item Orientation assignment (rotation invariant):
+\begin{itemize}
+\item Compute Haar wavelet responses $(d_x, d_y)$ within $6s$ around interest point.
+\item Select dominant direction
+\end{itemize}
 \item SURF is computed within a window of size $20s$.
-\item Further split the window into $4 \times 4$ sub-windows.
 \item[]
   \begin{figure}
     \centering
     \begin{tabularx}{600pt}{Z Z Z}
       \includegraphics[height=2.0cm]{haar_wavelet}%
-      \caption{Haar wavelet filters}%
+      %\caption{Haar wavelet filters}%
       &
       \includegraphics[height=5.5cm]{orientation_window}%
-      \caption{sum $(d_x, d_y)$ over a window size $\frac{\pi}{3}$}%
+      %\caption{sum $(d_x, d_y)$ over a window size $\frac{\pi}{3}$}%
       &
       \includegraphics[height=5.5cm]{feature_neighborhood}%
-      \caption{windows defining neighborhood}%
+      %\caption{windows defining neighborhood}%
     \end{tabularx}
   \end{figure}
-\end{itemize}
+\end{enumerate}
 \vfill
 
 
@@ -229,33 +234,36 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \NewPage\headline{Image Features: Speeded Up Robust Features}
 \vfill
 \begin{itemize}
+\item Split the window into $4 \times 4$ sub-windows.
 \item 4D descriptor vector $v = (\sum d_x, \sum d_y, \sum \lvert d_x \rvert, \sum \lvert d_y \rvert)$ for each sub-window $\Rightarrow$ 64D SURF descriptor.
 \item Normalize to make it invariant to contrast (a scale factor).
+\item Invariant to: Translation, Scaling, Rotation, Contrast.
 %\item[]
 \end{itemize}
-  \begin{figure}
-    \centering
-    \begin{tabularx}{600pt}{Z Z}
-      \includegraphics[width=0.4\textwidth]{surf}%
-      \caption{Wavelet responses extracted from neighborhood}%
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.5\linewidth} M{.5\linewidth} @{}}
+      \includegraphics[width=0.4\textwidth]{surf}
       &
       \includegraphics[width=0.4\textwidth]{surf_vector}%
-      \caption{The descriptor entries represent the underlying intensity pattern.}%
-    \end{tabularx}
-  \end{figure}
+  \end{tabular}
+\end{table}
 \vfill
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Gradient-based Features}
+\NewPage\headline{Image Features: Gradient-based Detectors}
 \small
 \vfill
-\begin{itemize}
+\begin{enumerate}
 \item Draw a circle with radius $r$, divide it along the diameter at orientation $\theta$.
-\item Build histograms of brightness, color and texture for each disc half.
-\item Compares histograms of the two disc halves: $G(x, y, \theta, r) = \chi ^ 2 (g, h) = \frac{1}{2} \sum_i \frac{(g_i - h_i)^2}{(g_i + h_i)}$
+\item Build histograms of brightness, color and texture for each disc half: $h(x, y, \theta, r)$.
+\item Compares histograms of the two disc halves: $G(x, y, \theta, r) = \chi ^ 2 (g, h) = \frac{1}{2} \sum_i \frac{(g_i - h_i)^2}{(g_i + h_i)}$.
 \item Use logistic regression trained on human segmentation dataset to get the result $Pb_{\sigma}(x, y, \theta)$.
-\end{itemize}
+\end{enumerate}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.45\textwidth]{gradient_features}
@@ -264,13 +272,14 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Globalized Probability of Boundary}
+\NewPage\headline{Globalized Probability of Boundary Detector}
 \small
 \vfill
 \begin{itemize}
 \item Brightness, color and texture gradients in 3 different scales: $mPb(x, y, \theta) = \sum\limits_{i = 1}^{9} G_i(x, y, \theta)$.
-\item Define affinity matrix $W$ using intervening contour cue $mPb$. Solve the generalized eigenvectors problem: $(D - W)v = \lambda D v$, $D_{ii} = \sum_j W_{ij}$.
-\item Edges from generalized eigenvectors $v_j$: $sPb(x, y, \theta) = \sum\limits_{j = 1}^{k} \frac{1}{\sqrt{\lambda_j}} sPb_{v_j} (x, y, \theta)$.
+\item Define affinity matrix $W$ using intervening contour cue $mPb$.
+\item Solve the generalized eigenvectors problem: $(D - W)v = \lambda D v$, $D_{ii} = \sum_j W_{ij}$\\ to get top $k$ eigenvectors $v_j$.
+\item Extract edges from $v_j$ to get $sPb_{v_j}(x, y, \theta)$: $sPb(x, y, \theta) = \sum\limits_{j = 1}^{k} \frac{1}{\sqrt{\lambda_j}} sPb_{v_j} (x, y, \theta)$.
 \item Globalized probability of boundary: $gPb(x, y, \theta) = \sum\limits_{i = 1}^{9} \beta_iG_i(x, y, \theta) + \gamma sPb(x, y, \theta)$.
 \end{itemize}
 %  \begin{figure}
@@ -287,17 +296,34 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
   \centering
   \begin{tabular}{@{} M{.3\linewidth} M{.7\linewidth} @{}}
       \includegraphics[width=0.15\textwidth]{intervening_contour2}%
-      \caption{Intervening contour}%
+      %\caption{Intervening contour}%
       &
       \includegraphics[width=0.65\textwidth]{sPb}%
-      \caption{Eigenvectors and their edges}%
+      %\caption{Eigenvectors and their edges}%
   \end{tabular}
 \end{table}
 \vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Support Vector Machine}
+\NewPage\headline{Image Features: Shape Descriptor}
+\vfill
+\begin{itemize}
+\item Split region's bounding box into $4 \times 4$ grid.
+\item Different region cues are extracted from the cells:
+\begin{itemize}
+\item Contour shape, given by the histogram of oriented responses of the contour detector $gPb$
+\item Edge shape, computed by convolution with a [-1 0 1] filter along $x$ and $y$ axes
+\item Color, represented by the $L^*$, $a$ and $b$ histograms in the CIELAB color space
+\item Texture, described by texton histograms
+\end{itemize}
+\item Each type of cue is encoded by concatenating cell signals into a histogram.
+\end{itemize}
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Supervised Training: Support Vector Machine}
 \vfill
 \begin{itemize}
 \item Given training data $\left\lbrace (h_i, t_i) \right\rbrace _{i = 1} ^S$, find a classifier $f(h) = w^Th + b$ that maximizes the margin.
@@ -316,30 +342,49 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \vfill
 \begin{figure}
 	\centering
-	\includegraphics[width=0.45\textwidth]{bag_of_features}
-	\caption{Bag of visual words}
+	\includegraphics[width=0.3\textwidth]{bag_of_features}
+	%\caption{Bag of visual words}
 \end{figure}
 \begin{itemize}
-\item Region $R = \left\lbrace (x_i, v_i) \right\rbrace _{i = 1} ^N$, its ranking score $f(R) = b + (\sum_i\alpha_ih(R_i)) \cdot h(R)$.
-\item Associate each $j$-th word with a weight $w_j = \sum_i\alpha_ih_j(R_i)$.
-\item $f(R) = b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i}$, 
+\item Given region $R = \left\lbrace (x_i, v_i) \right\rbrace _{i = 1} ^N$, its ranking score:
+\begin{equation*}
+\begin{array}{lcl}
+f(R) & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
+     & = & b + \sum\limits_{i = 1}^{S}\sum\limits_{j = 1}^{K} \alpha_ih_j(R_i)h_j(R)\\
+     & = & b + \sum\limits_{j = 1}^{K}\sum\limits_{i = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
+     & = & b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i}
+\end{array}
+\end{equation*}
 \item $d_i \in \left[ 1, K \right] $ the index of the visual word that feature $v_i$ maps to.
 \end{itemize}
 \vfill
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Graph Construction}
+\vfill
+\begin{itemize}
+\item Region Graph
+\item Contour Graph
+\item Markov Random Field
+\end{itemize}
+\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Region Graph}
 \vfill
 \begin{itemize}
-\item Watershed to define regions from gPb contours
-\item Vertex weights: SVM on SURF and Shape descriptors. Edge weights: intervening contour strengths
-\item $f^{\prime}(R) = \sum\limits_{i = 1}^{N}w^v_{d_i} - \sum\limits_{j = 1}^{M} w^e_{s_j}$, $s_j \in \left[ 1, L \right] $ is the bin index of the contour strength histogram for the $j^{th}$ contour.
+%\item Watershed to define regions from gPb contours
+\item Vertex weights based on SVM on SURF and Shape descriptors
+\item Edge weights based on intervening contour strengths
+\item Given region $R = \left\lbrace (x_i, v_i) \right\rbrace _{i = 1} ^N \cup \left\lbrace v_j \right\rbrace _{j = 1} ^M$
+\item Its ranking score $f^{\prime}(R) = \sum\limits_{i = 1}^{N}w^v_{d_i} - \sum\limits_{j = 1}^{M} w^e_{s_j}$
+\item $s_j \in \left[ 1, L \right] $ is the bin index of the contour strength histogram for the $j^{th}$ contour.
 \end{itemize}
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{region_graph}
+	\includegraphics[width=0.75\textwidth]{region_graph}
 \end{figure}
 \vfill
 
