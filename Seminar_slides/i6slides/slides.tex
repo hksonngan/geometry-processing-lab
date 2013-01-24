@@ -151,6 +151,14 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage
+%\headline{\refname}
+%\renewcommand*{\refname}{}
+\bibliographystyle{i6bibliostyle}
+\bibliography{slides}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Introduction and Motivation} 
 \hypertarget{sli:introduction}
 \vfill
@@ -775,9 +783,27 @@ $U^f_p(i) = U_p(X^i_p), \qquad V^f_{pq}(i, j) = V_{pq}(X^i_p, X^j_q)$
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{\LaTeX \ Tricks}
+\NewPage\headline{Conclusion}
 \vfill
-Some \LaTeX\xspace tricks
+\begin{itemize}
+	\item Pros:
+	\begin{itemize}
+		\item Different approaches can be expressed in terms of graph theory
+		\item Make use of powerful graph-cut algorithms $\Rightarrow$ improve the results
+	\end{itemize}
+	\item Cons:
+	\begin{itemize}
+		\item ERS only applicable to linear classifiers.
+		\item Contour Cut is a method to pick up salient contours from Pb edge detector.
+		\begin{itemize}
+			\item If we increase the number of contours, it converges to Pb result.
+		\end{itemize}
+		\item Multi-Shape Graph-Cut depends on shape priors.
+		\begin{itemize}
+			\item Can only extract shapes similar to shape priors.
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
 \vfill
 
 
@@ -787,15 +813,7 @@ Some \LaTeX\xspace tricks
 \FinalPage
 %%%
 
-%%%
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage
-%\headline{\refname}
-%\renewcommand*{\refname}{}
-\bibliographystyle{i6bibliostyle}
-\bibliography{slides}
 
 %\clearpage
 \appendix
