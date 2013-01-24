@@ -666,6 +666,7 @@ $U^f_p(i) = U_p(X^i_p), \qquad V^f_{pq}(i, j) = V_{pq}(X^i_p, X^j_q)$
 \item Test on two classes: 659 cats and 839 dogs
 \item 50\% for training and 50\% for testing
 \item Deformable objects with wide pose variation
+\item Baseline: Efficient Subwindow Search (ESS)
 \end{itemize}
 \item ETHZ Shape dataset:
 \begin{itemize}
@@ -676,19 +677,19 @@ $U^f_p(i) = U_p(X^i_p), \qquad V^f_{pq}(i, j) = V_{pq}(X^i_p, X^j_q)$
 \item PASCAL VOC 2008 segmentation dataset
 \begin{itemize}
 \item All 20 categories
+\item Baseline: Conditional random field (CRF)
 \end{itemize}
-\item Baseline: Efficient Subwindow Search (ESS)
 \end{itemize}
 \begin{table}
   \centering
   \begin{tabular}{@{} M{.25\linewidth} M{.25\linewidth} M{.25\linewidth} M{.25\linewidth} @{}}
-      \includegraphics[width=0.2\textwidth]{dog}%
+      \includegraphics[width=0.15\textwidth]{dog}%
       &
-      \includegraphics[width=0.2\textwidth]{cat}%
+      \includegraphics[width=0.15\textwidth]{cat}%
       &
-      \includegraphics[width=0.2\textwidth]{bike}%
+      \includegraphics[width=0.15\textwidth]{bike}%
       &
-      \includegraphics[width=0.2\textwidth]{airplane}%
+      \includegraphics[width=0.15\textwidth]{airplane}%
   \end{tabular}
 \end{table}
 \vfill
@@ -697,8 +698,19 @@ $U^f_p(i) = U_p(X^i_p), \qquad V^f_{pq}(i, j) = V_{pq}(X^i_p, X^j_q)$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{ERS Results}
 \vfill
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\textwidth]{pascal_voc07}
+	\caption{PASCAL VOC 2007}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.75\textwidth]{ERS_result}
+	\caption{ETHZ Shape}
+\end{figure}
 \begin{itemize}
-\item
+\item PASCAL VOC 2008: mean overlap accuracy 0.274 for ERS vs. 0.228 for CRF
+\item Efficiency: 0.29 seconds on average.
 \end{itemize}
 \vfill
 
@@ -736,10 +748,15 @@ Some \LaTeX\xspace tricks
 %\clearpage
 \appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{\appendixname: First Slide}
+\NewPage\headline{\appendixname: Metrics in Information Retrieval}
 \vfill
-\hypertarget{anchorname}{Hyper Target} on the first appendix slide. 
-Look at the current page number.
+\begin{itemize}
+\item $\mathrm{Precision} = \dfrac{\lvert \left\lbrace \mathrm{relevant\ images} \right\rbrace \cap \left\lbrace \mathrm{retrieved\ images} \right\rbrace \rvert}{\lvert \left\lbrace \mathrm{retrieved\ images} \right\rbrace \rvert}$
+\item $\mathrm{Recall} = \dfrac{\lvert \left\lbrace \mathrm{relevant\ images} \right\rbrace \cap \left\lbrace \mathrm{retrieved\ images} \right\rbrace \rvert}{\lvert \left\lbrace \mathrm{relevant\ images} \right\rbrace \rvert}$
+\item $\mathrm{Average\ Precision} = \dfrac{\sum\limits_{k = 1}^{n} P(k)\cdot rel(k)}{\lvert \left\lbrace \mathrm{relevant\ images} \right\rbrace \rvert}$
+\item $P(k): \mathrm{precision\ at\ } k, n: \lvert \left\lbrace \mathrm{retrieved\ images} \right\rbrace \rvert$
+\item $rel(k) = \begin{cases} 1, & \mbox{if the image at rank } k\mbox{ is relevant} \\ 0, & \mbox{otherwise} \end{cases}$
+\end{itemize}
 \vfill
 
 
