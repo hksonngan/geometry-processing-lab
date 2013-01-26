@@ -191,13 +191,13 @@ gPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\beta_i G_i(x, y, \theta) + \gamma sP
 where the weights are learned by gradient ascent on the F-measure
 
 \begin{equation}
-\mathrm{F} \operatorname{-} \mathrm{measure} = 2\cdot \mathrm{Precision} \cdot \mathrm{Recall}/(\mathrm{Precision + Recall}).
+\mathrm{F} \operatorname{-} \mathrm{measure} = \dfrac{2\cdot \mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision + Recall}}.
 \end{equation} 
 
 \subsubsection{Shape Descriptor}
 \label{sec:shape_descriptor}
 
-The contours detected above define over-segmented regions of the image. Gu et al. \cite{gu2009recognition} proposed a way to describe a region by subdividing evenly its bounding box into an $n \times n$ grid. The grid size n = 4 seems to be appropriate. Each cell encodes information only inside the region. Different cues are extracted from each cell, and each type of cue is encoded by concatenating cell signals into a histogram. The following region cues are included:
+The contours detected above define over-segmented regions of the image. Gu et al. \cite{gu2009recognition} proposed a way to describe a region by subdividing evenly its bounding box into an $n \times n$ grid. The grid size n = 4 has been reported effective. Each cell encodes information only inside the region. Different cues are extracted from each cell, and each type of cue is encoded by concatenating cell signals into a histogram. The following region cues are included:
 
 \begin{itemize}
 \item Contour shape, given by the histogram of oriented responses of the contour detector gPb.
@@ -212,7 +212,7 @@ There are some advantages of this representation which were pointed out by Gu et
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Discussion}
 
-So far we have seen many ways to extract features from an image, each has its own primary purpose. SURF feature was originally developed for the problem of image matching but it is also suitable for compact representation of local, isotropic image patches. The advantage of using SURF for object detection is its local nature, thereby being invariant to great viewpoint change having the capability of detecting deformable objects \cite{VijayGrauman2011}. gPb, however, was developed to detect contours hence suitable for segmentation tasks \cite{arbelaez2009contours} \cite{gu2009recognition}. It can also be used to detect objects with parts defined by their shape \cite{VijayGrauman2011} \cite{gu2009recognition}.
+So far we have seen two ways to extract features from an image, each has its own primary purpose. SURF features was originally developed for the problem of image matching but it is also suitable for compact representation of local, isotropic image patches. The advantage of using SURF for object detection is its local nature, thereby being invariant to great viewpoint change having the capability of detecting deformable objects \cite{VijayGrauman2011}. gPb, however, was developed to detect contours hence suitable for segmentation tasks \cite{arbelaez2009contours} \cite{gu2009recognition}. It can also be used to detect objects with parts defined by their shape \cite{VijayGrauman2011} \cite{gu2009recognition}.
 
 \section{Segmentation with Supervised Training}
 \label{sec:supervised_learning}
