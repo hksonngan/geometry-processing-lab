@@ -577,7 +577,7 @@ This ILP problem can be solved efficiently in practice with a branch-and-cut alg
 \subsubsection{Branch-and-Cut Algorithm}
 
 The branch-and-cut algorithm is a very successful technique for solving a wide variety of integer programming problems to optimality. In essence, it is a combination of a cutting plane method with a branch-and-bound algorithm. These methods work by solving a sequence of linear programming relaxations of the integer programming
-problem. Cutting plane methods improve the relaxation of the problem to more closely approximate the integer programming problem, and branch-and-bound algorithms break the problem into sub-problems based on the domain of its variables and proceed by rejecting the sub-problems not satisfying the bounding conditions.
+problem. Cutting plane methods improve the relaxation of the problem to more closely approximate the integer programming problem, and branch-and-bound algorithms break the problem into sub-problems based on the domain of its variables and proceed by pruning the branches of sub-problems having optimal solutions worse than the bounding value.
 
 We consider a general ILP problem with $n$ variables and $m$ constraints stated as follows
 
@@ -639,11 +639,6 @@ A branch-and-cut algorithm is outlined as follows:
 
 \subsection{Contour Cut}
 \label{sec:normalized_cut}
-
-\subsubsection{Graph Circulations}
-
-%\cite{shi2000normalized}
-
 Given a weighted directed graph $G = (V, E, W)$, a random walk on $G$ is a Markov process with transition matrix $P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$ is a diagonal matrix with the row-sums of $W$ along the diagonal. Let $\pi$ be the unique left eigenvector such that $\pi P = \pi$. The row-vector $\pi$ corresponds to the stationary distribution of the random walk. This means:
 \begin{equation}
 \pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu},
@@ -664,7 +659,7 @@ One interpretation of a circulation is a flow in the graph. The flow at each ver
 \end{equation}
 This circulation is advantageous because if $W$ is symmetric then the directed versions of cut and volume that we will define reduce to the original undirected versions \cite{gleich2006hierarchical}.
 
-\subsubsection{Contour Cut}
+\subsubsection{Contour Cut Cost}
 %\cite{zhu2007untangling}
 %\cite{KenGalShi2011}
 We define the external cut of a contour $(C, O)$ to measure its separation from the rest of the graph, $V \backslash C$:
@@ -737,8 +732,6 @@ Find local maxima of each $\lambda_i$ over all $\delta$. The associated $x^\prim
 
 \subsection{Graph-Cut}
 \label{sec:graph_cut}
-\subsubsection{Min-Cut}
-
 Given an undirected graph constructed from Section $\ref{sec:mrf}$, we convert it to a directed weighted graph by introducing terminal nodes corresponding to the set of labels that can be assigned to pixels. For the two-class problem, there are two terminal nodes called the source, $s$, and the sink, $t$. For each node in the original graph we insert a directed edge from the source to it and another directed edge from that node to the sink with the edge weights being the data term in Equation $\ref{eq:mrf_multishape_energy}$ evaluated at the label values of the source or the sink accordingly. Each existing edge from the original graph is replaced by 2 directed edges with the weights being the boundary term. Figure $\ref{fig:mrf_mincut}$ shows an example of a two-terminal graph that can be used to minimize the energy function as in Equation $\ref{eq:mrf_multishape_energy}$ on a $3 \times 3$ image with two labels.
 
 \begin{figure}[htbp]
@@ -762,10 +755,9 @@ where $s, t$ are the labels of the corresponding source or sink. In the non-subm
 %\subsubsection{The Quadratic Pseudo-Boolean Optimization Algorithm}
 
 \subsubsection{Multi-Shape Graph-Cuts}
+In order to solve the multi-label problem posed in Section $\ref{sec:mrf}$, we use an approximate algorithm called fusion move \cite{lempitsky2010fusion} which iteratively solves a series of problems between a set of current labels and a set of proposed labels. In essence, we define a fusion move operator which selects labels from either of the two input solutions such that the energy of the output solution is minimized. This is done by using the QPBO min-cut algorithm.
 
-In order to solve the multi-label problem posed in Section $\ref{sec:mrf}$, we use an approximation algorithm called fusion move \cite{lempitsky2010fusion} which iteratively solves a series of problems between a set of current labels and a set of proposed labels using the QPBO min-cut algorithm.
-
-Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of proposed labels. We divided the current labels into object labels and background labels. First, the fusion move algorithm proposes an object label, $l$, against voxels whose current labels, $X^{cur}$, are background, and proposes the same labels as current for other voxels $(X^{pro} \leftarrow X^{cur})$. The QPBO min-cut algorithm can find a combinatorial optimal solution of labels, or shape. This step can reduce false negatives, but cannot deal with false positives. The second step focuses on false positives, based on the same analogy. It proposes a background label $l$ against voxels whose current labels $X^{cur}$ are object. To compute the shape energy $S_{p,q}$ in the case of a background proposal, we extend the set of labels $L$ to $L = \left\lbrace 1, -1, 2, -2, ..., n, -n \right\rbrace$, where the absolute value of a label refers to the number of a shape, and its sign represents the state of a voxel. Here, positive labels represent object labels and negative labels represent background labels. The QPBO min-cut algorithm can again find combinatorial optimal solutions of labels. We iterate a pair of object proposals and background proposals by changing a label, or a shape. The algorithm stops the iteration process when no label changes or when it reaches the maximum number of iterations defined by the user. The method is summarized in Algorithm $\ref{algo:fusion}$.
+Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of proposed labels. We divided the current labels into object labels and background labels. First, the algorithm proposes an object label, $l$, against voxels whose current labels, $X^{cur}$, are background, and proposes the same labels as current for other voxels $(X^{pro} \leftarrow X^{cur})$. Then we apply the fusion move operator on $X^{cur}$ and $X^{pro}$ to find the combinatorial optimal solution of labels, or shape. This step can reduce false negatives, but cannot deal with false positives. The second step focuses on false positives, based on the same analogy. It proposes a background label $l$ against voxels whose current labels $X^{cur}$ are object. To compute the shape energy $S_{p,q}$ in the case of a background proposal, we extend the set of labels $L$ to $L = \left\lbrace 1, -1, 2, -2, ..., n, -n \right\rbrace$, where the absolute value of a label refers to the number of a shape, and its sign represents the state of a voxel. Here, positive labels represent object labels and negative labels represent background labels. The fusion move operator can again find combinatorial optimal solutions of labels. We iterate a pair of object proposals and background proposals by changing a label, or a shape. The algorithm stops the iteration process when no label changes or when it reaches the maximum number of iterations defined by the user. The method is summarized in Algorithm $\ref{algo:fusion}$.
 
 \begin{algorithm}
 \caption{Multi-shape graph-cuts}
