@@ -280,30 +280,21 @@ f(R) & = & b + w \cdot h(R)\\
 where $d_i \in [1, K]$ is the index of the visual word that feature $v_i$ maps to. Note that we associate each $j$-word in the vocabulary with a weight $w_j = \sum_i \alpha_i h_j(R_i)$ to express $f(R)$ as a sum over per-feature contributions. This means the score of a region is the sum of its N features' word weights. Since we are only interested in maximizing the classifier response $f(R)$, the bias term $b$ is irrelevant and can be ignored.
 
 \subsection{Logistic Regression}
-
 \label{sec:logistic_regression}
-
 In the problem of two-class classification, the logistic regression method models the posterior probability of class $C_1$ by applying a logistic sigmoid function $\sigma$ on a linear discriminant function of the feature vector $\phi$ so that
-
 \begin{equation}
 \label{eq:logistic}
-p(C_1|\phi) = y(\phi) = \sigma(w^T\phi)
+\begin{cases}
+	p(C_1|\phi) = \sigma(w^T\phi) \\
+	p(C_2|\phi) = 1 - p(C_1|\phi) \\
+\end{cases}
 \end{equation}
-
-with $p(C_2|\phi) = 1 - p(C_1|\phi)$. The logistic sigmoid function $\sigma$ is derived from the Bayes decision theory as follows:
-
+where $w$ is the weight vector of the linear discriminant function. The logistic sigmoid function $\sigma$ is given as follows:
 \begin{equation}
 \label{eq:Bayes}
-\begin{array}{lcl}
-p(C_1|x) & = & \dfrac{p(x|C_1)p(C_1)}{p(x|C_1)p(C_1) + p(x|C_2)p(C_2)}\\
-		 & = & \dfrac{1}{1 + \dfrac{p(x|C_2)p(C_2)}{p(x|C_1)p(C_1)}}\\
-		 & = & \dfrac{1}{1 + e^{-a}} \equiv \sigma(a)
-\end{array}
+\sigma(a) = \dfrac{1}{1 + e^{-a}} 
 \end{equation}
-
-with $a = \ln \dfrac{p(x|C_1)p(C_1)}{p(x|C_2)p(C_2)} = \ln(p(C_1|x) - p(C_2|x))$ represents the decision boundary corresponding to the decision boundary $w^T\phi$ in Equation $\ref{eq:logistic}$. The advantage of using Equation $\ref{eq:logistic}$ as opposed to Equation $\ref{eq:Bayes}$ is to avoid density estimation for all of its factors.
-
-Suppose we have a training data set $\left\lbrace \phi_n, t_n \right\rbrace$ with $n = 1, ... N$, where $\phi_n = \phi(x_n)$ and $t_n \in \left\lbrace 0, 1 \right\rbrace$, $t = (t_1, ..., t_n)^T$. With $y_n = p(C_1|\phi_n)$, we can write the likelihood as:
+Suppose we have a training data set $\left\lbrace \phi_n, t_n \right\rbrace_{n = 1}^N$, where $t_n \in \left\lbrace 0, 1 \right\rbrace$, $t = (t_1, ..., t_n)^T$. With $y_n = p(C_1|\phi_n)$, we can write the likelihood as:
 
 \begin{equation}
 p(t|w) = \prod\limits_{n = 1}^{N}y_n^{t_n} (1 - y_n)^{1 - t_n}
@@ -316,45 +307,18 @@ E(w) = - \ln p(t|w) = - \sum\limits_{n = 1}^{N} \left( t_n \ln y_n + (1 - t_n) \
 \end{equation}
 
 Our goal is to learn the weight $w$ such that it minimizes the cross-entropy error function. Due to the nonlinearity of the logistic sigmoid function, there is no closed-form solution to this optimization problem. Fortunately, this error function is concave, and hence has a unique minimum. Moreover, this error function can be minimized by using the Newton-Raphson iterative optimization scheme, which uses a local quadratic approximation to the log likelihood function. The Newton-Raphson update, for minimizing a function $E(w)$, is given as follows:
-
 \begin{equation}
 w^{new} = w^{old} - H^{-1} \nabla E(w)
+\label{eq:logistic_update}
 \end{equation}
-
 where $H$ is the Hessian matrix whose entries are the second derivatives of $E(w)$ with respect to the components of $w$. The gradient and Hessian of this error function are given by
-
 \begin{equation}
-\nabla E(w) = \sum\limits_{n = 1}^{N}(y_n - t_n) \phi_n = \Phi^T(y - t)
+\nabla E(w) = \sum\limits_{n = 1}^{N}(y_n - t_n) \phi_n %= \Phi^T(y - t)
 \end{equation}
-
 \begin{equation}
-H = \nabla \nabla E(w) = \sum\limits_{n = 1}^{N} y_n(1 - y_n) \phi_n \phi_n^T = \Phi^T R \Phi
+H = \nabla \nabla E(w) = \sum\limits_{n = 1}^{N} y_n(1 - y_n) \phi_n \phi_n^T %= \Phi^T R \Phi
 \end{equation}
-
-where we have introduced the $N \times N$ diagonal matrix $R$ with elements
-
-\begin{equation}
-R_{nn} = y_n(1 - y_n)
-\end{equation}
-
-We see that the Hessian depends on $w$ through the weighting matrix $R$, this is due to the present of the logistic sigmoid function in the error function. The Newton-Raphson update formula for the logistic regression model then becomes
-
-\begin{equation}
-\begin{array}{lcl}
-w^{new} & = & w^{old} - (\Phi^T R \Phi)^{-1}\Phi^T(y - t)\\
-		& = & (\Phi^T R \Phi)^{-1}(\Phi^T R \Phi w^{old} - \Phi^T(y - t))\\
-		& = & (\Phi^T R \Phi)^{-1}\Phi^T R z
-\end{array}
-\label{eq:normal_equations}
-\end{equation}
-
-where $z$ is an N-dimensional vector with elements
-
-\begin{equation}
-z = \Phi w^{old} - R^{-1}(y - t)
-\end{equation}
-
-Because the weighing matrix $R$ is not constant but depends on the parameter vector $w$, we need to apply Equation $\ref{eq:normal_equations}$ iteratively, each time using the new weight vector $w$ to compute a revised weighing matrix $R$. Therefore, this algorithm is known as iterative reweighted least squares, or IRLS.
+Since the Hessian depends on $w$ through $y_n$, we need to apply Equation $\ref{eq:logistic_update}$ iteratively, each time using the new weight vector $w$. Therefore, this algorithm is known as iterative reweighted least squares, or IRLS.
 
 \subsection{Statistical Shape Model}
 \label{sec:SSM}
