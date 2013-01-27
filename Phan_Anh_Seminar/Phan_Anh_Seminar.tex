@@ -230,17 +230,7 @@ The support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995s
     \label{fig:svm}
 \end{figure}
 
-In this paper we only consider the case of linearly separable data. Suppose we have a dataset of $N$ elements $\left\lbrace (x_i, t_i)\right\rbrace _{i=1}^N$, where $x_i \in R^d$ are training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $w^T x + b = 0$ which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $w$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|w\|}$. Since the data is linearly separable, there exists a
-hyperplane with:
-
-\begin{equation}
-	\begin{array}{lcl}
-	w^T x_i + b \geq +1\ for\ t_i = +1\\
-	w^T x_i + b \leq -1\ for\ t_i = -1
-	\end{array}
-\end{equation}
-
-Combined in one equation, this can be written as:
+In this paper we only consider the case of linearly separable data. Suppose we have a dataset of $S$ elements $\left\lbrace (x_i, t_i)\right\rbrace _{i=1}^S$, where $x_i \in R^d$ are training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $w^T x + b = 0$ which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $w$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|w\|}$. Since the data is linearly separable the separating hyperplane must stay within the following region:
 \begin{equation}
 t_i(w^T x_i + b) \geq 1\ \forall i
 \label{eq:margin}
@@ -252,28 +242,22 @@ The equality in Equation $\ref{eq:margin}$ will hold exactly for the points on t
 \operatorname*{arg\,min}_{w, b} \dfrac{1}{2}\|w\|^2
 \end{equation}
 
-subject to the constraint in Equation $\ref{eq:margin}$. This quadratic programming problem with linear constraints can be solved efficiently using Lagrange multipliers. Particularly, if we introduce positive Lagrange multipliers $a_i \geq 0\ \forall i$ then the above constrained optimization problem boils down to the problem of minimizing the primal form of the following Lagrangian:
+subject to the constraint in Equation $\ref{eq:margin}$. This quadratic programming problem with linear constraints can be solved efficiently using Lagrange multipliers. The solution for $w$ is obtained as a linear combination of training examples:
 
 \begin{equation}
-L_p(w, b, a) = \dfrac{1}{2} \|w\|^2 - \sum\limits_{i = 1}^{N}a_i\left( t_i(w^T x_i + b) - 1 \right) 
+w = \sum\limits_{i = 1}^{S} a_i t_i x_i = \sum\limits_{i = 1}^{S} \alpha_ix_i,
 \end{equation}
 
-By taking the derivative of the Lagrangian with respect to $w$ and set it to zero, i.e. $\frac{\partial L}{\partial w} = 0$, we get the solution for $w$ which is nothing more than a linear combination of training examples:
-
-\begin{equation}
-w = \sum\limits_{i = 1}^{N} a_i t_i x_i
-\end{equation}
-
-Note that $a_i > 0$ only for training data points on the margin called support vectors. We get the solution for $b$ by observing that any support vector $x_j$ satisfies the equality condition in Equation $\ref{eq:margin}$:
+where $a_i \geq 0$ is the Lagrange multiplier associate with the training data point $x_i$ and $\alpha_i = a_it_i$. Note that $a_i > 0$ only for training data points on the margin called support vectors. We get the solution for $b$ by observing that any support vector $x_j$ satisfies the equality condition in Equation $\ref{eq:margin}$:
 
 \begin{equation}
 \begin{array}{lcl}
-t_j \left( \sum\limits_{i = 1}^{N} a_i t_i x_i^t x_j + b \right) = 1\\
-b = t_j - \sum\limits_{i = 1}^{N} a_i t_i x_i^t x_j
+t_j \left( \sum\limits_{i = 1}^{S} a_i t_i x_i^t x_j + b \right) = 1\\
+b = t_j - \sum\limits_{i = 1}^{S} a_i t_i x_i^t x_j
 \end{array}
 \end{equation}
 
-In practice, it is more robust to average the solution for $b$ over all support vectors. The primal form of the Lagrangian $L_p$ can be transformed into the dual form to avoid the dependency on the dimensionality. This makes it possible to work with infinite-dimensional feature spaces by using some kernel tricks. More detail on extensions to the case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
+In practice, it is more robust to average the solution for $b$ over all support vectors. More detail on extensions to the case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
 
 %\subsubsection{Structured SVM learning framework}
 
