@@ -577,7 +577,7 @@ This ILP problem can be solved efficiently in practice with a branch-and-cut alg
 \subsubsection{Branch-and-Cut Algorithm}
 
 The branch-and-cut algorithm is a very successful technique for solving a wide variety of integer programming problems to optimality. In essence, it is a combination of a cutting plane method with a branch-and-bound algorithm. These methods work by solving a sequence of linear programming relaxations of the integer programming
-problem. Cutting plane methods improve the relaxation of the problem to more closely approximate the integer programming problem, and branch-and-bound algorithms proceed by a sophisticated divide and conquer approach to solve problems.
+problem. Cutting plane methods improve the relaxation of the problem to more closely approximate the integer programming problem, and branch-and-bound algorithms break the problem into sub-problems based on the domain of its variables and proceed by rejecting the sub-problems not satisfying the bounding conditions.
 
 We consider a general ILP problem with $n$ variables and $m$ constraints stated as follows
 
