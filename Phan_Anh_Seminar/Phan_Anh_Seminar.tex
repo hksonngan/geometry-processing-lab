@@ -671,51 +671,44 @@ We define the external cut of a contour $(C, O)$ to measure its separation from 
 \begin{equation}
 Ecut(C) = \sum\limits_{i \in C, j \notin C} F_{ij}.
 \end{equation}
-
 The internal cut is used to measure the entanglement caused by graph edges within the contour that violate the
 ordering $O$. Intuitively, the internal cut measures how much the contour deviates from an ideal one-dimensional contour toward a 2-dimensional clique. Let $k \in \mathbb{Z}^+$ be the width of the contour. Nodes $i, j \in C$ with $\lvert O(i) - O(j) \rvert > k$ are beyond the width of the contour hence they are included into the internal cut:
 \begin{equation}
 Icut(C, O) = \sum\limits_{(i, j) \in C, \lvert O(i) - O(j) \rvert > k} F_{ij}.
 \end{equation}
-
 Having defined the external and internal cuts, we can now define the cost function for the contour cut as follows:
 \begin{equation}
-Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{Vol(C)},
+Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)},
 \end{equation}
-where $Vol(C) = \sum_{i \in C, j \in E} F_{ij}$ is the sum of the weights of all edges incident with the contour. This cost function will be small for contours having small internal and external cuts.
+where $\mathrm{Vol}(C) = \sum_{i \in C, (i, j) \in E} F_{ij}$ is the sum of the weights of all edges incident with the contour. This cost function will be small for contours having small internal and external cuts.
 
 The internal and external cuts can be encoded with respect to the circular embedding. Given a the circular embedding of a contour, $x \in \mathbb{C}^{\lvert C \rvert}$, the external cut is:
 \begin{equation}
 Ecut(x) = \sum\limits_{(i, j) \in E: r_i \neq 0, r_j = 0} F_{ij} = \sum\limits_{(i, j) \in E} F_{ij}r_i(1 - r_j)
 \end{equation}
-
 Instead of using the hard-bound of $k$ for the internal cut, a soft version of the internal cut is applied by using the cosine function:
 \begin{equation}
 Icut(x) = \sum\limits_{(i, j) \in C}F_{ij} r_ir_j(1 - \cos(\theta_j - \theta_i - \delta)).
 \end{equation}
-
 The volume of the contour is defined as
 \begin{equation}
 \mbox{Vol}(x) = \sum\limits_{(i, j) \in E}F_{ij}r_i.
 \end{equation}
-
 The contour cut in terms of the circular embedding $x$ is then
 \begin{equation}
 \begin{array}{lcl}
-Ccut(x) & = & \dfrac{Icut(x) + Ecut(x)}{Vol(x)} = 1 - \dfrac{\sum\limits_{(i, j) \in E}F_{ij}r_ir_j\cos(\theta_j - \theta_i - \delta)}{\sum\limits_{(i, j) \in E}F_{ij}r_i} = ... \\
-& = & \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x),
+Ccut(x) & = & \dfrac{Icut(x) + Ecut(x)}{\mathrm{Vol}(x)} = ... = \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x),
 \end{array}
 \end{equation}
-where $H(\delta) = \frac{F\exp(-i\delta) + F^T\exp(i\delta)}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient. It follows that the problem of minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
+where $H(\delta) = \frac{Fe^{-i\delta} + F^Te^{i\delta}}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient. It follows that the problem of minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
 
 \subsubsection{Computational Solution}
-
 In order to minimize the contour cut, we would like to solve
 \begin{equation}
 \max_x \dfrac{x^*H(\delta)x}{x^* \Pi x} 
 \end{equation}
 \begin{equation*}
- \mbox{such that} \qquad x_i = r_i\exp(i\theta_i), \qquad r_i \in \left\lbrace 0, 1 \right\rbrace, \qquad \theta_i = O(i)\delta,
+ \mbox{such that} \qquad x_i = r_ie^{i\theta_i}, \qquad r_i \in \left\lbrace 0, 1 \right\rbrace, \qquad \theta_i = O(i)\delta,
 \end{equation*}
 where we seek not just the global maximum but all critical points which correspond to different contours. By requiring $r_i$ and $\theta_i$ to take on discrete values the problem is computationally infeasible since it requires searching over not only an exponential number of subsets sets of vertices but also over orderings on each of these sets. We relax the problem by allowing $x$ to take on arbitrary complex values: $x \in \mathbb{C}^{\lvert C \rvert}$. Note that we now must maximize over $\delta$ in addition to $x$. The main result for solving the problem is based on the following theorem:
 \begin{theorem}
@@ -735,7 +728,7 @@ The proof for this theorem can be found in \cite{KenGalShi2011}. In practice it 
 Calculate matrices $P$ and $\Pi$ from $W$.
 \begin{algorithmic}
 \For {$\delta = \delta_{min}\ to\ \delta_{max}$}\\
-\qquad $H(\delta) \leftarrow (\Pi P \exp(-i\delta) + P^T \Pi \exp(i\delta))/2$\\
+\qquad $H(\delta) \leftarrow \dfrac{\Pi P e^{-i\delta} + P^T \Pi e^{i\delta}}{2}$\\
 \qquad Solve $\Pi^{-1} H(\delta)x = \lambda x$ for top $k$ eigenvectors.
 \EndFor
 \end{algorithmic}
