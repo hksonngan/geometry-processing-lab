@@ -777,7 +777,15 @@ Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of propos
 
 \section{Applications}
 \label{sec:applications}
-This section is devoted to illustrate some applications of the algorithms described above to real-world image segmentation as well as in the field of medical image processing.
+This section is devoted to illustrate some applications of the algorithms described above to real-world image segmentation as well as in the field of medical image processing. The results are often compared using the precision vs. recall graph. Precision is the ratio of the number of true positive members to the total number of members predicted as positive:
+\begin{equation}
+\mathrm{Precision} = \dfrac{tp}{tp + fp},
+\end{equation}
+where $tp$ is the number of true positive members and $fp$ is the number of false positive members. Recall is the ratio of the number of true positive members to the actual number of positive members:
+\begin{equation}
+\mathrm{Recall} = \dfrac{tp}{tp + fn},
+\end{equation}
+where $fn$ is the number of actually positive members predicted as negative members. The higher the precision vs. recall graph the better the result is. An \emph{average precision} (AP) over all recall range is a single number also used to compare the results.
 
 \subsection{Efficient Region Search for Object Detection}
 
@@ -794,7 +802,7 @@ For point features, the system uses SURF extracted at Canny edge points, and qua
     \label{fig:ers_result}
 \end{figure}
 
-Figure $\ref{fig:ers_result}$ shows the results on ETHZ, scored for the full detection task where the ERS method is run on all images (positive or negative). The ERS method is applied using either the point features (blue curves), or the shape features (green curves). ESS is only applicable to the point features (red curves). Comparing both methods using the point features, we see the most significant gains for the Giraffes and Swans, both of which are poorly captured with a rectangular window. For Applelogos and Mugs, ERS-point$^\prime$s accuracy is close to ESS$^\prime$s, which makes sense as these objects are more boxy. Overall, the mAP of ERS is from 9\% to 90\% better than ESS using the same features. Using shape features, we see dramatic gains for almost all objects, since the ETHZ objects have parts well-described by their shape (e.g.,mug handle, bottle neck). Again, even with the bounding box metric the ERS approach is 19\% better than ESS (30.1 vs. 25.3 mAP).
+Figure $\ref{fig:ers_result}$ shows the results on ETHZ where the ERS method is applied using either the point features (blue curves), or the shape features (green curves). ESS is only applicable to the point features (red curves). Overall, the mean AP of ERS is from 9\% to 90\% better than ESS using the same features. Using shape features, we see dramatic gains for almost all objects, since the ETHZ objects have parts well-described by their shape (e.g., mug handle, bottle neck). Again, even with the bounding box metric the ERS approach is 19\% better than ESS (30.1 vs. 25.3 mean AP).
 
 \subsection{Salient Contour Detection}
 
