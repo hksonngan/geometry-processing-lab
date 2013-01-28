@@ -343,6 +343,12 @@ $\Rightarrow$ 64D SURF descriptor.
 \item Texture, described by texton histograms
 \end{itemize}
 \item Each type of cue is encoded by concatenating cell signals into a histogram.
+\begin{itemize}
+\item 13 dimensions for textures
+\item 3 for color
+\item 8 orientations for gPb contours
+\item At least 1 dimension for edge
+\end{itemize}
 \end{itemize}
 \vfill
 
@@ -352,7 +358,9 @@ $\Rightarrow$ 64D SURF descriptor.
 \vfill
 \begin{itemize}
 \item Given training data $\left\lbrace (h_i, t_i) \right\rbrace _{i = 1} ^S$, find a classifier $f(h) = w^Th + b$ that maximizes the margin.
-\item Equivalent to find a hyperplane satisfying: $\arg\min\limits_{w, b} \frac{1}{2} \|w\| ^2, \qquad t_i(w^Th_i + b) \geq 1 \forall i$.
+\vfill
+\item Equivalent to find a hyperplane satisfying: $\arg\min\limits_{w, b} \frac{1}{2} \|w\| ^2,$ subject to $t_i(w^Th_i + b) \geq 1 \forall i$.
+\vfill
 \item The solution for $w$ is a linear combination of training examples: $w = \sum\limits_{i = 1}^{S} a_it_ih_i = \sum\limits_{i = 1}^{S} \alpha_ih_i$.
 \end{itemize}
 \begin{figure}
@@ -367,7 +375,7 @@ $\Rightarrow$ 64D SURF descriptor.
 \vfill
 \begin{figure}
 	\centering
-	\includegraphics[width=0.3\textwidth]{bag_of_features}
+	\includegraphics[width=0.35\textwidth]{bag_of_features}
 	%\caption{Bag of visual words}
 \end{figure}
 \begin{itemize}
@@ -376,7 +384,7 @@ $\Rightarrow$ 64D SURF descriptor.
 \begin{array}{lcl}
 f(R) & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
      & = & b + \sum\limits_{i = 1}^{S}\sum\limits_{j = 1}^{K} \alpha_ih_j(R_i)h_j(R)\\
-     & = & b + \sum\limits_{j = 1}^{K}\sum\limits_{i = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
+     %& = & b + \sum\limits_{j = 1}^{K}\sum\limits_{i = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
      & = & b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i}
 \end{array}
 \end{equation*}
@@ -390,7 +398,9 @@ f(R) & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
 \vfill
 \begin{itemize}
 \item Region Graph
+\vfill
 \item Contour Graph
+\vfill
 \item Markov Random Field
 \end{itemize}
 \vfill
@@ -453,12 +463,12 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \begin{itemize}
 \item A contour $(C, O)$ consists of a set of vertices $C$ and an ordering function $O: C \rightarrow \left\lbrace 1, ..., \lvert C \rvert \right\rbrace $
 \item Each node of the contour is mapped to a point on a complex circle, all other points are mapped to the origin.
-\item $x_j = r_j\exp(i\theta_j)$, $r_j = 1$ if $j \in C$ and 0 otherwise,
+\item $x_j = r_je^{i\theta_j}$, $r_j = 1$ if $j \in C$ and 0 otherwise,
 \item $\theta_j = O(j)\delta$, where $\delta = \frac{2\pi}{\lvert C \rvert}$ is a phase step.
 \end{itemize}
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\textwidth]{circular_embedding}
+	\includegraphics[width=0.8\textwidth]{circular_embedding}
 \end{figure}
 \vfill
 
@@ -468,7 +478,8 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \vfill
 \begin{itemize}
 \item Nodes are random variables $\left\lbrace x_1, ..., x_n \right\rbrace $ corresponding to pixels.
-\item Two types of edges: neighborhood relation, correlation between true state and observed data
+\item Two types of edges:\\
+neighborhood relation, correlation between true state and observed data
 \item A graph represents a joint distribution $p(x)$
 \item Can be written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques:
 \item[]
