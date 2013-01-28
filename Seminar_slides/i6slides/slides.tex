@@ -145,13 +145,15 @@
 \item S. Vijayanarasimhan and K. Grauman. \alert{Efficient region search for object detection.} Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference, pages 1401--1408, June 2011.
 \item R. Kennedy, J. Gallier, and Jianbo Shi. \alert{Contour cut: Identifying salient contours in images
 by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognition (CVPR), 2011 IEEE Conference, pages 2065--2072, June 2011.
-\item Nakagomi, K. and Shimizu, A. and Kobatake, H. and Yakami, M. and Fujimoto, K. and Togashi, K. \alert{Multi-shape graph-cuts and its application to lung segmentation from a chest CT volume.}
+\item Nakagomi, K. and Shimizu, A. and Kobatake, H. and Yakami, M. and Fujimoto, K. and Togashi, K. \alert{Multi-shape graph-cuts and its application to lung segmentation from a chest CT volume.} Fourth International Workshop on Pulmonary Image Analysis, 2011.
 \end{itemize}
+\nocite{*}
 \vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage
+\footnotesize
 %\headline{\refname}
 %\renewcommand*{\refname}{}
 \bibliographystyle{i6bibliostyle}
@@ -161,13 +163,14 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Introduction and Motivation} 
 \hypertarget{sli:introduction}
+\normalsize
 \vfill
 \begin{itemize}
 	\item Purposes of segmentation
 	\begin{itemize}
-		\item Computer-aided diagnoses
-		\item Object detection and segmentation for autonomous systems
-		\item Shape alignments
+		\item Computer-aided diagnoses:\\
+		measure object's size and shape.
+		\item Mobile robots: object recognition.
 	\end{itemize}
 	\item Current problems
 	\begin{itemize}
@@ -175,16 +178,30 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 		\item time constraint
 		\item no clear boundaries
 	\end{itemize}
-	\item Advantages of Graph Representation
+	\item Advantages of graph representation
 	\begin{itemize}
-		\item Different approaches can be expressed in terms of graph theory
-		\item Powerful graph algorithms exist
+		%\item Different approaches can be expressed in terms of graph theory
+		\item Can express different kinds of problems
+		\item Leads to well-known graph problems\\
+		$\Rightarrow$ can be solved efficiently
 	\end{itemize}
 \end{itemize}
-\begin{figure}
-	\centering
-	\includegraphics[width=.5\linewidth]{region_graph_intro}
-\end{figure}
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=.5\linewidth]{region_graph_intro}
+%\end{figure}
+\begin{textblock}{3}(21,-15)
+  \scalebox{0.35}{\includegraphics{region_graph_intro1}}
+\end{textblock} 
+\begin{textblock}{3}(21,-11.5)
+  \scalebox{0.3}{\includegraphics{region_graph_intro2}}
+\end{textblock} 
+\begin{textblock}{3}(22,-7)
+  \scalebox{0.4}{\includegraphics{region_graph_intro3}}
+\end{textblock} 
+\begin{textblock}{3}(21,-2.5)
+  \scalebox{0.35}{\includegraphics{region_graph_intro4}}
+\end{textblock} 
 \vfill
 
 
