@@ -795,6 +795,15 @@ The ERS system is compared with the two most relevant existing methods: the stat
 
 For point features, the system uses SURF extracted at Canny edge points, and quantizes the training points into $K = 1000$ visual words using K-means. To construct the region-graph, 100 regions per image are extracted by using the technique in \cite{arbelaez2009contours}. For shape features, each region is described with a $4 \times 4$ spatial grid scaled to the region size, where each cell bins the normalized gPb and Canny edge responses according to their orientations. To collect responses at multiple scales, the responses from blurring the gPb map with Gaussians of two scales $(\sigma = 5, 10)$ are also collected.
 
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{images/pascal_voc07.png}
+\caption{Detection accuracy on PASCAL VOC 07 objects. Numbers in legends report mean AP.}
+\label{fig:pascal07}
+\end{figure}
+
+Figure $\ref{fig:pascal07}$ compares the accuracy of ERS versus ESS on the PASCAL VOC 2007 dataset. For both categories, maximizing the classifier response over the region-graph (ERS) yields much better accuracy than rectangular windows (ESS). In addition, including the edge costs (ERS-C) further boosts precision. Even under the PASCAL bounding box metric, the ERS method is about 70\%more accurate than ESS (mean AP of 27.2 for ERS, compared to 16.0 for ESS).
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{images/ERS_result.png}
@@ -803,6 +812,10 @@ For point features, the system uses SURF extracted at Canny edge points, and qua
 \end{figure}
 
 Figure $\ref{fig:ers_result}$ shows the results on ETHZ where the ERS method is applied using either the point features (blue curves), or the shape features (green curves). ESS is only applicable to the point features (red curves). Overall, the mean AP of ERS is from 9\% to 90\% better than ESS using the same features. Using shape features, we see dramatic gains for almost all objects, since the ETHZ objects have parts well-described by their shape (e.g., mug handle, bottle neck). Again, even with the bounding box metric the ERS approach is 19\% better than ESS (30.1 vs. 25.3 mean AP).
+
+Finally, the ERS method is compared with the CRF method on the PASCAL VOC 2008 dataset based on the amount of overlapping with the ground truths criterion. The ERS approach outperforms the baseline on 17 out of 20 categories, and improves the mean overlap accuracy significantly (0.274 vs. 0.228).
+
+Regarding the computation time, on average the ERS method converges in 0.29 seconds, which is similar to ESS. The longest time taken over any single test image was 5.8 secs.
 
 \subsection{Salient Contour Detection}
 
