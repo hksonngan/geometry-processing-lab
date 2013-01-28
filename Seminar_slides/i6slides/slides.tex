@@ -210,9 +210,15 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \vfill
 \begin{itemize}
 \item Capture important properties in local regions
-\item Represented as high dimensional vectors
-\item Point features: Speeded Up Robust Features
-\item Shape features: Probability of Boundary
+\item Compact representation: high dimensional vectors
+\item Computational effort: very efficient
+\item Invariant to: translation, rotation, scaling, brightness.
+\item Point features: Speeded Up Robust Features (SURF)
+\item Shape features:
+\begin{itemize}
+	\item Detector: Globalized Probability of Boundary (gPb)
+	\item Shape descriptor
+\end{itemize}
 \end{itemize}
 \vfill
 
@@ -222,29 +228,30 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \hypertarget{sli:style}
 \vfill
 \begin{enumerate}
-\item Detect interest points: $det(Hessian(I)) = I_{xx}I_{yy} - I^2_{xy}$
+\item Detect interest points: $det(Hessian(I)) = I_{xx}I_{yy} - I^2_{xy}$ at scale $s$
 \item Orientation assignment (rotation invariant):
 \begin{itemize}
 \item Compute Haar wavelet responses $(d_x, d_y)$ within $6s$ around interest point.
 \item Select dominant direction
 \end{itemize}
 \item SURF is computed within a window of size $20s$.
-\item[]
-  \begin{figure}
-    \centering
-    \begin{tabularx}{600pt}{Z Z Z}
-      \includegraphics[height=2.0cm]{haar_wavelet}%
-      %\caption{Haar wavelet filters}%
-      &
-      \includegraphics[height=5.5cm]{orientation_window}%
-      %\caption{sum $(d_x, d_y)$ over a window size $\frac{\pi}{3}$}%
-      &
-      \includegraphics[height=5.5cm]{feature_neighborhood}%
-      %\caption{windows defining neighborhood}%
-    \end{tabularx}
-  \end{figure}
 \end{enumerate}
+\begin{table}
+  \centering
+  \begin{tabular}{@{} M{.3\linewidth} M{.3\linewidth} M{.3\linewidth} @{}}
+      \includegraphics[width=0.25\textwidth]{feature_neighborhood}
+      &
+      \includegraphics[width=0.3\textwidth]{orientation_window}%
+      &
+      \includegraphics[width=0.2\textwidth]{haar_wavelet}%
+  \end{tabular}
+\end{table}
 \vfill
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -252,9 +259,10 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \vfill
 \begin{itemize}
 \item Split the window into $4 \times 4$ sub-windows.
-\item 4D descriptor vector $v = (\sum d_x, \sum d_y, \sum \lvert d_x \rvert, \sum \lvert d_y \rvert)$ for each sub-window $\Rightarrow$ 64D SURF descriptor.
-\item Normalize to make it invariant to contrast (a scale factor).
-\item Invariant to: Translation, Scaling, Rotation, Contrast.
+\item 4D descriptor vector $v = (\sum d_x, \sum d_y, \sum \lvert d_x \rvert, \sum \lvert d_y \rvert)$ for each sub-window\\
+$\Rightarrow$ 64D SURF descriptor.
+\item Normalize to make it invariant to brightness.
+\item Invariant to: Translation, Scaling, Rotation, Brightness.
 %\item[]
 \end{itemize}
 \begin{table}
@@ -272,7 +280,7 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Image Features: Gradient-based Detectors}
+\NewPage\headline{Image Features: Gradient-based Detector}
 \small
 \vfill
 \begin{enumerate}
