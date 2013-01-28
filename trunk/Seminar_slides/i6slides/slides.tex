@@ -449,6 +449,8 @@ P(T) = \sum\limits_{v \in V_T} p(v) - \sum\limits_{e \in E_T} c(e)
 \item Connect pairs of edgels within some distance $r_e$: $E = \left\lbrace (i, j) : \| (x_i, y_i) - (x_j, y_j) \| \leq r_e \right\rbrace $.
 \item Weights measure directed collinearity: $W_{ij} = e^{-(1 - cos(\mid \phi_i \mid + \mid \phi_j \mid))/\sigma^2}\ \mathrm{if}\ i \rightarrow j$.
 \item Curve $\Rightarrow$ two chains $\Rightarrow$ convert into a cycle by adding an edge between terminal points.
+\item Circulation $F = \Pi P$, where $P = D^{-1}W$ with $D = \mathrm{diag}(\sum_jW_{ij})$\\
+and $\Pi = \mathrm{diag}(\pi)$ is the stationary distribution of $P$.
 \end{itemize}
 \begin{figure}
 	\centering
@@ -502,25 +504,7 @@ neighborhood relation, correlation between true state and observed data
 \vfill
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Shape Energy}
-\vfill
-\begin{itemize}
-\item Given label set $L = \left\lbrace 1, ..., l \right\rbrace $, find labelling $A = (A_1, ..., A_{\lvert P \rvert})$ minimizing energy:
-\begin{center}
-$E(A) = \lambda \sum\limits_{p \in P} R_p(A_p) + \sum\limits_{(p, q) \in \mathcal{N}} (B_{p, q} + S_{p, q})\delta_{A_p \neq A_q}$,
-\end{center}
-\item[]
-\begin{center}
-$S_{p, q} = \min(\mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_p})]/2 \right\rbrace, \mathrm{sqrt}\left\lbrace [1 - \cos(\theta_{A_q})]/2 \right\rbrace )$
-\end{center}
-\end{itemize}
-\begin{figure}
-	\centering
-	\includegraphics[width=0.4\textwidth]{shape_energy}
-	\caption{True shape $C^{\prime}$ is similar to shape prior $C$}
-\end{figure}
-\vfill
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -545,90 +529,23 @@ $P = \left\lbrace x \in \mathbb{R}_+^n : Ax \geq b \right\rbrace $
 $P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace $
 \end{center}
 %\item A cutting plane as a linear inequality that is valid for $P_I$ but not for $P$.
+\end{itemize}
 \begin{table}
   \centering
   \begin{tabular}{@{} M{.5\linewidth} M{.5\linewidth} @{}}
-  \begin{itemize}
-  	\item A cutting plane is a linear inequality that is valid for $P_I$ but not for $P$.
-  \end{itemize}
+  	\includegraphics[width=0.25\textwidth]{Cutting_plane_algorithm}
       &
-    \includegraphics[width=0.25\textwidth]{cutting_plane}
+    \includegraphics[width=0.25\textwidth]{Branch-and-bound-polytopes}
   \end{tabular}
 \end{table}
-\end{itemize}
-%\begin{figure}
-%	\centering
-%	\includegraphics[width=0.2\textwidth]{cutting_plane}
-%\end{figure}
 \vfill
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Branch-and-Cut Example}
-\vfill
-\begin{itemize}
-\item The integer programming problem (Eg0):
-%\item[]
-\begin{table}
-  \centering
-  \begin{tabular}{l l}
-  	$\min$ 		& $z = -6x_1 - 5x_2$\\
-	subject to  & $3x_1 + x_2 \leq 11$\\
-                & $-x_1 + 2x_2 \leq 5$\\
-                & $x_1, x_2 \geq 0$, interger.
-  \end{tabular}
-\end{table}
-\item Solve the linear programming relaxation.
-\item Branch on $x_1$ to get two new problems:
-\begin{itemize}
-\item Add constraint $x_1 \geq 3$ to Eg0 to get Eg1 $\Rightarrow$ integral solution (3, 2), with value -28.
-\item Add constraint $x_1 \leq 2$ to Eg0 to get Eg2 $\Rightarrow$ solution (2, 3.5), with value -29.5.
-\end{itemize}
-\item Add a cutting plane $2x_1 + x2 \leq 7$ to Eg2 to get Eg3 $\Rightarrow$ solution (1.8, 3.4), with value -27.8.
-\item The solution of Eg3 is larger than the integral solution of Eg1 $\Rightarrow$ terminate.
-\end{itemize}
-\vfill
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Branch-and-Cut Example}
-\vfill
-\begin{figure}
-	\centering
-	\includegraphics[width=0.55\textwidth]{branch_and_cut}
-\end{figure}
-\vfill
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Contour Cut: Graph Circulations}
-\small
-\vfill
-\begin{definition}
-A matrix $F \in (\mathbb{R}^+ \cup \left\lbrace 0 \right\rbrace )^{\lvert V \rvert \times \lvert V \rvert}$ that assigns each directed edge to a non-negative value is called a circulation if
-\begin{equation}
-\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{w, v \rightarrow w} F_{vw}
-\end{equation}
-for each vertex $v$.
-\end{definition}
-\begin{itemize}
-\item A random walk on graph $G = (V, E, W)$ is a Markov process with transition matrix $P$:
-\item[] 
-\begin{center}
-$P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$.
-\end{center}
-\item $\pi$ is a stationary distribution on graph $G$ if $\pi P = \pi$:
-\item[]
-\begin{center}
-$\pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu}$
-\end{center}
-\item $F = \Pi P, \Pi = \mbox{diag}(\pi)$ is a circulation on graph $G$ since:
-\begin{center}
-$\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{u, u \rightarrow v} \pi_u P_{uv} = \pi_v \cdot 1 = \sum\limits_{w, v \rightarrow w} \pi_v P_{vw} = \sum\limits_{w, v \rightarrow w} F_{vw}$
-\end{center}
-\end{itemize}
-\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -656,7 +573,6 @@ $Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)}, \qquad \mathrm{Vol}
 $Ccut(x) = \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x)$
 \end{center}
 \item $H(\delta) = \frac{F\exp(-i\delta) + F^T\exp(i\delta)}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient.
-\item Minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
 \end{itemize}
 \vfill
 
@@ -720,20 +636,8 @@ with respect to both $x$ and $\delta$.
 \vfill
 \begin{itemize}
 \item Given 2 labelling configurations $X^0 \in L^{\lvert P \rvert}$ and $X^1 \in L^{\lvert P \rvert}$
-\item Combine labels s.t. the label of each node is taken either from $X^0$ or from $X^1$:
-\item[]
-\begin{center}
-$X^c(Y) = X^0 \bullet (1 - Y) + X^1 \bullet Y, \qquad Y \in \left\lbrace 0, 1 \right\rbrace^{\lvert P \rvert}$
-\end{center}
-\item Fusion move minimizes the energy of combination:
-\item[]
-\begin{center}
-$E(X^c(Y)) = \sum\limits_{p \in P}U^f_p(Y_p) + \sum\limits_{p, q \in \mathcal{N}}V^f_{pq} (Y_p, Y_q)$
-\end{center}
-\item[]
-\begin{center}
-$U^f_p(i) = U_p(X^i_p), \qquad V^f_{pq}(i, j) = V_{pq}(X^i_p, X^j_q)$
-\end{center}
+\item Fusion move operator of $X^0$ and $X^1$ denoted $X^c = X^0 \odot X^1$:\\
+select labels from either $X^0$ or $X^1$ s.t. the energy of $X^c$ is minimized.
 \item Multi-Shape Graph-Cut Algorithm:
 \begin{enumerate}
 \item Given current labelling $X^{cur}$, propose label $l$ for background voxels to get $X^{pro}$
