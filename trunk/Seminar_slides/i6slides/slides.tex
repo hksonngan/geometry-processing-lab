@@ -17,7 +17,7 @@
 %%  - tools          : 'blackslide' to insert a black slide which is linked with every slide title, e.g. to write a proof on the blackboard
 %%
 \documentclass[11pt, a4paper, landscape]{article}
-\usepackage{NeyDreuwSlides_Nov07}
+\usepackage{NeyDreuwSlides_Oct08}
 
 \usepackage{amsthm}
 \newtheorem{definition}{Definition}
@@ -151,13 +151,7 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \vfill
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage
-\footnotesize
-%\headline{\refname}
-%\renewcommand*{\refname}{}
-\bibliographystyle{i6bibliostyle}
-\bibliography{slides}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -170,20 +164,19 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 	\begin{itemize}
 		\item Computer-aided diagnoses:\\
 		measure object's size and shape.
-		\item Mobile robots: object recognition.
+		\item Mobile robots: scene understanding.
 	\end{itemize}
 	\item Current problems
 	\begin{itemize}
-		\item deformable shapes
-		\item time constraint
-		\item no clear boundaries
+		\item Deformable shapes
+		\item Time constraint
+		\item No clear boundaries
 	\end{itemize}
 	\item Advantages of graph representation
 	\begin{itemize}
-		%\item Different approaches can be expressed in terms of graph theory
-		\item Can express different kinds of problems
-		\item Leads to well-known graph problems\\
-		$\Rightarrow$ can be solved efficiently
+		\item Can be transformed into standard graph problems
+		\item Can be solved efficiently
+		\item Optimal solution possible
 	\end{itemize}
 \end{itemize}
 %\begin{figure}
@@ -209,10 +202,14 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \NewPage\headline{Image Features}
 \vfill
 \begin{itemize}
+\item Advantages:
+\begin{itemize}
 \item Capture important properties in local regions
-\item Compact representation: high dimensional vectors
-\item Computational effort: very efficient
-\item Invariant to: translation, rotation, scaling, brightness.
+\item Compact representation: High dimensional vectors
+\item Computational effort: Very efficient
+\item Invariant to: Translation, rotation, scaling, brightness.
+\end{itemize}
+\vfill
 \item Point features: Speeded Up Robust Features (SURF)
 \item Shape features:
 \begin{itemize}
@@ -285,9 +282,9 @@ $\Rightarrow$ 64D SURF descriptor.
 \vfill
 \begin{enumerate}
 \item Draw a circle with radius $r$, divide it along the diameter at orientation $\theta$.
-\item Build histograms of brightness, color and texture for each disc half: $h(x, y, \theta, r)$.
+\item Build histograms of brightness, color and texture for each disc half: $h$ and $g$.
 \item Compares histograms of the two disc halves: $G(x, y, \theta, r) = \chi ^ 2 (g, h) = \frac{1}{2} \sum_i \frac{(g_i - h_i)^2}{(g_i + h_i)}$.
-\item Use logistic regression trained on human segmentation dataset to get the result $Pb_{\sigma}(x, y, \theta)$.
+%\item Use logistic regression trained on human segmentation dataset to get the result $Pb_{\sigma}(x, y, \theta)$.
 \end{enumerate}
 \begin{figure}
 	\centering
@@ -335,7 +332,7 @@ $\Rightarrow$ 64D SURF descriptor.
 \vfill
 \begin{itemize}
 \item Split region's bounding box into $4 \times 4$ grid.
-\item Different region cues are extracted from the cells:
+\item Different features are extracted from the cells:
 \begin{itemize}
 \item Contour shape, given by the histogram of oriented responses of the contour detector $gPb$
 \item Edge shape, computed by convolution with a [-1 0 1] filter along $x$ and $y$ axes
@@ -344,10 +341,10 @@ $\Rightarrow$ 64D SURF descriptor.
 \end{itemize}
 \item Each type of cue is encoded by concatenating cell signals into a histogram.
 \begin{itemize}
-\item 13 dimensions for textures
-\item 3 for color
 \item 8 orientations for gPb contours
-\item At least 1 dimension for edge
+\item At least 2 dimensions for edge
+\item 3D histogram for color
+\item 200 dimensions for textures
 \end{itemize}
 \end{itemize}
 \vfill
@@ -398,10 +395,19 @@ f(R) & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
 \vfill
 \begin{itemize}
 \item Region Graph
+\begin{itemize}
+\item Graph of Regions with arbitrary shape
+\end{itemize}
 \vfill
 \item Contour Graph
+\begin{itemize}
+\item Graph of Edge segments
+\end{itemize}
 \vfill
 \item Markov Random Field
+\begin{itemize}
+\item Voxel graph with shape priors
+\end{itemize}
 \end{itemize}
 \vfill
 
@@ -477,11 +483,12 @@ and $\Pi = \mathrm{diag}(\pi)$ is the stationary distribution of $P$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Markov Random Field}
+\small
 \vfill
 \begin{itemize}
 \item Nodes are random variables $\left\lbrace x_1, ..., x_n \right\rbrace $ corresponding to pixels.
 \item Two types of edges:\\
-neighborhood relation, correlation between true state and observed data
+Correlation between true state and observed data, neighborhood relation
 \item A graph represents a joint distribution $p(x)$
 \item Can be written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques:
 \item[]
@@ -489,15 +496,16 @@ neighborhood relation, correlation between true state and observed data
 		$p(x) = \frac{1}{Z} \prod\limits_{C}\psi_C(x_C)$
 	\end{center}
 \item Conveniently expressed as energy functions: $\psi_C(x_C) = \exp(-E(x_C))$.
+\item Can include shape priors into $E$.
 \item Maximize $p(x)$ equals to minimize $E$.
 \end{itemize}
 \begin{table}
   \centering
   \begin{tabular}{@{} M{.5\linewidth} M{.5\linewidth} @{}}
-      \includegraphics[width=0.2\textwidth]{clique}%
+      \includegraphics[width=0.15\textwidth]{clique}%
       \caption{Cliques}%
       &
-      \includegraphics[width=0.2\textwidth]{mrf}%
+      \includegraphics[width=0.15\textwidth]{mrf}%
       \caption{MRF}%
   \end{tabular}
 \end{table}
@@ -514,7 +522,7 @@ neighborhood relation, correlation between true state and observed data
 \item The PCST can be formulated as an ILP problem with $n$ variables and $m$ constraints:
 \item[]
 \begin{center}
-$\min \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{Z}_+^n \right\rbrace $
+$\max \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{Z}_+^n \right\rbrace $
 \end{center}
 \item $x \in \mathbb{Z}_+^n$ integer decision variables, $c \in \mathbb{Z}^n$ objective function vector and $A \in \mathbb{Z}^{m \times n}$ the matrix of constraint coefficients.
 \item The LP-relaxation (CUT) is obtained by using real-value constraints $x \in \mathbb{R}_+^n$.
@@ -529,13 +537,14 @@ $P = \left\lbrace x \in \mathbb{R}_+^n : Ax \geq b \right\rbrace $
 $P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace $
 \end{center}
 %\item A cutting plane as a linear inequality that is valid for $P_I$ but not for $P$.
+\item Branch-and-Cut:
 \end{itemize}
 \begin{table}
   \centering
   \begin{tabular}{@{} M{.5\linewidth} M{.5\linewidth} @{}}
-  	\includegraphics[width=0.25\textwidth]{Cutting_plane_algorithm}
+  	\includegraphics[width=0.2\textwidth]{Cutting_plane_algorithm}
       &
-    \includegraphics[width=0.25\textwidth]{Branch-and-bound-polytopes}
+    \includegraphics[width=0.2\textwidth]{Branch-and-bound-polytopes}
   \end{tabular}
 \end{table}
 \vfill
@@ -552,12 +561,12 @@ $P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace $
 \NewPage\headline{Contour Cut}
 \vfill
 \begin{itemize}
-\item An external cut of a contour $(C, O)$ measures its separation from the rest of the graph:
+\item External cut of a contour $(C, O)$ measures its separation from the rest of the graph:
 \item[]
 \begin{center}
 $Ecut(C) = \sum\limits_{i \in C, j \notin C} F_{ij}$
 \end{center}
-\item An internal cut measures the deviation of the contour toward a 2-dimensional clique:
+\item Internal cut measures how good it can stay in the form of 1D structure:
 \item[]
 \begin{center}
 $Icut(C, O) = \sum\limits_{(i, j) \in C, \lvert O(i) - O(j) \rvert > k} F_{ij}$
@@ -565,44 +574,18 @@ $Icut(C, O) = \sum\limits_{(i, j) \in C, \lvert O(i) - O(j) \rvert > k} F_{ij}$
 \item The contour cut cost:
 \item[]
 \begin{center}
-$Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)}, \qquad \mathrm{Vol}(C) = \sum_{i \in C, (i, j) \in E} F_{ij}$
+$Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)}, \qquad \mathrm{Vol}(C) = \sum\limits_{i \in C, (i, j) \in E} F_{ij}$
 \end{center}
-\item The contour cut cost written in terms of the circular embedding $x$:
-\item[]
-\begin{center}
-$Ccut(x) = \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x)$
-\end{center}
-\item $H(\delta) = \frac{F\exp(-i\delta) + F^T\exp(i\delta)}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient.
+\item Using circular embedding, $Ccut$ can be transformed into the generalized eigenvalue problem
 \end{itemize}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{contour_eigen}
+\end{figure}
 \vfill
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Contour Cut: Computational Solution}
-\vfill
-\begin{itemize}
-\item Minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$:
-\end{itemize}
-\begin{equation}
-\max_x \dfrac{x^*H(\delta)x}{x^* \Pi x} 
-\end{equation}
-\begin{equation*}
- \mbox{such that} \qquad x_i = r_i\exp(i\theta_i), \qquad r_i \in \left\lbrace 0, 1 \right\rbrace, \qquad \theta_i = O(i)\delta,
-\end{equation*}
-\begin{itemize}
-\item Relax the problem by allowing $x$ to take on arbitrary complex values: $x \in \mathbb{C}^{\lvert C \rvert}$.
-\end{itemize}
-\begin{theorem}
-\label{theorem:hermitian}
-The critical points of the relaxed contour cut problem
-\begin{equation}
-\max_{x, \delta} \dfrac{x^*H(\delta)x}{x^* \Pi x} \qquad \mbox{s.t.} \qquad x_i \in \mathbb{C}
-\label{eq:hermitian}
-\end{equation}
-can be found by searching over $\delta$ and finding the eigenvectors of the corresponding matrices $\Pi^{-1}H(\delta)$; any eigenvectors for which $x^*H(\delta)x = \lvert x^*Fx \rvert$ are critical points
-with respect to both $x$ and $\delta$.
-\end{theorem}
-\vfill
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -638,6 +621,7 @@ with respect to both $x$ and $\delta$.
 \item Given 2 labelling configurations $X^0 \in L^{\lvert P \rvert}$ and $X^1 \in L^{\lvert P \rvert}$
 \item Fusion move operator of $X^0$ and $X^1$ denoted $X^c = X^0 \odot X^1$:\\
 select labels from either $X^0$ or $X^1$ s.t. the energy of $X^c$ is minimized.
+\vfill
 \item Multi-Shape Graph-Cut Algorithm:
 \begin{enumerate}
 \item Given current labelling $X^{cur}$, propose label $l$ for background voxels to get $X^{pro}$
@@ -737,7 +721,7 @@ select labels from either $X^0$ or $X^1$ s.t. the energy of $X^c$ is minimized.
 \item 97 CT images: 49 for training and 48 for test
 \item Baseline algorithm: single-shape graph-cuts
 \item Metric: average distance between extracted surface and ground truth.
-\item Average distance of (b) 0.835[mm] vs. (c) 0.523; (e) 0.862 vs. (f) 0.732
+%\item Average distance of (b) 0.835[mm] vs. (c) 0.523; (e) 0.862 vs. (f) 0.732
 \item Efficiency: 30 mins per CT volume (Intel(R) Core(TM) i7 3.07 GHz $\times$ 2)
 \item Image sizes: 512 $\times$ 512 $\times$ 204-561[voxel]
 \end{itemize}
@@ -773,19 +757,21 @@ select labels from either $X^0$ or $X^1$ s.t. the energy of $X^c$ is minimized.
 \begin{itemize}
 	\item Pros:
 	\begin{itemize}
-		\item Different approaches can be expressed in terms of graph theory
-		\item Make use of powerful graph-cut algorithms $\Rightarrow$ improve the results
+		\item Many problems can be transformed into standard graph problems
+		\item Can be solved efficiently
+		\item Optimal solution possible
 	\end{itemize}
+	\vfill
 	\item Cons:
 	\begin{itemize}
-		\item ERS only applicable to linear classifiers.
-		\item Contour Cut is a method to pick up salient contours from Pb edge detector.
+		\item ERS only applicable to linear classifiers
+		\item Contour Cut is a method to pick up salient contours from Pb edge detector
 		\begin{itemize}
-			\item If we increase the number of contours, it converges to Pb result.
+			\item If we increase the number of contours, it converges to Pb result
 		\end{itemize}
-		\item Multi-Shape Graph-Cut depends on shape priors.
+		\item Multi-Shape Graph-Cut depends on shape priors
 		\begin{itemize}
-			\item Can only extract shapes similar to shape priors.
+			\item Can only extract shapes similar to shape priors
 		\end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -797,6 +783,16 @@ select labels from either $X^0$ or $X^1$ s.t. the energy of $X^c$ is minimized.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FinalPage
 %%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage
+\footnotesize
+%\headline{\refname}
+%\renewcommand*{\refname}{}
+\bibliographystyle{i6bibliostyle}
+\bibliography{slides}
 
 
 
