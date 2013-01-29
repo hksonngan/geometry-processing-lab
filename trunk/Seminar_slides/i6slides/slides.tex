@@ -392,7 +392,7 @@ $\Rightarrow$ 64D SURF descriptor.
 \begin{equation*}
 \begin{array}{lcl}
 f(R) & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
-     & = & b + \sum\limits_{i = 1}^{S}\sum\limits_{j = 1}^{K} \alpha_ih_j(R_i)h_j(R)\\
+     & = & b + \sum\limits_{i = 1}^{K}\sum\limits_{j = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
      %& = & b + \sum\limits_{j = 1}^{K}\sum\limits_{i = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
      & = & b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i}
 \end{array}
@@ -408,12 +408,12 @@ f(R) & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
 \begin{itemize}
 \item Region Graph
 \begin{itemize}
-\item Graph of Regions with arbitrary shape
+\item Graph of regions with arbitrary shape
 \end{itemize}
 \vfill
 \item Contour Graph
 \begin{itemize}
-\item Graph of Edge segments
+\item Graph of edge segments
 \end{itemize}
 \vfill
 \item Markov Random Field
@@ -508,8 +508,8 @@ Correlation between true state and observed data, neighborhood relation
 		$p(x) = \frac{1}{Z} \prod\limits_{C}\psi_C(x_C)$
 	\end{center}
 \item Conveniently expressed as energy functions: $\psi_C(x_C) = \exp(-E(x_C))$.
-\item Can include shape priors into $E$.
 \item Maximize $p(x)$ equals to minimize $E$.
+\item Can include shape priors into $E$.
 \end{itemize}
 \begin{table}
   \centering
