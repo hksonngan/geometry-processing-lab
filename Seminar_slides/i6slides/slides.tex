@@ -49,7 +49,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand*{\title}{Graph-Based Image Segmentation}        % main title of the work (used for \TitlePage)
 \renewcommand*{\titleshort}{Graph-Based Segmentation}         % short title (used for \lfoot)
-\renewcommand*{\occasion}{Seminar Medical Image Processing -- MedBV13}		% (used for \TitlePage)
+\renewcommand*{\occasion}{Seminar Medical Image Processing -- MedBV 13}		% (used for \TitlePage)
 \renewcommand*{\occasionshort}{MedBV13}               % short occasion title (used for \rfoot)
 %\renewcommand*{\date}{11. April 2005}                                        % default is \today (used for \TitlePage and \rfoot)
 \renewcommand*{\author}{Phan-Anh Nguyen, Christian Oberdoefer}         % all the authors of the work, can be long (used for \TitlePage)
@@ -259,7 +259,7 @@ by solving a hermitian eigenvalue problem.} Computer Vision and Pattern Recognit
 \item 4D descriptor vector $v = (\sum d_x, \sum d_y, \sum \lvert d_x \rvert, \sum \lvert d_y \rvert)$ for each sub-window\\
 $\Rightarrow$ 64D SURF descriptor.
 \item Normalize to make it invariant to brightness.
-\item Invariant to: Translation, Scaling, Rotation, Brightness.
+\item Invariant to: Translation, scaling, rotation, brightness.
 %\item[]
 \end{itemize}
 \begin{table}
@@ -298,7 +298,7 @@ $\Rightarrow$ 64D SURF descriptor.
 \small
 \vfill
 \begin{itemize}
-\item Brightness, color and texture gradients in 3 different scales: $mPb(x, y, \theta) = \sum\limits_{i = 1}^{9} G_i(x, y, \theta)$.
+\item Brightness, color and texture gradients in 3 different scales: $mPb(x, y, \theta) = \sum\limits_{i = 1}^{9} \alpha_i G_i(x, y, \theta)$.
 \item Define affinity matrix $W$ using intervening contour cue $mPb$.
 \item Solve the generalized eigenvectors problem: $(D - W)v = \lambda D v$, $D_{ii} = \sum_j W_{ij}$\\ to get top $k$ eigenvectors $v_j$.
 \item Extract edges from $v_j$ to get $sPb_{v_j}(x, y, \theta)$: $sPb(x, y, \theta) = \sum\limits_{j = 1}^{k} \frac{1}{\sqrt{\lambda_j}} sPb_{v_j} (x, y, \theta)$.
@@ -524,7 +524,26 @@ Correlation between true state and observed data, neighborhood relation
 \vfill
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{Graph Cut Algorithms}
+\vfill
+\begin{itemize}
+\item Region Graph
+\begin{itemize}
+\item Branch-and-Cut
+\end{itemize}
+\vfill
+\item Contour Graph
+\begin{itemize}
+\item Hermitian eigenvalue problem
+\end{itemize}
+\vfill
+\item Markov Random Field
+\begin{itemize}
+\item Multi-Shape Graph-Cuts
+\end{itemize}
+\end{itemize}
+\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -586,9 +605,9 @@ $Icut(C, O) = \sum\limits_{(i, j) \in C, \lvert O(i) - O(j) \rvert > k} F_{ij}$
 \item The contour cut cost:
 \item[]
 \begin{center}
-$Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)}, \qquad \mathrm{Vol}(C) = \sum\limits_{i \in C, (i, j) \in E} F_{ij}$
+$Ccut(C, O) = \dfrac{Icut(C, O) + Ecut(C)}{\mathrm{Vol}(C)}, \qquad \mathrm{Vol}(C) = \sum\limits_{i \in C, j \in E} F_{ij}$
 \end{center}
-\item Using circular embedding, $Ccut$ can be transformed into the generalized eigenvalue problem
+\item Using circular embedding, $Ccut$ can be transformed into the Hermitian eigenvalue problem
 \end{itemize}
 \begin{figure}[htbp]
 \centering
@@ -771,7 +790,7 @@ select labels from either $X^0$ or $X^1$ s.t. the energy of $X^c$ is minimized.
 	\begin{itemize}
 		\item Many problems can be transformed into standard graph problems
 		\item Can be solved efficiently
-		\item Optimal solution possible
+		\item Supervised and unsupervised methods possible
 	\end{itemize}
 	\vfill
 	\item Cons:
