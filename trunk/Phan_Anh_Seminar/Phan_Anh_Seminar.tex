@@ -216,12 +216,12 @@ So far, we have seen two ways to extract features from an image, each has its ow
 
 \section{Segmentation with Supervised Training}
 \label{sec:supervised_learning}
-In image processing, it is very important that algorithms can get some knowledge from the tasks they are going to perform. The knowledge often comes from the training process using pre-defined datasets so that the algorithms can learn from our experiences. This section introduces some supervised learning techniques that are often used in computer vision tasks.
+In image processing, it is very important that algorithms can get some knowledge from the tasks they are going to perform. The knowledge often comes from the training process using pre-defined datasets so that the algorithms can learn from our experiences. This section introduces some supervised learning techniques, that are often used in computer vision tasks.
 
 \subsection{Support Vector Machine}
 \label{sec:svm}
 
-The support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995support} is a non-probabilistic binary linear classifier which predicts, for each input data point, to which of the two possible classes the input belongs. SVM maximizes the margin between positive and negative data points (as shown in Figure $\ref{fig:svm}$), thereby achieving very good generalization performance.
+The support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995support} is a non-probabilistic binary linear classifier, which predicts for each input data point which of the two possible classes the input belongs to. SVM maximizes the margin between positive and negative data points (as shown in Figure $\ref{fig:svm}$), thereby achieving very good generalization performance.
 
 \begin{figure}[htbp]
     \centering
@@ -230,13 +230,13 @@ The support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995s
     \label{fig:svm}
 \end{figure}
 
-In this paper we only consider the case of linearly separable data. Suppose we have a dataset of $S$ elements $\left\lbrace (x_i, t_i)\right\rbrace _{i=1}^S$, where $x_i \in R^d$ are training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $w^T x + b = 0$ which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $w$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|w\|}$. Since the data is linearly separable the separating hyperplane must stay within the following region:
+In this paper we only consider the case of linearly separable data. Suppose we have a dataset of $S$ elements $\left\lbrace (x_i, t_i)\right\rbrace _{i=1}^S$, where $x_i \in R^d$ are training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $w^T x + b = 0$, which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $w$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|w\|}$. Since the data is linearly separable the separating hyperplane must stay within the following region:
 \begin{equation}
 t_i(w^T x_i + b) \geq 1\ \forall i
 \label{eq:margin}
 \end{equation}
 
-The equality in Equation $\ref{eq:margin}$ will hold exactly for the points on the margin. In order to maximize the margin $M = d_- + d_+ = \dfrac{2}{\|w\|}$, we need to minimize $\|w\|$. This can be formally stated as the following optimization problem: find the hyperplane satisfying
+The equality in Equation $\ref{eq:margin}$ will hold exactly for the points on the margin. In order to maximize the margin $M = d_- + d_+ = \dfrac{2}{\|w\|}$ we need to minimize $\|w\|$. This can be formally stated as the following optimization problem: find the hyperplane satisfying
 
 \begin{equation}
 \operatorname*{arg\,min}_{w, b} \dfrac{1}{2}\|w\|^2
@@ -265,7 +265,7 @@ In practice, it is more robust to average the solution for $b$ over all support 
 
 \subsubsection{SVM for Region Ranking}
 
-In this section we will formulate a SVM classifier in a way that it can reliably score a region of arbitrary shape according to how strongly it belongs to a particular object category. It is desirable that features extracted from local image regions can be combined additively to obtain the classifier response for a larger region. It has been proven \cite{lampert2008beyond} that a linear kernel SVM applied to a bag-of-features representation (recall the concept of bag-of-textures from Section $\ref{fig:textons}$) has this additive property. Similar to the textons approach, we obtain a vocabulary of K visual words by clustering a sample of local features (e.g. SURF) from the training images. We represent a region by its set of local features $R = \left\lbrace (x_i, v_i) \right\rbrace _{i=1} ^ N$, where $x_i$ being the feature position and $v_i$ the local descriptor. A histogram can be built from this bag-of-features, denoted $h(R)$, by mapping each feature $v_i$ to its closest visual word $d_i$ and recording the frequency of words in a K-dimensional vector.
+In this section we will formulate a SVM classifier in a way that it can reliably score a region of arbitrary shape according to how strongly it belongs to a particular object category. It is desirable that features extracted from local image regions can be combined additively to obtain the classifier response for a larger region. It has been proven \cite{lampert2008beyond} that a linear kernel SVM applied to a bag-of-features representation (recall the concept of bag-of-textures from Section $\ref{fig:textons}$) has this additive property. Similar to the textons approach we obtain a vocabulary of K visual words by clustering a sample of local features (e.g. SURF) from the training images. We represent a region by its set of local features $R = \left\lbrace (x_i, v_i) \right\rbrace _{i=1} ^ N$, where $x_i$ is the feature position and $v_i$ the local descriptor. A histogram can be built from this bag-of-features, denoted $h(R)$, by mapping each feature $v_i$ to its closest visual word $d_i$ and recording the frequency of words in a K-dimensional vector.
 
 A linear SVM classifier is learned from the segmented training examples according to the principle described in Section $\ref{sec:svm}$. The region ranking score is then given as follows:
 \begin{equation}
@@ -273,28 +273,28 @@ A linear SVM classifier is learned from the segmented training examples accordin
 \begin{array}{lcl}
 f(R) & = & b + w \cdot h(R)\\
 	 & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
-     & = & b + \sum\limits_{i = 1}^{S}\sum\limits_{j = 1}^{K} \alpha_ih_j(R_i)h_j(R)\\
+     & = & b + \sum\limits_{i = 1}^{K}\sum\limits_{j = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
      & = & b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i},
 \end{array}
 \end{equation}
-where $d_i \in [1, K]$ is the index of the visual word that feature $v_i$ maps to. Note that we associate each $j$-word in the vocabulary with a weight $w_j = \sum_i \alpha_i h_j(R_i)$ to express $f(R)$ as a sum over per-feature contributions. This means the score of a region is the sum of its N features' word weights. Since we are only interested in maximizing the classifier response $f(R)$, the bias term $b$ is irrelevant and can be ignored.
+where $d_i \in [1, K]$ is the index of the visual word that feature $v_i$ maps to. Note that we associate each $j$-word in the vocabulary with a weight $w_j = \sum_i \alpha_i h_j(R_i)$ to express $f(R)$ as a sum over per-feature contributions. This means the score of a region is the sum of its N features' word weights. Since we are only interested in maximizing the classifier response $f(R)$ the bias term $b$ is irrelevant and can be ignored.
 
 \subsection{Logistic Regression}
 \label{sec:logistic_regression}
 In the problem of two-class classification, the logistic regression method models the posterior probability of class $C_1$ by applying a logistic sigmoid function $\sigma$ on a linear discriminant function of the feature vector $\phi$ so that
 \begin{equation}
 \label{eq:logistic}
-\begin{cases}
-	p(C_1|\phi) = \sigma(w^T\phi) \\
-	p(C_2|\phi) = 1 - p(C_1|\phi) \\
-\end{cases}
+\begin{array}{lcl}
+	p(C_1|\phi) & = & \sigma(w^T\phi) \\
+	p(C_2|\phi) & = & 1 - p(C_1|\phi) 
+\end{array}
 \end{equation}
 where $w$ is the weight vector of the linear discriminant function. The logistic sigmoid function $\sigma$ is given as follows:
 \begin{equation}
 \label{eq:Bayes}
 \sigma(a) = \dfrac{1}{1 + e^{-a}} 
 \end{equation}
-Suppose we have a training data set $\left\lbrace \phi_n, t_n \right\rbrace_{n = 1}^N$, where $t_n \in \left\lbrace 0, 1 \right\rbrace$, $t = (t_1, ..., t_n)^T$. With $y_n = p(C_1|\phi_n)$, we can write the likelihood as:
+Suppose we have a training data set $\left\lbrace \phi_n, t_n \right\rbrace_{n = 1}^N$, where $t_n \in \left\lbrace 0, 1 \right\rbrace$, $t = (t_1, ..., t_n)^T$. With $y_n = p(C_1|\phi_n)$ we can write the likelihood as:
 
 \begin{equation}
 p(t|w) = \prod\limits_{n = 1}^{N}y_n^{t_n} (1 - y_n)^{1 - t_n}
@@ -306,19 +306,19 @@ The error function is then defined as the negative log-likelihood, which gives t
 E(w) = - \ln p(t|w) = - \sum\limits_{n = 1}^{N} \left( t_n \ln y_n + (1 - t_n) \ln(1 - y_n) \right)
 \end{equation}
 
-Our goal is to learn the weight $w$ such that it minimizes the cross-entropy error function. Due to the nonlinearity of the logistic sigmoid function, there is no closed-form solution to this optimization problem. Fortunately, this error function is concave, and hence has a unique minimum. Moreover, this error function can be minimized by using the Newton-Raphson iterative optimization scheme, which uses a local quadratic approximation to the log likelihood function. The Newton-Raphson update, for minimizing a function $E(w)$, is given as follows:
+Our goal is to learn the weight $w$ such that it minimizes the cross-entropy error function. Due to the nonlinearity of the logistic sigmoid function there is no closed-form solution to this optimization problem. Fortunately, this error function is concave, and hence has a unique minimum. Moreover, this error function can be minimized by using the Newton-Raphson iterative optimization scheme, which uses a local quadratic approximation to the log likelihood function. The Newton-Raphson update, for minimizing a function $E(w)$, is given as follows:
 \begin{equation}
 w^{new} = w^{old} - H^{-1} \nabla E(w)
 \label{eq:logistic_update}
 \end{equation}
-where $H$ is the Hessian matrix whose entries are the second derivatives of $E(w)$ with respect to the components of $w$. The gradient and Hessian of this error function are given by
+where $H$ is the Hessian matrix, whose entries are the second derivatives of $E(w)$ with respect to the components of $w$. The gradient and Hessian of this error function are given by
 \begin{equation}
 \nabla E(w) = \sum\limits_{n = 1}^{N}(y_n - t_n) \phi_n %= \Phi^T(y - t)
 \end{equation}
 \begin{equation}
 H = \nabla \nabla E(w) = \sum\limits_{n = 1}^{N} y_n(1 - y_n) \phi_n \phi_n^T %= \Phi^T R \Phi
 \end{equation}
-Since the Hessian depends on $w$ through $y_n$, we need to apply Equation $\ref{eq:logistic_update}$ iteratively, each time using the new weight vector $w$. Therefore, this algorithm is known as iterative reweighted least squares, or IRLS.
+Since the Hessian depends on $w$ through $y_n$ we need to apply Equation $\ref{eq:logistic_update}$ iteratively, each time using the new weight vector $w$. Therefore, this algorithm is known as iterative reweighted least squares or IRLS.
 
 \subsection{Statistical Shape Model}
 \label{sec:SSM}
