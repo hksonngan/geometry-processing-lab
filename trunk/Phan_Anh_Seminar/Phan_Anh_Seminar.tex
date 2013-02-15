@@ -56,18 +56,18 @@ This seminar paper presents several different graph-based approaches to the imag
 %
 \section{Image Features}
 \label{sec:features}
-Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. The advantage of the compact representation of features is that it can be readily fed into standard algorithms which often take high dimensional vectors as input. Also features are often made to be invariant to different transformations e.g. rotation, scaling, translation etc. To support real-time systems, features need to be efficient to compute. Normally, raw features are extracted at each pixel by applying various kinds of filters. Each filter response corresponds to one dimension in the feature vector space. The shape and size of filters reflect local structure around each pixel. Raw features at each pixel can be collected to form region descriptors which can be used to represent shapes, contours etc. In this section, we present methods to extract raw features and various ways of constructing region descriptors. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art feature named Speeded Up Robust Features (SURF) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ explains the Globalized Probability of Boundary (gPb) contour detector \cite{maire2008using}.
+Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. The advantage of the compact representation of features is that it can be readily fed into standard algorithms which often take high dimensional vectors as input. Also features are often made to be invariant to different transformations e.g. rotation, scaling etc. Since features are defined locally, they are invariant to translation. To support real-time systems features need to be efficient to compute. Normally, raw features are extracted at each pixel by applying various kinds of filters. Each filter response corresponds to one dimension in the feature vector space. The shape and size of filters reflect local structure around each pixel. Raw features at each pixel can be collected to form region descriptors which can be used to represent shapes, contours etc. In this section, we present methods to extract raw features and various ways of constructing region descriptors. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art feature named Speeded Up Robust Features (SURF) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ explains the Globalized Probability of Boundary (gPb) contour detector \cite{maire2008using}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Speeded Up Robust Features}
 \label{sec:surf}
-Speeded Up Robust Features (SURF) \cite{bay2006surf} was originally developed for the task of finding point correspondences between two images of the same scene. This includes three main steps. First, interest points are selected at distinctive locations in the image. Then a feature vector is extracted from the neighbourhood of every interest point. Finally the feature vectors are matched between different images. Since the SURF descriptor provides a very good representation of a local region it has been applied to tasks other than correspondence problem such as image classification or image segmentation.
+Speeded Up Robust Features (SURF) \cite{bay2006surf} was originally developed for the task of finding point correspondences between two images of the same scene. This includes three main steps. First, interest points are selected at distinctive locations in the image. Then a feature vector is extracted from the neighbourhood of every interest point. Finally, the feature vectors are matched between different images. Since the SURF descriptor provides a very good representation of a local region it has also been applied to tasks other than correspondence problems such as image classification or image segmentation.
 
-Regarding the interest point detection problem, the choice for a detector varies depending on the need of the application. An application for image registration requires the same interest points to be detected in two different images of the same scene under different viewing conditions. In this case, a detector would pick up hard-to-miss points which appear in both images such as picks in signal responses corresponding to blobs or corners. In the case of image segmentation, it would be a wise choice to select points on contours to be interest points. In the original SURF paper, Bay et al. suggested using an approximate Hessian detector to search in scale-space domain for points having strong derivatives in two orthogonal directions as interest points (often located at corners and strongly textured areas).
+Regarding the interest point detection problem the choice of a detector varies depending on the needs of the application. An application for image registration requires the same interest points to be detected in two different images of the same scene under different viewing conditions. In this case, a detector would pick up hard-to-miss points which appear in both images such as peaks in signal responses corresponding to blobs or corners. In the case of image segmentation it would be a wise choice to select points on contours to be interest points. In the original SURF paper Bay et al. suggested to use an approximate Hessian detector to search in scale-space domain for points having strong derivatives in two orthogonal directions as interest points (often located at corners and strongly textured areas).
 
-Given an interest point in the input image, the SURF descriptor is obtained by extracting distinctive information around its neighborhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it can be computed very fast. Scale invariance is achieved by adopting the scale at which the Hessian detector attains maximal response. In order to be invariant to rotation, we first find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
+Given an interest point in the input image the SURF descriptor is obtained by extracting distinctive information around its neighborhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it can be computed very fast. Scale invariance is achieved by adopting the scale at which the Hessian detector attains maximal response. In order to be invariant to rotation we first find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
 
-To find the dominant orientation, Haar wavelet responses in $x$ and $y$ directions ($d_x$, $d_y$) are calculated within a circular neighbourhood of radius $6s$ around the interest point and weighted with a Gaussian ($\sigma = 2s$), where $s$ is the scale chosen above. Figure $\ref{fig:haar_wavelet}$ shows the structure of the Haar wavelet filters. The wavelet responses ($d_x, d_y$) are then represented in a vector space and the sum of all vectors within a sliding orientation window of size $\frac{\pi}{3}$ is calculated, see Figure $\ref{fig:orientation_window}$. The dominant orientation is finally assigned to the sum vector having the maximal length.
+To find the dominant orientation Haar wavelet responses in $x$ and $y$ directions ($d_x$, $d_y$) are calculated within a circular neighbourhood of radius $6s$ around the interest point and weighted with a Gaussian ($\sigma = 2s$), where $s$ is the scale chosen above. Figure $\ref{fig:haar_wavelet}$ shows the structure of the Haar wavelet filters. The wavelet responses ($d_x, d_y$) are then represented in a vector space and the sum of all vectors within a sliding orientation window of size $\frac{\pi}{3}$ is calculated, see Figure $\ref{fig:orientation_window}$. The dominant orientation is finally assigned to the sum vector having the maximal length.
 
 \begin{figure}[htbp]
     \centering
@@ -86,7 +86,7 @@ To find the dominant orientation, Haar wavelet responses in $x$ and $y$ directio
         \includegraphics[width=0.5\textwidth]{images/surf.png}
         \label{fig:surf}
     }
-    \caption{(a) Haar wavelet filters for the x (left) and y (right) components. The dark parts are weighted -1 and the light parts +1. (b) Orientation assignment: a sliding orientation window of size $\frac{\pi}{3}$ detects the dominant orientation. (c) The SURF descriptor: an oriented quadratic grid with $4 \times 4$ square cells is laid over the interest point (left). For each cell, the wavelet responses are computed from $5 \times 5$ samples (for illustrative purposes, only $2 \times 2$ sub-divisions are shown here). In each cell, the 4 elements $\sum d_x$, $\sum \left| d_x \right|$, $\sum d_y$, $\sum \left| d_y \right| $ contribute to the SURF feature vector. The images are taken from \cite{bay2006surf}.} 
+    \caption{(a) Haar wavelet filters for the x (left) and y (right) components. The dark parts are weighted -1 and the light parts +1. (b) Orientation assignment: A sliding orientation window of size $\frac{\pi}{3}$ detects the dominant orientation. (c) The SURF descriptor: An oriented quadratic grid with $4 \times 4$ square cells is laid over the interest point (left). For each cell, the wavelet responses are computed from $5 \times 5$ samples (for illustrative purposes, only $2 \times 2$ sub-divisions are shown here). In each cell, the 4 elements $\sum d_x$, $\sum \left| d_x \right|$, $\sum d_y$, $\sum \left| d_y \right| $ contribute to the SURF feature vector. The images are taken from \cite{bay2006surf}.} 
     %\label{fig:surf}
 \end{figure}
 
@@ -96,7 +96,7 @@ To extract the SURF descriptor, we construct a window of size $20s$ centred at t
 \subsection{Globalized Probability of Boundary}
 \label{sec:shape_feature}
 
-Globalized probability of boundary (gPb) contour extractor was developed based on the predecessor, namely probability of boundary (Pb), which uses features extracted from a local image patch to estimate the posterior probability of a boundary passing through the current pixel. gPb improves from Pb by introducing global information based on spectral graph theory. In this Section, we will first survey the local features used by Pb. We will then explain how gPb incorporates global information into Pb. Finally, we will show one method to extract shape descriptors from regions defined by gPb contours. The method to estimate the posterior probability of a boundary will be explained in more detail in Section $\ref{sec:logistic_regression}$.
+The globalized probability of boundary (gPb) contour extractor was developed based on the predecessor, namely probability of boundary (Pb), which uses features extracted from a local image patch to estimate the posterior probability of a boundary passing through the current pixel. gPb improves from Pb by introducing global information based on spectral graph theory. In this section we will first survey the local features used by Pb. We will then explain how gPb incorporates global information into Pb. Finally, we will show one method to extract shape descriptors from regions defined by gPb contours. The method to estimate the posterior probability of a boundary will be explained in more detail in Section $\ref{sec:logistic_regression}$.
 
 \subsubsection{Gradient-Based Features for Probability of Boundary}
 \label{sec:textons}
@@ -110,10 +110,8 @@ The gradient-based paradigm was used by Martin et al. in their $Pb$ paper \cite{
 	\chi^2(g, h) = \frac{1}{2} \sum \dfrac{(g_i - h_i)^2}{g_i + h_i}
 \end{equation}
 \item An edge is detected if there is a large difference $G(x, y, \theta, r)$ between the two half disks along the chosen orientation.
-\item A supervised learning method is used to combine the cues into a single detector. Particularly, we use a logistic regression classifier to learn the combination rules from the ground truth data. This produces soft boundary maps of the form $Pb(x, y, \theta)$.
+\item A supervised learning method is used to combine the cues into a single detector. This produces soft boundary maps of the form $Pb(x, y, \theta)$.
 \end{enumerate}   
-
-
 
 \begin{figure}[htbp]
     \centering
@@ -143,11 +141,11 @@ The gradient-based paradigm was used by Martin et al. in their $Pb$ paper \cite{
 
 The same algorithm is used to compute texture gradient but the technique to calculate the texture histogram is different. Specifically, a group of 13 filters covering the most probable shapes is used. It consists of six pairs of elongated, oriented filters and a center-surround filter as shown in Figure $\ref{fig:filter_bank}$. The oriented filters are in even/odd quadrature pairs. The even symmetric filter is a Gaussian second derivative, and the odd-symmetric filter is its Hilbert transform. Finally, a difference of Gaussians is chosen to be the center-surround filter. This filter bank generates a feature vector of 13 dimensions corresponding to 13 filter responses at each pixel.
 
-In order to build up histograms for comparison, the $Pb$ algorithm uses the so called textons approach (or bag-of-textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large, diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses, and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons has been computed, each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
+In order to build up histograms for comparison the $Pb$ algorithm uses the so called textons approach (or bag-of-textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons has been computed each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally, the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
 
 \subsubsection{Globalized Probability of Boundary Detector}
 
-The gPb contour detector \cite{maire2008using} is an extension of the Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm which defines an affinity matrix $W$ whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
+The gPb contour detector \cite{maire2008using} is an extension of the Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm, which defines an affinity matrix $W$, whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
 \begin{equation}
 (D-W)v = \lambda D v
 \label{eq:ncut}
@@ -158,16 +156,16 @@ Section $\ref{sec:normalized_cut}$ will explain the normalized cut algorithm in 
 We start by extracting the brightness, color and texture gradients in 3 different scales: $[\sigma/2, \sigma, 2\sigma]$, where $\sigma$ is the default scale of the Pb detector. This gives 9 different responses ${G_i}$. These local cues are then linearly combined into a single multiscale oriented signal:
 
 \begin{equation}
-mPb(x, y, \theta) = \sum\limits_{i = 1}^{9}G_i(x, y, \theta)
+mPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\alpha_i G_i(x, y, \theta)
 \end{equation}
 
-In order to integrate global information, the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure $\ref{fig:intervening_contour}$. The first $k + 1$ generalized eigenvectors $v_j$ of the system $\ref{eq:ncut}$ are chosen and reshaped in the size of the original image. Contours are extracted from each eigenvector $v_j$ by applying Gaussian directional derivatives at multiple orientations $\theta$, resulting in an oriented signal $sPb_{\mathbf{v_j}}(x, y, \theta)$. The information from different eigenvectors is then combined to provide the spectral boundary detector:
+In order to integrate global information the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure $\ref{fig:intervening_contour}$. The first $k + 1$ generalized eigenvectors $v_j$ of the system $\ref{eq:ncut}$ are chosen and reshaped in the size of the original image. Contours are extracted from each eigenvector $v_j$ by applying Gaussian directional derivatives at multiple orientations $\theta$, resulting in an oriented signal $sPb_{v_j}(x, y, \theta)$. The information from different eigenvectors is then combined to provide the spectral boundary detector:
 
 \begin{equation}
 sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{v_j}(x, y, \theta)
 \end{equation}
 
-where $0 = \lambda_0 \leq ... \leq \lambda_k$ are corresponding eigenvalues. Figure $\ref{fig:sPb}$ illustrates an example of the spectral boundary detector $sPb$.
+where $0 = \lambda_0 \leq ... \leq \lambda_k$ are the corresponding eigenvalues. Figure $\ref{fig:sPb}$ illustrates an example of the spectral boundary detector $sPb$.
 
 \begin{figure}[htbp]
     \centering
@@ -190,31 +188,31 @@ Finally, the globalized probability of boundary , i.e. gPb, is then defined as:
 gPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\beta_i G_i(x, y, \theta) + \gamma sPb(x, y, \theta)
 \end{equation}
 
-where the weights are learned by gradient ascent on the F-measure
+where the weights are learned by gradient ascent on the F-measure cost function
 
 \begin{equation}
-\mathrm{F} \operatorname{-} \mathrm{measure} = \dfrac{2\cdot \mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision + Recall}}.
+\mathrm{F} \operatorname{-} \mathrm{measure} = 2\cdot \dfrac{\mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision + Recall}}.
 \end{equation} 
 
 \subsubsection{Shape Descriptor}
 \label{sec:shape_descriptor}
 
-The contours detected above define over-segmented regions of the image. Gu et al. \cite{gu2009recognition} proposed a way to describe a region by subdividing evenly its bounding box into an $n \times n$ grid. The grid size n = 4 has been reported effective. Each cell encodes information only inside the region. Different cues are extracted from each cell, and each type of cue is encoded by concatenating cell signals into a histogram. The following region cues are included:
+The contours detected in the previous section define over-segmented regions of the image. Gu et al. \cite{gu2009recognition} proposed a way to describe a region by evenly subdividing its bounding box into an $n \times n$ grid. The grid size n = 4 has been reported as effective. Each cell encodes information only inside the region. Different cues are extracted from each cell and each type of cue is encoded by concatenating cell signals into a histogram. The following region cues are included:
 
 \begin{itemize}
 \item Contour shape, given by the histogram of oriented responses of the contour detector gPb.
-\item Edge shape, computed by convolution with a [-1 0 1] filter along x and y axes. This captures high frequency information, while it has been smoothed out by gPb.
+\item Edge shape, computed by convolution with a [-1 0 1] filter along x and y axes. This captures high frequency information while it has been smoothed by gPb.
 \item Color, represented by the L*, a and b histograms in the CIELAB color space.
 \item Texture, described by texton histograms.
 \end{itemize}
 
-There are some advantages of this representation which were pointed out by Gu et al. Firstly, the scale invariant nature of region descriptors enables us to compare regions regardless of their relative sizes. Secondly, background clutter interferes with region representations only mildly compared to interest point descriptors.
+There are some advantages of this representation, which were pointed out by Gu et al. Firstly, the scale invariant nature of region descriptors enables us to compare regions regardless of their relative sizes. Secondly, background clutter interferes with region representations only mildly compared to interest point descriptors.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Discussion}
 
-So far we have seen two ways to extract features from an image, each has its own primary purpose. SURF features was originally developed for the problem of image matching but it is also suitable for compact representation of local, isotropic image patches. The advantage of using SURF for object detection is its local nature, thereby being invariant to great viewpoint change having the capability of detecting deformable objects \cite{VijayGrauman2011}. gPb, however, was developed to detect contours hence suitable for segmentation tasks \cite{arbelaez2009contours} \cite{gu2009recognition}. It can also be used to detect objects with parts defined by their shape \cite{VijayGrauman2011} \cite{gu2009recognition}.
+So far, we have seen two ways to extract features from an image, each has its own primary purpose. SURF features were originally developed for the problem of image matching but they are also suitable for compact representation of local isotropic image patches. The advantage of using SURF for object detection is its local nature, thereby being invariant to great viewpoint changes having the capability of detecting deformable objects \cite{VijayGrauman2011}. gPb, however, was developed to detect contours, hence being suitable for segmentation tasks \cite{arbelaez2009contours} \cite{gu2009recognition}. It can also be used for part-based object detection \cite{VijayGrauman2011} \cite{gu2009recognition}.
 
 \section{Segmentation with Supervised Training}
 \label{sec:supervised_learning}
