@@ -2,14 +2,27 @@
 % Dokument-Einstellungen
 \documentclass{SMBV13}
 
+\setcounter{tocdepth}{5} %to make it appears in TOC
+\setcounter{secnumdepth}{5} %to make it numbered
+
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}[section]
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
 % Hier beginnt das eigentliche Dokument
 \begin{document}
 
-\title{Richtlinien zur Erstellung der druckfertigen Beiträge für das Hauptseminar Medizinische Bildverarbeitung im Sommersemester 2013}
+\title{Graph-Based Segmentation}
 
-\author{Elke Musterfrau}
+\author{Phan-Anh Nguyen}
 
 \maketitle
 
@@ -17,152 +30,92 @@
 %-----------------------------------------------------------% Zusammenfassung
 
 \begin{abstract}%
-Zum Seminar Medizinische Bildverarbeitung ist die Herausgabe eines Seminarbandes geplant, der alle Ausarbeitungen umfasst. Um die Lesbarkeit zu erhöhen und ein einheitliches Layout der Ausarbeitungen zu gewährleisten, bitten wir die Seminaristen, die hier zusammengefassten Vorschriften zu beachten und einzuhalten. Nur so können die Druckkosten und der Aufwand der Weiterverarbeitung gering gehalten werden.
+The purpose of image segmentation is to partition an image into meaningful regions with respect to a particular application. Segmentation is commonly used in medical image processing to locate tumors, measure tissue volumes and to study anatomical structure. Segmentation is also a crucial part in scene understanding for autonomous systems. However there are several issues often encountered during segmentation. First, the object we want to detect does not always have the same shape. This can cause troubles for the segmentation methods that depend on pre-defined shapes. Secondly, there are no clear boundaries between objects and background due to image clutters and noises. This seminar paper reviews three novel graph-based approaches to the image segmentation problem. The first approach builds a region graph to detect object as the optimal subgraph weighted by a support vector machine classifier applied to bag-of-features regions. The second approach identifies salient contours within an image by solving an Hermitian eigenvalue problem on a contour grouping graph. The third approach extends the min-cut algorithm to solve the multi-class segmentation problem on a Markov random field. Pros and cons and some comparisons between these graph-cut methods are discussed at the end of the present seminar paper.
 \end{abstract}
 
-\keywords{Proceedings, Druckformate, Seitenlayout, Fristen}
+\keywords{Classification, Graph-Cut, Segmentation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------
+%
+\section{Introduction}
+
+Image segmentation is an initial and vital step in the whole image processing pipeline aimed at overall image understanding. Segmentation is often used to identify objects in a scene for object-based measurements such as size and shape. This is particularly useful for computer-aided diagnosis applications which assist physicians in finding abnormalities based on medical images of patients. Segmentation is also used to identify obstacles in depth images taken from a mobile robot to generate the optimal path. There are two main problems that prohibit the segmentation task from delivering good results. First, the object we want to detect does not always have the same shape. This can cause troubles for the segmentation methods that depend on pre-defined shapes. Secondly, there are no clear boundaries between objects and background due to image clutters and noises.
+
+Graph-based segmentation is currently emerging as a promising method and has been applied successfully to many image processing applications ranging from scene understanding and segmentation to medical image analysis. Formulating segmentation problems by means of graph theory has a twofold advantage: Firstly, graph representation is an abstract way to encode generic complex relationships between entities, thereby opening up to a wide variety of interpretations for the segmentation problems provided that they can define some metrics to measure the relationships; Secondly, graph representation often leads to well-known graph problems which have been studied for a while and therefore can be solved efficiently.
+
+In general, a graph-based segmentation method often follows the following pipeline. First, image features, which are signal responses from some filters describing important image properties, are extracted from an input image. These features serve as numerical elements used to construct a graph often based on supervised learning algorithms. Once we have built a graph to represent the image segmentation problem, we can apply state-of-the-art graph-cut algorithms to solve the problem efficiently. 
+
+Beside graph-based approaches, a wide variety of segmentation methods have been proposed. Mortensen et al. \cite{mortensen1995intelligent} introduced an interactive segmentation system in which an user picks up some seed points to define a contour that can automatically snap around the object of interest. The system used the Dijkstra's shortest path algorithm to find the lowest cost path in a cost image which is defined based on gradient. Chan and Vese proposed a segmentation method called ``Active contours without edges'' \cite{chan2001active} which used level set formulation to model the evolution of boundaries under internal and external forces. The system did not use gradient for stopping condition thereby being able to identify objects that are very smooth, or even have discontinous boundaries. The system proposed by Fripp et al. \cite{fripp2007automatic} uses three-dimensional active shape models to segment cartilages and rebuild a 3D-model of them. The reconstruction error is below 1 mm.
+
+This seminar paper presents several different graph-based approaches to the image segmentation problem and demonstrates some applications of these techniques to real-world problems. Particularly, Section $\ref{sec:features}$ describes several methods to extract features from images notably Speeded Up Robust Features (SURF) \cite{bay2006surf} is used to describe local image information around a feature point as well as a shape descriptor \cite{gu2009recognition} based on the Globalized Probability of Boundary (gPb) \cite{martin2004learning} \cite{maire2008using}. Section $\ref{sec:supervised_learning}$ introduces some supervised learning techniques which are used in Section $\ref{sec:graph_cunstruction}$ to construct a graph. Section $\ref{sec:graph_cut_algorithms}$ presents powerful graph-cut algorithms used to select optimal subgraphs as segmentation solutions. The applications of graph-cut algorithms to solve the segmentation problem are illustrated in Section $\ref{sec:applications}$ in three different systems namely ``Efficient Region Search'' \cite{VijayGrauman2011} to search for an object of arbitrary shape, ``Contour Cut'' \cite{KenGalShi2011} to identify salient contours in images and ``Multi-Shape Graph-Cut'' \cite{nakagomimulti} to perform lung segmentation based on multiple shape priors. Finally, Section $\ref{sec:conclusion}$ discusses advantages and disadvantages and gives some comparisons between these graph-cut methods.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
 %
-\section{Einleitung}
-
-In der Hausdruckerei des Klinikums wird ein Seminarband mit allen
-Ausarbeitungen im DIN-A4 Format gedruckt. Jeder Seminarteilnehmer wird über
-die Fertigstellung informiert und kann dann einen solchen Band im Sekretariat des Instituts abholen.
-
+\section{Image Features}
+\label{sec:features}
+Low level image features are essential building blocks for high level image processing tasks such as object detection, image categorization or segmentation. In general, image features capture important properties around local image regions in the form of high dimensional feature vectors that can be used by high level applications. The advantage of the compact representation of features is that it can be readily fed into standard algorithms which often take high dimensional vectors as input. Also features are often made to be invariant to different transformations e.g. rotation, scaling etc. Since features are defined locally, they are invariant to translation. To support real-time systems features need to be efficient to compute. Normally, raw features are extracted at each pixel by applying various kinds of filters. Each filter response corresponds to one dimension in the feature vector space. The shape and size of filters reflect local structure around each pixel. Raw features at each pixel can be collected to form region descriptors which can be used to represent shapes, contours etc. In this section, we present methods to extract raw features and various ways of constructing region descriptors. Specifically, Section $\ref{sec:surf}$ describes a state-of-the-art feature named Speeded Up Robust Features (SURF) \cite{bay2006surf} and Section $\ref{sec:shape_feature}$ explains the Globalized Probability of Boundary (gPb) contour detector \cite{maire2008using}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%-----------------------------------------------------------
-%
-\section{Generelles Format und Seitenlayout}
+\subsection{Speeded Up Robust Features}
+\label{sec:surf}
+Speeded Up Robust Features (SURF) \cite{bay2006surf} was originally developed for the task of finding point correspondences between two images of the same scene. This includes three main steps. First, interest points are selected at distinctive locations in the image. Then a feature vector is extracted from the neighbourhood of every interest point. Finally, the feature vectors are matched between different images. Since the SURF descriptor provides a very good representation of a local region it has also been applied to tasks other than correspondence problems such as image classification or image segmentation.
 
+Regarding the interest point detection problem the choice of a detector varies depending on the needs of the application. An application for image registration requires the same interest points to be detected in two different images of the same scene under different viewing conditions. In this case, a detector would pick up hard-to-miss points which appear in both images such as peaks in signal responses corresponding to blobs or corners. In the case of image segmentation it would be a wise choice to select points on contours to be interest points. In the original SURF paper Bay et al. suggested to use an approximate Hessian detector to search in scale-space domain for points having strong derivatives in two orthogonal directions as interest points (often located at corners and strongly textured areas).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Seitenrand}
+Given an interest point in the input image the SURF descriptor is obtained by extracting distinctive information around its neighborhood in a form of a feature vector. The SURF descriptor is designed to be invariant to image scaling and rotation while it can be computed very fast. Scale invariance is achieved by adopting the scale at which the Hessian detector attains maximal response. In order to be invariant to rotation we first find a reproducible orientation based on information within a circular region around the interest point. We then construct a square region aligned to the selected orientation and extract the SURF descriptor from it.
 
-Bitte erstellen Sie Ihre Beiträge in \LaTeX\ mit der Dokumtenklasse SMBV13 (kopieren Sie die Datei "'SMBV13.cls"' in Ihr Arbeitsverzeichniss und laden Sie die Dokumentenklasse wie in diesem Beispieldokument). Die Klasse sorgt für die richtigen Seitenränder, sowie die korrekten Schriftstyle. Bitte verwenden Sie die Sourcen dieses Dokuments als Vorlage für Ihre Ausarbeitung.
+To find the dominant orientation Haar wavelet responses in $x$ and $y$ directions ($d_x$, $d_y$) are calculated within a circular neighbourhood of radius $6s$ around the interest point and weighted with a Gaussian ($\sigma = 2s$), where $s$ is the scale chosen above. Figure $\ref{fig:haar_wavelet}$ shows the structure of the Haar wavelet filters. The wavelet responses ($d_x, d_y$) are then represented in a vector space and the sum of all vectors within a sliding orientation window of size $\frac{\pi}{3}$ is calculated, see Figure $\ref{fig:orientation_window}$. The dominant orientation is finally assigned to the sum vector having the maximal length.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Keine Kopf-- und Fußzeilen und keine Seitenzahlen}
-
-Die Seitenzahlen im Seminarband werden nicht von den Autoren, sondern vom Institut für Medizinische Informatik eingefügt. Bitte erstellen Sie weder eine Kopf- noch eine Fußzeile.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Gliederung und Umfang des Beitrages}
-
-Jeder Beitrag muss wie folgt gegliedert sein: 
-\begin{itemize}
-\item
-Deckblatt mit dem Thema des Seminares, Vorname und Name des Seminaristen und
-Inhaltsverzeichnis (s. Blatt 1 dieser Richtlinien)
-\item
-neue Seite, beginnend mit Zusammenfassung (maximal 100 Worte), 3-5 Keywords, Text und
-Literatur.
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Schriftarten}
-
-Die Klassendefinition sorgt für die Verwendung der richtigen Schriftarten und Größen.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Absätze}
-
-Neue Absätze werden am Anfang um 5mm eingerückt. Der Zeilenabstand
-zwischen den Absätzen wird nicht geändert. Bitte fügen Sie keine 
-Leerzeilen zwischen einzelnen Absätzen ein.
-
-Um Stellen hervorzuheben, werden diese 
-{\em kursiv} gesetzt. Bitte vermeiden Sie Unterstreichungen oder Fettdruck.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Abbildungen und Tabellen}
-
-Abbildungen werden elektronisch in das Dokument integriert und können im Text
-beliebig platziert werden.  Jede Abbildung oder Tabelle muss nummeriert sein und eine Unterschrift erhalten (Tabellen eine Überschrift). Im Text muss auf die Abbildung bzw. Tabelle explizit verwiesen
-werden.
-
-Beachten Sie, dass sich gerasterte Grauwertvorlagen durch die
-Kopie in der Druckerei in der Qualität verschlechtern. Aus demselben
-Grund sollte man in Diagrammen auf Schattierungen des
-Hintergrundes verzichten und stattdessen Schraffuren einsetzen.
-Alle Grafiken müssen bei der Einreichung unabhängig vom ansonsten verwendeten Format auch im {\em eps}-Format vorliegen.
-
-Im Text muss auf Abbildungen und Tabellen explizit verwiesen werden. Auch die Aussage, die mit dem Objekt visualisiert werden soll, muss im Text explizit genannt werden. Sätze wie: "`Abb. 1 zeigt das Ergebnis"'
-alleine sind nicht ausreichend.
-Um mehrere Abbildungen unter einer Bildunterschrift nebeneinander zu setzen, kann das Packet {\em subfigure} verwendet werde (\figurename~\ref{SMBV13_EMuster_fig01}).
-
-\begin{figure}[b]
- 	\centering
-		\subfigure[Eins]{\includegraphics[width=0.3\textwidth]{Bilder/ScreenShot005}}
-		\subfigure[Zwei]{\includegraphics[width=0.3\textwidth]{Bilder/ScreenShot005}}
-		\subfigure[Drei]{\includegraphics[width=0.3\textwidth]{Bilder/ScreenShot005}}
- 		\caption{\label{SMBV13_EMuster_fig01}Beispiel für die Einbindung mehrerer Graphiken unter eine Unterschrift.}
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+        \includegraphics[width=0.15\textwidth]{Bilder/SMBV13_EMuster_fig1}
+        \label{fig:haar_wavelet}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.25\textwidth]{images/orientation_window.png}
+        \label{fig:orientation_window}
+    }
+    \subfigure[]
+    {
+        \includegraphics[width=0.5\textwidth]{images/surf.png}
+        \label{fig:surf}
+    }
+    \caption{(a) Haar wavelet filters for the x (left) and y (right) components. The dark parts are weighted -1 and the light parts +1. (b) Orientation assignment: A sliding orientation window of size $\frac{\pi}{3}$ detects the dominant orientation. (c) The SURF descriptor: An oriented quadratic grid with $4 \times 4$ square cells is laid over the interest point (left). For each cell, the wavelet responses are computed from $5 \times 5$ samples (for illustrative purposes, only $2 \times 2$ sub-divisions are shown here). In each cell, the 4 elements $\sum d_x$, $\sum \left| d_x \right|$, $\sum d_y$, $\sum \left| d_y \right| $ contribute to the SURF feature vector. The images are taken from \cite{bay2006surf}.} 
+    %\label{fig:surf}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Nummerierungen und Verweise}
-
-Bitte verwenden Sie ausschließlich dezimale Einteilungen für die
-Nummerierung der Überschriften, Abbildungen, Tabellen, Gleichungen, 
-Literaturverweise und sonstigen Elementen. 
-
-Die Nummerierung darf dabei nicht von Hand, sondern mit den von 
-\LaTeX\ zur Verfügung gestellten Automatismen erfolgen. 
-Nur so ist ein konsistente Nummerierung über den gesamten 
-Seminarband zu erreichen. Außerdem erspart eine automatische 
-Nummerierung Arbeit, wenn während der Beitragserstellung Elemente eingefügt, 
-entfernt oder umsortiert werden.
-
-Die Verweise auf nummerierte Elemente sind aus denselben Gründen ebenfalls 
-automatisch zu generieren.
+To extract the SURF descriptor, we construct a window of size $20s$ centred at the interest point and oriented in the dominant orientation as illustrated in Figure $\ref{fig:surf}$. The window is then subdivided into regular $4 \times 4$ grid cells, each being a $5 \times 5$ pixel patch. For each cell, the Gaussian weighted ($\sigma = 3.3s$) Haar wavelet responses are summed up to form a first set of entries in the feature vector. The sum of the absolute values of the responses, $\left| d_x \right| $ and $\left| d_y \right| $ are also extracted to capture information about the polarity of the intensity changes. Therefore, each cell has a 4D descriptor vector for its underlying intensity structure $\left( \sum d_x, \sum d_y, \sum \left| d_x \right| , \sum \left| d_y \right|  \right)$. Concatenating this for all $4 \times 4$ cells results in a descriptor vector of length 64. Finally the descriptor vector is normalized to make it invariant to contrast.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Formeln}
-
-Mathematische Formeln werden innerhalb der Seite zentriert ausgerichtet
-\begin{equation}
-c=sqrt(a^2+b^2)
-\end{equation}
-und am rechten Rand auf der Höhe des Gleichheitszeichens fortlaufend nummeriert.
-Einfachere Formeln, wie  $x+y=z$, können auch fortlaufend im Text
-erscheinen.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Textanmerkungen / Fußnoten}
-
-Bitte verzichten Sie aus Gründen der Lesbarkeit auf Fußnoten und sonstige
-Textanmerkungen (Diese können in Klammern direkt in den Text eingefügt
-werden).
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Literaturangaben}
 
 
-\cite{mortensen1995intelligent} \cite{fripp2007automatic}
-\cite{chan2001active} \cite{nowozin2009global}
-\cite{gleich2006hierarchical} \cite{lempitsky2010fusion}
-\cite{kolmogorov2007minimizing} \cite{boykov2004experimental}
-\cite{mitchell2002branch} \cite{VijayGrauman2011}
-\cite{bishop2006pattern} \cite{shimizu2011automated}
-\cite{KenGalShi2011} \cite{nakagomimulti}
-\cite{leventon2000statistical} \cite{tsochantaridis2006large}
-\cite{maire2008using} \cite{gu2009recognition}
-\cite{bay2006surf} \cite{ljubic2006algorithmic}
-\cite{shi2000normalized} \cite{zhu2007untangling}
-\cite{martin2004learning} \cite{arbelaez2009contours}
-\cite{malik2001contour} \cite{leung1998contour}
-\cite{cortes1995support} \cite{burges1998tutorial}
-\cite{lampert2008beyond}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
