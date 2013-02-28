@@ -100,9 +100,9 @@ Um mehrere Abbildungen unter einer Bildunterschrift nebeneinander zu setzen, kan
 
 \begin{figure}[b]
  	\centering
-		\subfigure[Eins]{\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig1}}
-		\subfigure[Zwei]{\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig2}}
-		\subfigure[Drei]{\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig3}}
+		\subfigure[Eins]{\includegraphics[width=0.3\textwidth]{Bilder/ScreenShot005}}
+		\subfigure[Zwei]{\includegraphics[width=0.3\textwidth]{Bilder/ScreenShot005}}
+		\subfigure[Drei]{\includegraphics[width=0.3\textwidth]{Bilder/ScreenShot005}}
  		\caption{\label{SMBV13_EMuster_fig01}Beispiel für die Einbindung mehrerer Graphiken unter eine Unterschrift.}
 \end{figure}
 
@@ -147,53 +147,27 @@ werden).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Literaturangaben}
 
-Bitte ordnen Sie die Literaturverweise in der Reihenfolge, in der sie im
-Text auftreten. Im Text werden Literaturverweise in eckigen Klammern
-gesetzt \cite{Rut84}. Alle Einträge im Literaturverzeichnis müssen im Text
-referenziert werden. 
-Das Literaturverzeichnis ist im sogenannten Vancouver-Style zu halten.
-Informationen dazu finden sich online unter
-\nobreak{\tt http://www.library.uq.edu.au/training/citation/vancouv.pdf}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Einbinden von \LaTeX -Paketen}
+\cite{mortensen1995intelligent} \cite{fripp2007automatic}
+\cite{chan2001active} \cite{nowozin2009global}
+\cite{gleich2006hierarchical}
 
-Damit sich bei der Zusammenstellung des Seminarbandes keine Probleme durch Paketkonflikte 
-ergeben und ein einheitliches Layout gewährleistet werden kann, sollte auf das Einbinden von
-\LaTeX -Paketen verzichtet werden, die in der Dokumentenklasse nicht enthalten sind.
-(Die Dokumentenklasse enthält die Packete: {\em graphicx}, {\em subfigure}, {\em amsmath}, {\em amssymb})
-
-\section{Umfang der Beiträge}
-
-Die Seminarausarbeitung sollte ca. 20 Seiten umfassen. 
-
-\section{Übermittlung der Beiträge}
-Die Beiträge müssen in elektronischer Form als \LaTeX-Sourcen mit allen
-Bildern und im PDF-Format eingereicht werden. Erzeugen Sie hierzu ein
-entsprechendes {\em Zip-Archiv}. Das Archiv sollte ein Verzeichnis mit Ihrem Namen
-enthalten und alle Dateien sollten sich dann in diesem Verzeichnis befinden.
-Verwenden Sie als Dateinamen {\sf "`SMBV13\_"'} gefolgt vom ersten Buchstaben Ihres Vornamens und den ersten sechs Buchstaben Ihres Nachnamens (z.B.~{\sf "`SMBV13\_EMuster.ps"'}). Für Bilder, die in Ihrem Beitrag erscheinen, erstellen Sie bitte einen Unterordner und bennenen Sie nach dem Muster {\sf "`SMBV13\_EMuster\_fig1.eps"'}. Ihr Archiv sollte eine {\em .tex} und eine {\em .pdf} Datei, sowie alle verwendeten Bilder enthalten.
-Einreichen können Sie das {\em Zip-Archiv} über die in Kürze unter der Adresse \nobreak{\tt http://ganymed.imib.rwth-aachen.de/SMBV13/} verfügbare Internetseite. Daraufhin wird Ihr Betreuer eine E-Mail erhalten, um Ihren Beitrag zu bestätigen.
-
-Überprüfen Sie bitte auch bei Verwendung dieser Vorlagen die Positionierung
-des Textes auf der Seite.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------------------------------------------------------
 %
 \def\refname{Literatur}
 \begin{thebibliography}{AA}
+                 
+\bibitem{mortensen1995intelligent} Mortensen, Eric N., and William A. Barrett: Intelligent scissors for image composition. Proceedings of the 22nd annual conference on Computer graphics and interactive techniques. ACM, 1995.
 
+\bibitem{fripp2007automatic} Fripp, Jurgen and Crozier, Stuart and Warfield, Simon and Ourselin, S{\'e}bastien: Automatic segmentation of articular cartilage in magnetic resonance images of the knee. Medical Image Computing and Computer-Assisted Intervention--MICCAI 2007 (2007): 186--194.
 
-\bibitem {Rut84} Ruttimann UE, Groenhuis RAJ, Webber RL:
-                 Restoration of digital multiplane tomosynthesis by a
-                 constrained iteration method.
-                 IEEE Trans. on Medical Imaging, 1984;
-                 3(3): 141--148.
+\bibitem{chan2001active} Chan, Tony F and Vese, Luminita A: Active contours without edges. Image Processing, IEEE Transactions on 10.2 (2001): 266--277.
 
-\bibitem {Ebe76} Ebert H (Hrsg.):
-                 Physikalisches Taschenbuch.
-                 Vieweg Verlag, Braunschweig, 5.\ Auflage 1976.
+\bibitem{nowozin2009global} Nowozin, Sebastian, and Christoph H. Lampert: Global connectivity potentials for random field models. Computer Vision and Pattern Recognition, 2009. CVPR 2009. IEEE Conference on. IEEE, 2009.
+
+\bibitem{gleich2006hierarchical} Gleich, David: Hierarchical directed spectral graph partitioning. (2006).
 
 \end{thebibliography}
 
