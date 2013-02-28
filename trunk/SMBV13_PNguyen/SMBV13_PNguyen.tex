@@ -437,16 +437,274 @@ x_j = r_j e^{i \theta_j}
 with $r_j = 1$ if $j \in C$ and $0$ otherwise, and $\theta_j = O(j) \delta$ specifies the ordering with $\delta = \frac{2\pi}{\lvert C \rvert}$ is a phase step. The radius $r_j$ of each point encodes whether it is part of the contour.
 
 
+\subsection{Markov Random Fields}
+\label{sec:mrf}
+Markov Random Fields (MRF) are undirected graphical models, which formalize and visualize the structure of a probabilistic model through a graph. In MRFs, the nodes correspond to a set of random variables $\left\lbrace x_1, ..., x_n\right\rbrace $, the edges represent soft constraints between them and the graph as a whole can be understood as a joint distribution $p(x)$ over the set of random variables. It is advantageous to express the joint distribution $p(x)$ as a product of functions defined over sets of variables that are local to the graph since this so-called factorized representation conveys interesting information about the properties of the class of distributions that the graph represents. We therefore need to define the appropriate notion of locality through a graphical concept called a clique. A clique is defined as a subset of nodes in a graph such that there exists a link between all pairs of nodes in the subset. In other words, the set of nodes in a clique is fully connected. Furthermore, a maximal clique is a clique such that it is not possible to include any
+other nodes from the graph in the set without it ceasing to be a clique. Figure $\ref{fig:clique}$ shows an example of cliques.
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.2\textwidth]{Bilder/SMBV13_EMuster_fig17}
+        \label{fig:clique}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.25\textwidth]{Bilder/SMBV13_EMuster_fig18}
+        \label{fig:mrf}
+    }
+    \caption{(a) A four-node undirected graph showing a clique (in green) and a maximal clique (in blue). Image source: \cite{bishop2006pattern}. (b) An undirected graphical model representing a Markov random field in which $x_i$ is a variable denoting the hidden true state of pixel $i$ and $y_i$ denotes the corresponding value of pixel $i$ in the observed image data. Image source: \cite{bishop2006pattern}.}
+\end{figure}
+Given a clique C, we denote the set of variables in that clique by $x_C$. Then the joint distribution is written as a product of potential functions $\psi_C(x_C)$ over the maximal cliques of the graph
+\begin{equation}
+p(x) = \frac{1}{Z} \prod\limits_{C} \psi_C(x_C)
+\label{eq:joint_distribution}
+\end{equation}
+Here the quantity $Z$, sometimes called the partition function, is a normalization constant and is given by
+\begin{equation}
+Z = \sum\limits_{x} \prod\limits_{C} \psi_C(x_C)
+\end{equation}
+which ensures that the distribution $p(x)$ given by Equation $\ref{eq:joint_distribution}$ is correctly normalized. By considering only potential functions, which satisfy $\psi_C(x_C) \geq 0$, we ensure that $p(x) \geq 0$. It is convenient to express $\psi_C(x_C)$ as exponential functions so that
+\begin{equation}
+\psi_C(x_C) = \exp \left( -E(x_C) \right) 
+\end{equation}
+where $E(x_C)$ is called an energy function. The joint distribution is defined as the product of potentials and so the total energy is obtained by adding the energies of each of the maximal cliques.
+
+In the field of image processing MRFs are used to capture for each pixel the correlation between the hidden state variable and the observed image data. The spatial coherent of the image content can also be modeled using the neighborhood relationships between pixel state variables as shown in Figure $\ref{fig:mrf}$. 
 
 
+\subsubsection{Shape Energy}
+\begin{figure}
+	\centering
+    \includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig19}
+    \caption{Gradient vectors of $\phi(p)$ and an angle $\theta$ between a gradient vector of $\phi(p)$ and a vector connecting points p and q. Image source: \cite{shimizu2011automated}.}
+    \label{fig:shape_energy}
+\end{figure}
+For the image segmentation problem our goal is to minimize the energy function associated with a MRF constructed from the training data and the observed input image. Particularly, given a set of labels $L = \left\lbrace 0, ..., n \right\rbrace $ we need to find a labelling configuration $A = (A_1, ..., A_{\lvert P \rvert})$ for a set of voxels $P$ that minimizes an energy $E(A)$ given by
+\begin{equation}
+E(A) = \lambda R(A) + B(A) = \lambda \sum_{p \in P} R_p(A_p) + \sum_{(p, q) \in \mathcal{N}} B_{p, q} \delta_{A_p \neq A_q}
+\label{eq:mrf_energy}
+\end{equation}
+where the set $\mathcal{N}$ is a collection of neighboring voxel pairs, the function $\delta$ is 1 if $A_p \neq A_q$ and 0 otherwise and $\lambda$ is a balancing parameter. There are two types of energy terms in Equation $\ref{eq:mrf_energy}$. The first term $R_p(A_p)$ is a data term which expresses a penalty for assigning label $A_p$ to voxel $p$. Normally, we use the negative log likelihood of the gray value for this term. The second term $B_{p, q}$ is a boundary term which punishes the assignment of labels $A_p$ and $A_q$ to the two neighboring voxels $p$ and $q$. In the context of lung segmentation Shimizu and Nakagomi \cite{shimizu2011automated} \cite{nakagomimulti} proposed a novel energy function incorporating shape energy term $S_{p, q}$ based on multiple shape priors learned with the statistical shape model described in Section $\ref{sec:SSM}$:
+\begin{equation}
+E(A) = \lambda \sum_{p \in P} \left\lbrace  R_p(A_p) + NB_p(A_p) \right\rbrace + \sum_{(p, q) \in \mathcal{N}} \left\lbrace B_{p, q} + S_{p, q} \right\rbrace \delta_{A_p \neq A_q}
+\label{eq:mrf_multishape_energy}
+\end{equation}
+\begin{equation}
+S_{p, q} = \min \left( \sqrt{\dfrac{1 - \cos(\theta_{A_p})}{2}}, \sqrt{\dfrac{1 - \cos(\theta_{A_q})}{2}} \right)
+\end{equation}
+where $\theta_{A_p}$ represents an angle between a vector connecting voxels $p$ and $q$ and a gradient vector of a signed distance $\phi_{A_p}(p)$ from the boundary of a shape corresponding to a label $A_p \in L$ as shown in Figure $\ref{fig:shape_energy}$. $NB_p(A_p)$ is defined by the distance from the dorsal ribs. This multiple shape MRF problem can be solved using the combination of fusion move and min-cut algorithms explained in Section $\ref{sec:graph_cut}$.
 
 
+\section{Graph Cut Algorithms}
+\label{sec:graph_cut_algorithms}
+This part will concentrate on some of the state-of-the-art graph-cut algorithms, which can find a cut that separates the optimal subgraph from those kinds of graphs constructed in Section $\ref{sec:graph_cunstruction}$.
+
+\subsection{Prize-Collecting Steiner Tree}
+\label{sec:branch_and_cut}
+
+In this section, we discuss a method to solve the Prize-Collecting Steiner Tree (PCST) problem \cite{ljubic2006algorithmic} of finding a connected subgraph $T = (V_T, E_T)$ that maximizes the profit function defined in Section $\ref{sec:region_graph}$. This maximization problem can be transformed into the problem of finding a subtree $T = (V_T, E_T)$ that minimizes the following function:
+
+\begin{equation}
+GW(T) = \sum\limits_{v \notin V_T} p(v) + \sum\limits_{e \in E_T} c(e)
+\end{equation}
+
+where $GW(T)$ is the cost function for the subtree $T$. Here, $p(v)$ is interpreted as penalty for not connecting a vertex $v$. Furthermore, we can formulate this problem by means of an integer linear program (ILP) by transforming the reduced graph $G^{\prime} = (V^{\prime}, E^{\prime}, c^{\prime}, p^{\prime})$ resulting from the application of preprocessing into a directed edge-weighted graph $G_{SA} = (V_{SA}, A_{SA}, c^{\prime \prime})$, which is called Steiner arborescence. The vertex set $V_{SA} = V^{\prime} \cup \left\lbrace r \right\rbrace $ contains the vertices of the input graph $G^{\prime}$ and an artificial root vertex $r$. The arc set $A_{SA}$ contains two directed arcs $(i, j)$ and $(j, i)$ for each edge $(i, j) \in E^{\prime}$ plus a set of arcs from the root $r$ to the customer vertices $R_{SA} = \left\lbrace i \in V^{\prime} \lvert p_i^{\prime} > 0 \right\rbrace $, which are the vertices having positive profit. The cost vector $c^{\prime \prime}$ is defined as follows:
+
+\begin{equation}
+c_{ij}^{\prime \prime} = 
+	\begin{cases} 
+		c_{ij}^{\prime} - p_j^{\prime} & \forall (i, j) \in A_{SA}, i \neq r \\ 
+		- p_j^{\prime} &  \forall (r, j) \in A_{SA} .
+	\end{cases}
+\end{equation}
+
+To model the presence or absence of each vertex or edge in the solution $T_{SA}$ we introduce variable vectors $x \in \left\lbrace 0, 1 \right\rbrace ^ {\lvert A_{SA} \rvert}$ and $y \in \left\lbrace 0, 1 \right\rbrace ^ {\lvert V_{SA} \rvert - 1}$ with the following interpretation:
+
+\begin{equation}
+x_{ij} = 
+	\begin{cases}
+		1 & (i, j) \in T_{SA}\\
+		0 & \mbox{otherwise}
+	\end{cases}
+	\forall (i, j) \in A_{SA},\ \ \ 
+y_i = 
+	\begin{cases}
+		1 & i \in T_{SA}\\
+		0 & \mbox{otherwise}
+	\end{cases}
+	\forall i \in V_{SA}, i \neq r.
+\end{equation}
+
+Given a set of vertices $S \subset V_{SA}$ and its complement $\bar{S} = V_{SA} \backslash S$ we define two directed cuts: $\delta^+(S) = \left\lbrace (i, j) \lvert i \in S, j \in \bar{S} \right\rbrace $ and $\delta^-(S) = \left\lbrace (i, j) \lvert i \in \bar{S}, j \in S \right\rbrace $. We also write $x(A) = \sum\limits_{ij \in A} x_{ij}$ for any subset of arcs $A \subset A_{SA}$. The corresponding ILP model then reads as follows:
+
+\begin{equation}
+\label{eq:ilp_cut}
+\mbox{(CUT)} \qquad \min \sum\limits_{ij \in A_{SA}} c_{ij}^{\prime \prime} x_{ij} + \sum\limits_{i \in V_{SA}} p_i^{\prime}
+\end{equation}
+
+\begin{equation}
+\label{eq:tree}
+\mbox{subject to} \qquad \sum\limits_{ji \in A_{SA}} x_{ji} = y_i \qquad \qquad \forall i \in V_{SA} \backslash \left\lbrace r \right\rbrace 
+\end{equation}
+
+\begin{equation}
+\qquad \qquad \qquad \qquad \qquad x(\delta^-(S)) \geq y_k \qquad \qquad k \in S, r \notin S, \forall S \subset V_{SA}
+\label{eq:connectivity}
+\end{equation}
+
+\begin{equation}
+\sum\limits_{ri \in A_{SA}} x_{ri} = 1
+\label{eq:root}
+\end{equation}
+
+\begin{equation}
+x_{ij}, y_i \in \left\lbrace 0, 1 \right\rbrace \qquad \qquad \qquad \forall (i, j) \in A_{SA}, \forall i \in V_{SA} \backslash \left\lbrace r \right\rbrace 
+\end{equation}
+
+Note that the profits from the vertices of the solution have been absorbed into the cost formulation. Therefore, in Equation $\ref{eq:ilp_cut}$ we only penalize those vertices not getting included into the solution. The condition in Equation $\ref{eq:tree}$ is required to ensure a tree structure of the solution. The cut constraints in Equation $\ref{eq:connectivity}$ guarantee that for each vertex $v$ in the solution there must be a directed path from $r$ to $v$. The constraint in Equation $\ref{eq:root}$ is used to ensure the existence and uniqueness of a connection to the root.
+
+In order to create a bijection between arborescence and PCST solutions we introduce the so-called asymmetry
+constraints:
+
+\begin{equation}
+x_{rj} \leq 1 - y_i, \forall i < j, i \in R
+\end{equation}
+
+These inequalities assure that for each PCST solution the customer vertex adjacent to the root is the one with the
+smallest index. Note furthermore that in every non-customer vertex, which is not a branching vertex in the Steiner arborescence, the in-degree and the out-degree must be equal, whereas in a branching non-customer vertex the in-degree is always less than the outgoing degree. Thus, we have the following flow-balance constraints:
+
+\begin{equation}
+\sum\limits_{ji \in A_{SA}} x_{ji} \leq \sum\limits_{ij \in A_{SA}} x_{ij}, \qquad \forall i \notin R, i \neq r.
+\end{equation}
+
+This ILP problem can be solved efficiently in practice with a branch-and-cut algorithm.
 
 
+\subsubsection{Branch-and-Cut Algorithm}
+
+The branch-and-cut algorithm is a very successful technique for solving a wide variety of integer programming problems to optimality. In essence, it is a combination of a cutting plane method with a branch-and-bound algorithm. These methods work by solving a sequence of linear programming relaxations of the integer programming
+problem. Cutting plane methods improve the relaxation of the problem to more closely approximate the integer programming problem and Branch-and-bound algorithms break the problem into sub-problems based on the domain of its variables and proceed by pruning the branches of sub-problems having optimal solutions worse than the bounding value.
+
+We consider a general ILP problem with $n$ variables and $m$ constraints stated as follows
+
+\begin{equation}
+\min \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{Z}_+^n \right\rbrace 
+\end{equation}
+
+where $x \in \mathbb{Z}_+^n$ is a vector of integer decision variables, $c \in \mathbb{Z}^n$ is the objective function vector, $b \in \mathbb{Z}^m$ is the right hand side vector and $A \in \mathbb{Z}^{m \times n}$ is the matrix of constraint coefficients.
+
+The LP-relaxation (CUT) is obtained by replacing the integrality requirements by their corresponding real-value constraints:
+
+\begin{equation}
+\min \left\lbrace c^Tx : Ax \geq b, x \in \mathbb{R}_+^n \right\rbrace 
+\end{equation}
+
+Its feasible region is the polyhedron:
+
+\begin{equation}
+P = \left\lbrace x \in \mathbb{R}_+^n : Ax \geq b \right\rbrace 
+\end{equation}
+
+The integral hull is the convex hull of the set of integer solutions, i.e., the polyhedron:
+
+\begin{equation}
+P_I = \mbox{conv} \left\lbrace x \in \mathbb{Z}_+^n : Ax \geq b \right\rbrace 
+\end{equation}
+
+We define a cutting plane as a linear inequality that is valid for $P_I$ but not for $P$ as shown in Figure $\ref{fig:cutting_plane}$.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig20}
+\label{fig:cutting_plane}
+\caption{A cutting plane cuts through the polygon $P$ while trying to get as close to $P_I$ as possible.}
+\end{figure}
+Following the tutorial of Mitchell \cite{mitchell2002branch} the branch-and-cut algorithm is outlined as follows:
+
+\begin{enumerate}
+
+\item Initialization: Denote the initial integer programming problem by $ILP^0$ and set the active nodes to be $L = \left\lbrace ILP^0 \right\rbrace $. Set the upper bound to be $\bar{z} = + \infty$ and set the lower bound $\underline{z}_l = - \infty$ for the problem $l \in L$.
+
+\item Termination: If $L = \emptyset$, then the solution $x^*$ which yielded the incumbent objective value $\bar{z}$ is optimal. If no such $x^*$ exists (i.e., $\bar{z} = + \infty$) then ILP is infeasible.
+
+\item Problem selection: Select and delete a problem $ILP^l$ from $L$.
+
+\item Relaxation: Solve the linear programming relaxation of $ILP^l$. If the relaxation is infeasible, set $\underline{z}_l = + \infty$ and go to Step 6. Let $\underline{z}_l$ denote the optimal objective value of the relaxation if it is finite and let $x^{lR}$ be an optimal solution; otherwise set $\underline{z}_l = - \infty$.
+
+\item Add cutting planes: If desired, search for cutting planes that are violated by $x^{lR}$; if any are found, add them to the relaxation and return to Step 4.
+
+\item Fathoming and Pruning:
+
+\begin{enumerate}
+\item If $\underline{z}_l \geq \bar{z}$ go to Step 2.
+\item If $\underline{z}_l < \bar{z}$ and $x^{lR}$ is integral feasible, update $\bar{z} = \underline{z}_l$ , delete from $L$ all problems with $\underline{z}_l \geq \bar{z}$, and go to Step 2.
+\end{enumerate}
+
+\item Partitioning: Let $\left\lbrace S^{lj} \right\rbrace _{j = 1} ^ {j = k}$ be a partition of the constraint set $S^l$ of problem $ILP^l$. Add problems $\left\lbrace ILP^{lj} \right\rbrace _{j = 1} ^ {j = k}$ to $L$, where $ILP^{lj}$ is $ILP^l$ with feasible region restricted to $S^{lj}$ and $\underline{z}_{lj}$ for $j = 1, ..., k$ is set to the value of $\underline{z}_l$ for the parent problem $l$. Go to Step 2.
+
+\end{enumerate}
 
 
+\subsection{Contour Cut}
+\label{sec:normalized_cut}
+Given a weighted directed graph $G = (V, E, W)$ a random walk on $G$ is a Markov process with transition matrix $P = D^{-1}W$, where $D = \mbox{diag}(\sum_{u}W_{vu})$ is a diagonal matrix with the row-sums of $W$ along the diagonal. Let $\pi$ be the unique left eigenvector such that $\pi P = \pi$. The row-vector $\pi$ corresponds to the stationary distribution of the random walk. This means:
+\begin{equation}
+\pi_u = \sum\limits_{v, v \rightarrow u} \pi_v P_{vu},
+\end{equation}
+that is, the probability of finding the random walk at $u$ is the sum of all the incoming probabilities from vertices $v$ that have a directed edges to $u$.
+
+A circulation on a directed graph $G$ is defined as follows.
+\begin{definition}
+A matrix $F \in (\mathbb{R}^+ \cup \left\lbrace 0 \right\rbrace )^{\lvert V \rvert \times \lvert V \rvert}$ that assigns each directed edge to a non-negative value is called a circulation if
+\begin{equation}
+\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{w, v \rightarrow w} F_{vw}
+\end{equation}
+for each vertex $v$.
+\end{definition}
+One interpretation of a circulation is a flow in the graph. The flow at each vertex must be conserved, hence, the flow in is equal to the flow out. It is easy to show that $F = \Pi P$ is a circulation in the graph $G$, where $\Pi = \mbox{diag}(\pi)$. This is because the conservation property follows directly from the stationarity property of $\pi$:
+\begin{equation}
+\sum\limits_{u, u \rightarrow v} F_{uv} = \sum\limits_{u, u \rightarrow v} \pi_u P_{uv} = \pi_v \cdot 1 = \sum\limits_{w, v \rightarrow w} \pi_v P_{vw} = \sum\limits_{w, v \rightarrow w} F_{vw}
+\end{equation}
+This circulation is advantageous because if $W$ is symmetric then the directed versions of cut and volume that we will define reduce to the original undirected versions \cite{gleich2006hierarchical}.
 
 
+\subsubsection{Contour Cut Cost}
+%\cite{zhu2007untangling}
+%\cite{KenGalShi2011}
+We define the external cut of a contour $(C, O)$ to measure its separation from the rest of the graph, $V \backslash C$:
+\begin{equation}
+\mathrm{Ecut}(C) = \sum\limits_{i \in C, j \notin C} F_{ij}
+\end{equation}
+The internal cut is used to measure the entanglement caused by graph edges within the contour that violate the
+ordering $O$. Intuitively, the internal cut measures how much the contour deviates from an ideal one-dimensional contour toward a 2-dimensional clique. Let $k \in \mathbb{Z}^+$ be the width of the contour. Nodes $i, j \in C$ with $\lvert O(i) - O(j) \rvert > k$ are beyond the width of the contour, hence they are included into the internal cut:
+\begin{equation}
+\mathrm{Icut}(C, O) = \sum\limits_{\left\lbrace i, j\right\rbrace  \subseteq C, \lvert O(i) - O(j) \rvert > k} F_{ij}
+\end{equation}
+Having defined the external and internal cuts, we can now define the cost function for the contour cut as follows:
+\begin{equation}
+\mathrm{Ccut}(C, O) = \dfrac{\mathrm{Icut}(C, O) + \mathrm{Ecut}(C)}{\mathrm{Vol}(C)}
+\end{equation}
+where $\mathrm{Vol}(C) = \sum_{i \in C, j \in E} F_{ij}$ is the sum of the weights of all edges incident with the contour. This cost function will be small for contours having small internal and external cuts.
+
+The internal and external cuts can be encoded with respect to the circular embedding. Given a the circular embedding of a contour, $x \in \mathbb{C}^{\lvert C \rvert}$, the external cut is:
+\begin{equation}
+\mathrm{Ecut}(x) = \sum\limits_{(i, j) \in E: r_i \neq 0, r_j = 0} F_{ij} = \sum\limits_{(i, j) \in E} F_{ij}r_i(1 - r_j)
+\end{equation}
+Instead of using the hard-bound of $k$ for the internal cut, a soft version of the internal cut is applied by using the cosine function:
+\begin{equation}
+\mathrm{Icut}(x) = \sum\limits_{\left\lbrace i, j\right\rbrace \subseteq C}F_{ij} r_ir_j(1 - \cos(\theta_j - \theta_i - \delta))
+\end{equation}
+The volume of the contour is defined as
+\begin{equation}
+\mbox{Vol}(x) = \sum\limits_{(i, j) \in E}F_{ij}r_i
+\end{equation}
+The contour cut in terms of the circular embedding $x$ is then
+\begin{equation}
+\begin{array}{lcl}
+Ccut(x) & = & \dfrac{Icut(x) + Ecut(x)}{\mathrm{Vol}(x)} = ... = \dfrac{x^*(\Pi - H(\delta))x}{x^* \Pi x} = R_{\Pi - H(\delta), \Pi}(x),
+\end{array}
+\end{equation}
+where $H(\delta) = \frac{Fe^{-i\delta} + F^Te^{i\delta}}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient. It follows that the problem of minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
 
 
 
