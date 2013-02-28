@@ -707,14 +707,202 @@ Ccut(x) & = & \dfrac{Icut(x) + Ecut(x)}{\mathrm{Vol}(x)} = ... = \dfrac{x^*(\Pi 
 where $H(\delta) = \frac{Fe^{-i\delta} + F^Te^{i\delta}}{2}$ and $R_{\Pi - H(\delta), \Pi}(x)$ is the generalized Rayleigh quotient. It follows that the problem of minimizing $Ccut(x) = R_{\Pi - H(\delta), \Pi}(x)$ is equivalent to maximizing $R_{H(\delta), \Pi}(x)$.
 
 
+\subsubsection{Computational Solution}
+In order to minimize the contour cut, we would like to solve
+\begin{equation}
+\max_x \dfrac{x^*H(\delta)x}{x^* \Pi x} 
+\end{equation}
+\begin{equation*}
+ \mbox{such that} \qquad x_i = r_ie^{i\theta_i}, \qquad r_i \in \left\lbrace 0, 1 \right\rbrace, \qquad \theta_i = O(i)\delta,
+\end{equation*}
+where we seek not just the global maximum but all critical points, which correspond to different contours. By requiring $r_i$ and $\theta_i$ to take on discrete values the problem is computationally infeasible since it requires searching not only over an exponential number of subsets of vertices but also over orderings on each of these sets. We relax the problem by allowing $x$ to take on arbitrary complex values: $x \in \mathbb{C}^{\lvert C \rvert}$. Note that we now must maximize over $\delta$ in addition to $x$. The main result for solving the problem is based on the following theorem:
+\begin{theorem}
+\label{theorem:hermitian}
+The critical points of the relaxed contour cut problem
+\begin{equation}
+\max_{x, \delta} \dfrac{x^*H(\delta)x}{x^* \Pi x} \qquad \mbox{s.t.} \qquad x_i \in \mathbb{C}
+\label{eq:hermitian}
+\end{equation}
+can be found by searching over $\delta$ and finding the eigenvectors of the corresponding matrices $\Pi^{-1}H(\delta)$; any eigenvectors for which $x^*H(\delta)x = \lvert x^*Fx \rvert$ are critical points
+with respect to both $x$ and $\delta$.
+\end{theorem}
+The proof for this theorem can be found in \cite{KenGalShi2011}. In practice it might be difficult to search over all values of $\delta$ with a small enough step size such that $x^*H(\delta)x = \lvert x^*Fx \rvert$ to a high enough precision. Instead a different algorithm is used based on the observation that as $\delta$ changes, the eigenvalues of $H(\delta)$ rarely cross. To determine the critical points with respect to $\delta$, we make the assumption that the $k^{th}$ largest eigenvalue of $H(\delta)$ remains the $k^{th}$ largest over all values of $\delta$, in which case it suffices to directly find the local maxima of the $k^{th}$ eigenvalue over all $\delta$. This leads to the following algorithm:
+
+\begin{algorithm}
+\caption{Contour cut}
+Calculate matrices $P$ and $\Pi$ from $W$.
+\begin{algorithmic}
+\FOR {$\delta = \delta_{min}\ to\ \delta_{max}$}
+\STATE \qquad $H(\delta) \leftarrow \dfrac{\Pi P e^{-i\delta} + P^T \Pi e^{i\delta}}{2}$
+\STATE \qquad Solve $\Pi^{-1} H(\delta)x = \lambda x$ for top $k$ eigenvectors.
+\ENDFOR
+\end{algorithmic}
+Find local maxima of each $\lambda_i$ over all $\delta$. The associated $x^\prime$s are critical points with respect to both $x$ and $\delta$.
+\end{algorithm}
 
 
+\subsection{Graph-Cut}
+\label{sec:graph_cut}
+Given an undirected graph constructed from Section $\ref{sec:mrf}$ we convert it to a directed weighted graph by introducing terminal nodes corresponding to the set of labels that can be assigned to pixels. For the two-class problem there are two terminal nodes called the source $s$ and the sink $t$. For each node in the original graph we insert a directed edge from the source to it and another directed edge from that node to the sink with the edge weights being the data term in Equation $\ref{eq:mrf_multishape_energy}$ evaluated at the label values of the source or the sink accordingly. Each existing edge from the original graph is replaced by 2 directed edges with the weights being the boundary term. Figure $\ref{fig:mrf_mincut}$ shows an example of a two-terminal graph that can be used to minimize the energy function as in Equation $\ref{eq:mrf_multishape_energy}$ on a $3 \times 3$ image with two labels.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig21}
+    \caption{Example of a directed capacitated graph. Edge costs are reflected by their thickness. Image source: \cite{boykov2004experimental}.}
+    \label{fig:mrf_mincut}
+\end{figure}
+
+An $s/t$ cut $C$ on a graph with two terminals is a partitioning of the nodes in the graph into two disjoint subsets $S$ and $T$ such that the source $s$ is in $S$ and the sink $t$ is in $T$. The cost of a cut $C = \left\lbrace S, T \right\rbrace $ is defined as the sum of the costs of boundary edges $(p, q)$, where $p \in S$ and $q \in T$. One of the fundamental results in combinatorial optimization is that the minimum $s/t$ cut problem can be solved by finding a maximum flow from the source $s$ to the sink $t$. Loosely speaking, maximum flow is the maximum amount of water that can be sent from the source to the sink by interpreting graph edges as directed pipes with capacities equal to edge weights.
+
+The max-flow problem can be solved in polynomial time by using the augmenting paths-based algorithm, which pushes flow along non-saturated paths from the source to the sink until the maximum flow in the graph $G$ is reached. A typical augmenting path algorithm stores information about the distribution of the current $s \rightarrow t$ flow $f$ among the edges of $G$ using a residual graph $G_f$. The topology of $G_f$ is identical to $G$, but the capacity of an edge in $G_f$ reflects the residual capacity of the same edge in $G$ given the amount of flow already in the edge. At the initialization, there is no flow from the source to the sink $(f = 0)$ and edge capacities in the residual graph $G_0$ are equal to the original capacities in $G$. At each new
+iteration, the algorithm finds the shortest $s \rightarrow t$ path along non-saturated edges of the residual graph. If a path is found, then the algorithm augments it by pushing the maximum possible flow $df$ that saturates at least one of the edges in the path. The residual capacities of edges in the path are reduced
+by $df$ while the residual capacities of the reverse edges are increased by $df$. Each augmentation increases the total flow from the source to the sink $f = f + df$. The maximum flow is reached when any $s \rightarrow t$ path crosses at least one saturated edge in the residual graph $G_f$.
+
+Note that a minimum $s-t$ cut in $G$ yields a global minimum of the energy $E$. However, the global minimum can only be reached if the energy function satisfies the submodular property:
+\begin{equation}
+E(s, s) + E(t,t) \leq E(s,t) + E(t, s)
+\end{equation}
+where $s, t$ are the labels of the corresponding source or sink. In the non-submodular case, Kolmogorov and Rother propose a quadratic pseudo-boolean optimization method (QPBO) which produce optimal solution based on the roof duality and the probing methods. More detail can be found in \cite{kolmogorov2007minimizing}.
+%\subsubsection{The Quadratic Pseudo-Boolean Optimization Algorithm}
 
 
+\subsubsection{Multi-Shape Graph-Cuts}
+In order to solve the multi-label problem posed in Section $\ref{sec:mrf}$ we use an approximate algorithm called fusion move \cite{lempitsky2010fusion}, which iteratively solves a series of problems between a set of current labels and a set of proposed labels. In essence, we define a fusion move operator which selects labels from either of the two input solutions such that the energy of the output solution is minimized. This is done by using the QPBO min-cut algorithm.
+
+Let $X^{cur}$ be a collection of current labels and $X^{pro}$ be a set of proposed labels. We divided the current labels into object labels and background labels. First, the algorithm proposes an object label $l$ against voxels whose current labels $X^{cur}$ are background and proposes the same labels as current for other voxels $(X^{pro} \leftarrow X^{cur})$. Then we apply the fusion move operator on $X^{cur}$ and $X^{pro}$ to find the combinatorial optimal solution of labels or shape. This step can reduce false negatives but cannot deal with false positives. The second step focuses on false positives based on the same analogy. It proposes a background label $l$ against voxels whose current labels $X^{cur}$ are object. To compute the shape energy $S_{p,q}$ in the case of a background proposal, we extend the set of labels $L$ to $L = \left\lbrace 1, -1, 2, -2, ..., n, -n \right\rbrace$, where the absolute value of a label refers to the number of a shape and its sign represents the state of a voxel. Here, positive labels represent object labels and negative labels represent background labels. The fusion move operator can again find combinatorial optimal solutions of labels. We iterate a pair of object proposals and background proposals by changing a label or a shape. The algorithm stops the iteration process when no label changes or when it reaches the maximum number of iterations defined by the user. The method is summarized in Algorithm $\ref{algo:fusion}$.
+
+\begin{algorithm}
+\caption{Multi-shape graph-cuts}
+\label{algo:fusion}
+\begin{algorithmic}
+\REQUIRE a set of labels $L, X^{cur}$
+\ENSURE segmented regions
+\STATE Initialize $X^{cur} = \left\lbrace -1, ..., -1\right\rbrace $
+\REPEAT
+	\FOR {each $l \in L$}
+		\STATE Generate a set of labels $X^{pro}$ where either $l$ or an element of $X^{cur}$ is assigned at each voxel
+		\STATE $X^{cur} \leftarrow X^{cur} \odot X^{pro} \qquad \odot:$ fusion move operator \cite{lempitsky2010fusion}
+	\ENDFOR 
+\UNTIL {Convergence: no label changes or reaches maximum number of iterations}
+\end{algorithmic}
+\end{algorithm}
 
 
+\section{Applications}
+\label{sec:applications}
+This section is devoted to illustrate some applications of the algorithms described above to real-world image segmentation as well as in the field of medical image processing. The results are often compared using the precision vs. recall graph. Precision is the ratio of the number of true positive members to the total number of members predicted as positive:
+\begin{equation}
+\mathrm{Precision} = \dfrac{tp}{tp + fp}
+\end{equation}
+where $tp$ is the number of true positive members and $fp$ is the number of false positive members. Recall is the ratio of the number of true positive members to the actual number of positive members:
+\begin{equation}
+\mathrm{Recall} = \dfrac{tp}{tp + fn}
+\end{equation}
+where $fn$ is the number of actually positive members predicted as negative members. The higher the precision vs. recall graph the better the result is. An \emph{average precision} (AP) over all recall range is a single number also used to compare the results.
+
+\subsection{Efficient Region Search for Object Detection}
+
+In this section we describe the efficient region search (ERS) system developed by Vijayanarasimhan and Grauman \cite{VijayGrauman2011}. Given training images in which the spatial extent of the object of interest is marked at the pixel level an additive classifier is trained to distinguish that object category from any other. Given a new image we oversegment it into subregions, extract the image features associated with each subregion and pre-compute its resulting contribution to the classifier response. This yields a vertex-weighted region-graph, where the weights are the components of the classifier score. To incorporate inter-region contour cues we introduce learned edge costs into the graph leading to the PCST problem, which can be solved with a branch-and-cut algorithm. The resulting detection method rapidly determines the region within the image that yields the maximal classifier response.
+
+The ERS system is compared with the two most relevant existing methods: The state-of-the-art efficient subwindow search (ESS) method \cite{lampert2008beyond}, which efficiently provides the best result possible with bounding box search and the global connectivity conditional random field (CRF) model of \cite{nowozin2009global}, which efficiently provides an approximate region-based solution. Three datasets are used to test the system: The PASCAL VOC 2007, the ETHZ Shapes and the PASCAL VOC 2008. For the PASCAL VOC 2007, 659 cat images and 839 dog images are used to test the ERS system. 50\% of the data are used for training and 50\% are used for testing. The ETHZ Shape dataset consists of 255 images of five shape categories (Applelogos, Bottles, Mugs, Giraffes, Swans). Half the examples per category are used for training, the rest for testing. All 20 categories of 10057 images in the PASCAL VOC 2008 segmentation dataset are used to compare the ERS system with the CRF model.
+
+For point features the system uses SURF extracted at Canny edge points and quantizes the training points into $K = 1000$ visual words using K-means. To construct the region-graph 100 regions per image are extracted by using the technique in \cite{arbelaez2009contours}. For shape features, each region is described with a $4 \times 4$ spatial grid scaled to the region size, where each cell bins the normalized gPb and Canny edge responses according to their orientations. To collect responses at multiple scales, the responses from blurring the gPb map with Gaussians of two scales $(\sigma = 5, 10)$ are also collected.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{Bilder/SMBV13_EMuster_fig22}
+\caption{Detection accuracy on PASCAL VOC 07 objects. Numbers in legends report mean AP.}
+\label{fig:pascal07}
+\end{figure}
+
+Figure $\ref{fig:pascal07}$ compares the accuracy of ERS versus ESS on the PASCAL VOC 2007 dataset. For both categories, maximizing the classifier response over the region-graph (ERS) yields much better accuracy than rectangular windows (ESS). In addition, including the edge costs (ERS-C) further boosts precision. Even under the PASCAL bounding box metric, the ERS method is about 70\%more accurate than ESS (mean AP of 27.2 for ERS, compared to 16.0 for ESS).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Bilder/SMBV13_EMuster_fig23}
+    \caption{Detection accuracy (top row) and example detections by the ERS method (bottom row) on the ETHZ categories. Image source: \cite{VijayGrauman2011}.}
+    \label{fig:ers_result}
+\end{figure}
+
+Figure $\ref{fig:ers_result}$ shows the results on ETHZ where the ERS method is applied using either the point features (blue curves) or the shape features (green curves). ESS is only applicable to the point features (red curves). Overall, the mean AP of ERS is from 9\% to 90\% better than ESS using the same features. Using shape features, we see dramatic gains for almost all objects, since the ETHZ objects have parts well-described by their shape (e.g., mug handle, bottle neck). Again, even with the bounding box metric the ERS approach is 19\% better than ESS (30.1 vs. 25.3 mean AP).
+
+Finally, the ERS method is compared with the CRF method on the PASCAL VOC 2008 dataset based on the amount of overlapping with the ground truths criterion. The ERS approach outperforms the baseline on 17 out of 20 categories and improves the mean overlap accuracy (0.274 vs. 0.228).
+
+Regarding the computation time on average the ERS method converges in 0.29 seconds, which is similar to ESS. The longest time taken for any single test image was 5.8 secs.
 
 
+\subsection{Salient Contour Detection}
+
+In this section we demonstrate the result from the contour cut algorithm developed by Kennedy et al. \cite{KenGalShi2011}. The contour cut approach first identifies edge segments (known as edgels) from the output of a contour detector, it then constructs a contour grouping graph whose vertices are the edgels duplicated in opposite directions and edges connecting the edgels within a small radius. Cycles are formed by connecting the duplicated nodes. The contour cut cost function is formulated based on the internal and external cuts normalized by the volume of the contour. The minimization of the contour cut cost can be formulated as a Hermitian eigenvalue problem as stated in Theorem $\ref{theorem:hermitian}$.
+
+The algorithm is tested on the Berkeley Segmentation dataset consisting of 300 images, of which 200 images are used for training and 100 images are used for testing. We compare the algorithm, which finds the exact critical points of Equation $\ref{eq:hermitian}$ by searching over all $\delta$ to the algorithms that give approximations by finding the right eigenvectors of $P$ and the left eigenvectors of $P$ scaled by $\Pi^{-1}$. The algorithms we compare are $H(F)$, $H(P)$, $P$, and $P^T$, where the name designates which matrix is used in the eigenvector computation. Specifically, $H(F)$ is the algorithm, which finds the exact critical points of Equation $\ref{eq:hermitian}$ using the circulation matrix $F = \Pi P$; $H(P)$ is the exact algorithm using $P$ rather than $F$; $P$ is the approximation given by the right eigenvectors of $P$; $P^T$ is the approximation given by the left eigenvectors of $P$ and scaled by $\Pi^{-1}$. Note that $P$ is the algorithm given by Zhu \cite{zhu2007untangling}. We also compare between using the full graph and clustering the nodes to $n = 1000$ clusters using normalized cut \cite{shi2000normalized} and running the algorithms on this reduced graph.
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.30\textwidth]{Bilder/SMBV13_EMuster_fig24}
+        \label{fig:contour_cut_pr}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.65\textwidth]{Bilder/SMBV13_EMuster_fig25}
+        \label{fig:contour_cut_example}
+    }
+    \caption{(a) Comparison of algorithms for the Berkeley Segmentation dataset with $n = 1000$, top 20 contours. (b) Results of $H(F)$ on various images using an aggregated graph with $n = 1000$ vertices. The top 20 contours, as ranked by the cost function (Equation ), are plotted. Observe that the contour cut algorithm ($H(F)$) finds significantly longer contours than Zhu$^\prime$s algorithm ($P$). Left: image with extracted contours. Middle: all thresholded Pb edges (black) and contours (white). Right: difference between $H(F)$ and $P$. Contours only $H(F)$ found are white and contours only $P$ found are black. Image source \cite{KenGalShi2011}.}
+\end{figure}
+A comparison between algorithms is shown in Figure $\ref{fig:contour_cut_pr}$. Using a graph of size $n = 1000$, the precision values are similar for low recall, but for higher recall the algorithm $H(F)$ outperforms the other algorithms. Because all algorithms are producing the same number of contours, this indicates that $H(F)$ is producing longer contours, which is a better result. Figures $\ref{fig:contour_cut_example}$ shows that $H(F)$ finds notably longer contours than $P$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.35\textwidth]{Bilder/SMBV13_EMuster_fig26}
+\caption{Comparison of the contour cut algorithm to the $Pb$ algorithm on the Berkeley Segmentation dataset.}
+\label{fig:contour_cut_vs_pb}
+\end{figure}
+
+Figure $\ref{fig:contour_cut_vs_pb}$ shows a comparison between the contour cut algorithm and the $Pb$ contour detector. Since the contour cut algorithm begins with $Pb$ as an input it will converge to $Pb$ as more contours are used. The contour cut algorithm outperforms $Pb$ in the low-recall range and so is able to pick out the best salient contours in an image.
+
+
+\subsection{Multi-Shape Graph-Cut for Lung Segmentation}
+
+This section presents results from the multi-shape graph-cuts algorithm proposed by Nakagomi et al. \cite{nakagomimulti} that can solve the problem of a combination of multiple shape priors. First, patient-specific shape priors are estimated by combining a statistical shape model and a pre-segmented result that is obtained by thresholding and morphological operations. Shapes similar to a pre-segmentation result are extracted from an eigen shape space. Particularly, the top $n$ shapes with a minimum distance between a shape in an eigen shape space and a pre-segmented region are selected as the shape priors and used in the proposed multi-shape graph-cuts Algorithm $\ref{algo:fusion}$.
+
+The algorithm is tested on the dataset of 97 cases with pulmonary diseases, such as lung carcinoma. These cases include both non-contrast and contrast CT volumes (image size: 512 $\times$ 512 $\times$ 204-561[voxel], pixel size: 0.625-0.741[mm/pixel], slice spacing: 0.5-1.0 [mm], bits stored: 16 [bit]). The algorithm uses a 26-neighborhood system for the graph-cuts. 49 CT images are used for training and 48 for testing. The algorithm is compared with the single-shape graph-cuts approach.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Bilder/SMBV13_EMuster_fig27}
+    \caption{Examples of segmentation results. (a) and (d): true boundaries, (b) and (e): single-shape
+    graph-cuts, (c) and (f): multi-shape graph-cuts. Image source: \cite{nakagomimulti}.}
+    \label{fig:graphcut_result2}
+\end{figure}
+
+Figure $\ref{fig:graphcut_result2}$ (a)-(c) show cases in which the single-shape graph-cuts were inferior to the proposed method as a result of false positives of the heart region, as indicated by an arrow. In order to
+evaluate the results quantitatively we compare average distances between an extracted surface and a manually delineated surface. The average distance of this case is improved from 0.835 to 0.523 [mm]. Figure $\ref{fig:graphcut_result2}$ (d)-(f) show failure cases, using both methods, in which the average distances are 0.862 [mm] for the single-shape graph-cuts and 0.732 [mm] for the multi-shape graph-cuts.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\textwidth]{Bilder/SMBV13_EMuster_fig28}
+\caption{Performance index of single-shape graph-cuts and multi-shape graph-cuts: average and standard deviation of testing 48 clinical cases.}
+\label{fig:multi_shape_std}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{Bilder/SMBV13_EMuster_fig29}
+\label{fig:shape_priors}
+\caption{Shape priors used for the case in Figure $\ref{fig:graphcut_result2}$ (d)-(f).}
+\end{figure}
+
+Figure $\ref{fig:multi_shape_std}$ shows the average and standard deviation of the average distance over all testing data, which was improved from 0.719 $\pm$ 0.309 to 0.587 $\pm$ 0.176 [mm]. Figure $\ref{fig:shape_priors}$ presents the shape priors of Figure $\ref{fig:graphcut_result2}$ (d)-(f). Since the shape of the aorta region of this case is unique and differs from those of statistical shape model training data it was impossible to estimate the shape correctly. Consequently, there was no shape among the set of proposed shapes that resembled the aorta. The failure of Figure $\ref{fig:graphcut_result2}$ (e) and (f) could be explained by the above reasons.
+
+The computational time of the multi-shape graph-cut algorithm was approximately 30 min per CT volume (Intel(R) Core(TM) i7 3.07 GHz $\times$ 2).
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Throughout the paper, we introduced two state-of-the-art methods for extracting features: One for local features and the other for shape features. These features are used together with a linear support vector machine to build a region graph to solve for the sub-graph having the best region score which often corresponds to the object in an image. We also showed how a contour graph is built based on the output of the $gPb$ contour detector. Then, the contour cut algorithm was applied on the contour graph to successfully detect salient contours in a image. Finally, we showed a method to construct a Markov random field from an image and used the multi-shape graph-cut algorithm to segment the lungs from a CT image with high accuracy. 
+
+We have seen that both the efficient region search system and the contour cut algorithm heavily depend on the output of an edge detector therefore it is obvious that the performance of the edge detector can affect the accuracies of these systems. The multi-shape graph-cut algorithm also depends on the shape priors. Hence, given the wrong assumptions about the shape of the object we will end up at the wrong resulting shape similar to the shape priors. This leads to the problem of tuning the parameters such that the shape priors can partly influence the result. Depending on the goal each system is addressing an appropriate graph construction algorithm is needed. The contour cut algorithm tries to improve the result of an edge detector and it can spot out the most salient contours from the image, as the consequence edge segments are suitable candidates for graph construction. The purpose of the efficient region search system is to detect and segment an object, hence object fragments detected by an edge detector together with the water shed algorithm are appropriate to build the graph. On the other hand, the multi-shape graph-cut algorithm operates on the pixel/voxel, level which are the smallest image elements. In fact, both the contour cut and the efficient region search system can be formulated on the pixel level but this will rapidly slow down the efficiencies. Furthermore, since the edge detector performs well enough in the real-world images we can safely rely on it. Finally, for each type of graph constructed by a different system, we need to use a different graph-cut algorithm to find the optimal solution thanks to the advancement in graph theory.
 
 
 
