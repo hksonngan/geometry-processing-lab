@@ -1,0 +1,205 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dokument-Einstellungen
+\documentclass{SMBV13}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------
+% Hier beginnt das eigentliche Dokument
+\begin{document}
+
+\title{Richtlinien zur Erstellung der druckfertigen Beiträge für das Hauptseminar Medizinische Bildverarbeitung im Sommersemester 2013}
+
+\author{Elke Musterfrau}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------% Zusammenfassung
+
+\begin{abstract}%
+Zum Seminar Medizinische Bildverarbeitung ist die Herausgabe eines Seminarbandes geplant, der alle Ausarbeitungen umfasst. Um die Lesbarkeit zu erhöhen und ein einheitliches Layout der Ausarbeitungen zu gewährleisten, bitten wir die Seminaristen, die hier zusammengefassten Vorschriften zu beachten und einzuhalten. Nur so können die Druckkosten und der Aufwand der Weiterverarbeitung gering gehalten werden.
+\end{abstract}
+
+\keywords{Proceedings, Druckformate, Seitenlayout, Fristen}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------
+%
+\section{Einleitung}
+
+In der Hausdruckerei des Klinikums wird ein Seminarband mit allen
+Ausarbeitungen im DIN-A4 Format gedruckt. Jeder Seminarteilnehmer wird über
+die Fertigstellung informiert und kann dann einen solchen Band im Sekretariat des Instituts abholen.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------
+%
+\section{Generelles Format und Seitenlayout}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Seitenrand}
+
+Bitte erstellen Sie Ihre Beiträge in \LaTeX\ mit der Dokumtenklasse SMBV13 (kopieren Sie die Datei "'SMBV13.cls"' in Ihr Arbeitsverzeichniss und laden Sie die Dokumentenklasse wie in diesem Beispieldokument). Die Klasse sorgt für die richtigen Seitenränder, sowie die korrekten Schriftstyle. Bitte verwenden Sie die Sourcen dieses Dokuments als Vorlage für Ihre Ausarbeitung.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Keine Kopf-- und Fußzeilen und keine Seitenzahlen}
+
+Die Seitenzahlen im Seminarband werden nicht von den Autoren, sondern vom Institut für Medizinische Informatik eingefügt. Bitte erstellen Sie weder eine Kopf- noch eine Fußzeile.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Gliederung und Umfang des Beitrages}
+
+Jeder Beitrag muss wie folgt gegliedert sein: 
+\begin{itemize}
+\item
+Deckblatt mit dem Thema des Seminares, Vorname und Name des Seminaristen und
+Inhaltsverzeichnis (s. Blatt 1 dieser Richtlinien)
+\item
+neue Seite, beginnend mit Zusammenfassung (maximal 100 Worte), 3-5 Keywords, Text und
+Literatur.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Schriftarten}
+
+Die Klassendefinition sorgt für die Verwendung der richtigen Schriftarten und Größen.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Absätze}
+
+Neue Absätze werden am Anfang um 5mm eingerückt. Der Zeilenabstand
+zwischen den Absätzen wird nicht geändert. Bitte fügen Sie keine 
+Leerzeilen zwischen einzelnen Absätzen ein.
+
+Um Stellen hervorzuheben, werden diese 
+{\em kursiv} gesetzt. Bitte vermeiden Sie Unterstreichungen oder Fettdruck.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Abbildungen und Tabellen}
+
+Abbildungen werden elektronisch in das Dokument integriert und können im Text
+beliebig platziert werden.  Jede Abbildung oder Tabelle muss nummeriert sein und eine Unterschrift erhalten (Tabellen eine Überschrift). Im Text muss auf die Abbildung bzw. Tabelle explizit verwiesen
+werden.
+
+Beachten Sie, dass sich gerasterte Grauwertvorlagen durch die
+Kopie in der Druckerei in der Qualität verschlechtern. Aus demselben
+Grund sollte man in Diagrammen auf Schattierungen des
+Hintergrundes verzichten und stattdessen Schraffuren einsetzen.
+Alle Grafiken müssen bei der Einreichung unabhängig vom ansonsten verwendeten Format auch im {\em eps}-Format vorliegen.
+
+Im Text muss auf Abbildungen und Tabellen explizit verwiesen werden. Auch die Aussage, die mit dem Objekt visualisiert werden soll, muss im Text explizit genannt werden. Sätze wie: "`Abb. 1 zeigt das Ergebnis"'
+alleine sind nicht ausreichend.
+Um mehrere Abbildungen unter einer Bildunterschrift nebeneinander zu setzen, kann das Packet {\em subfigure} verwendet werde (\figurename~\ref{SMBV13_EMuster_fig01}).
+
+\begin{figure}[b]
+ 	\centering
+		\subfigure[Eins]{\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig1}}
+		\subfigure[Zwei]{\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig2}}
+		\subfigure[Drei]{\includegraphics[width=0.3\textwidth]{Bilder/SMBV13_EMuster_fig3}}
+ 		\caption{\label{SMBV13_EMuster_fig01}Beispiel für die Einbindung mehrerer Graphiken unter eine Unterschrift.}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Nummerierungen und Verweise}
+
+Bitte verwenden Sie ausschließlich dezimale Einteilungen für die
+Nummerierung der Überschriften, Abbildungen, Tabellen, Gleichungen, 
+Literaturverweise und sonstigen Elementen. 
+
+Die Nummerierung darf dabei nicht von Hand, sondern mit den von 
+\LaTeX\ zur Verfügung gestellten Automatismen erfolgen. 
+Nur so ist ein konsistente Nummerierung über den gesamten 
+Seminarband zu erreichen. Außerdem erspart eine automatische 
+Nummerierung Arbeit, wenn während der Beitragserstellung Elemente eingefügt, 
+entfernt oder umsortiert werden.
+
+Die Verweise auf nummerierte Elemente sind aus denselben Gründen ebenfalls 
+automatisch zu generieren.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Formeln}
+
+Mathematische Formeln werden innerhalb der Seite zentriert ausgerichtet
+\begin{equation}
+c=sqrt(a^2+b^2)
+\end{equation}
+und am rechten Rand auf der Höhe des Gleichheitszeichens fortlaufend nummeriert.
+Einfachere Formeln, wie  $x+y=z$, können auch fortlaufend im Text
+erscheinen.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Textanmerkungen / Fußnoten}
+
+Bitte verzichten Sie aus Gründen der Lesbarkeit auf Fußnoten und sonstige
+Textanmerkungen (Diese können in Klammern direkt in den Text eingefügt
+werden).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Literaturangaben}
+
+Bitte ordnen Sie die Literaturverweise in der Reihenfolge, in der sie im
+Text auftreten. Im Text werden Literaturverweise in eckigen Klammern
+gesetzt \cite{Rut84}. Alle Einträge im Literaturverzeichnis müssen im Text
+referenziert werden. 
+Das Literaturverzeichnis ist im sogenannten Vancouver-Style zu halten.
+Informationen dazu finden sich online unter
+\nobreak{\tt http://www.library.uq.edu.au/training/citation/vancouv.pdf}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Einbinden von \LaTeX -Paketen}
+
+Damit sich bei der Zusammenstellung des Seminarbandes keine Probleme durch Paketkonflikte 
+ergeben und ein einheitliches Layout gewährleistet werden kann, sollte auf das Einbinden von
+\LaTeX -Paketen verzichtet werden, die in der Dokumentenklasse nicht enthalten sind.
+(Die Dokumentenklasse enthält die Packete: {\em graphicx}, {\em subfigure}, {\em amsmath}, {\em amssymb})
+
+\section{Umfang der Beiträge}
+
+Die Seminarausarbeitung sollte ca. 20 Seiten umfassen. 
+
+\section{Übermittlung der Beiträge}
+Die Beiträge müssen in elektronischer Form als \LaTeX-Sourcen mit allen
+Bildern und im PDF-Format eingereicht werden. Erzeugen Sie hierzu ein
+entsprechendes {\em Zip-Archiv}. Das Archiv sollte ein Verzeichnis mit Ihrem Namen
+enthalten und alle Dateien sollten sich dann in diesem Verzeichnis befinden.
+Verwenden Sie als Dateinamen {\sf "`SMBV13\_"'} gefolgt vom ersten Buchstaben Ihres Vornamens und den ersten sechs Buchstaben Ihres Nachnamens (z.B.~{\sf "`SMBV13\_EMuster.ps"'}). Für Bilder, die in Ihrem Beitrag erscheinen, erstellen Sie bitte einen Unterordner und bennenen Sie nach dem Muster {\sf "`SMBV13\_EMuster\_fig1.eps"'}. Ihr Archiv sollte eine {\em .tex} und eine {\em .pdf} Datei, sowie alle verwendeten Bilder enthalten.
+Einreichen können Sie das {\em Zip-Archiv} über die in Kürze unter der Adresse \nobreak{\tt http://ganymed.imib.rwth-aachen.de/SMBV13/} verfügbare Internetseite. Daraufhin wird Ihr Betreuer eine E-Mail erhalten, um Ihren Beitrag zu bestätigen.
+
+Überprüfen Sie bitte auch bei Verwendung dieser Vorlagen die Positionierung
+des Textes auf der Seite.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------
+%
+\def\refname{Literatur}
+\begin{thebibliography}{AA}
+
+
+\bibitem {Rut84} Ruttimann UE, Groenhuis RAJ, Webber RL:
+                 Restoration of digital multiplane tomosynthesis by a
+                 constrained iteration method.
+                 IEEE Trans. on Medical Imaging, 1984;
+                 3(3): 141--148.
+
+\bibitem {Ebe76} Ebert H (Hrsg.):
+                 Physikalisches Taschenbuch.
+                 Vieweg Verlag, Braunschweig, 5.\ Auflage 1976.
+
+\end{thebibliography}
+
+%\noindent
+%\begin{picture}(160,242)
+%\put(0,0){\framebox(160,242){}}
+%\end{picture}
+
+\end{document}
