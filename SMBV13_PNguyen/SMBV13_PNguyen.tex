@@ -146,6 +146,222 @@ The same algorithm is used to compute texture gradient but the technique to calc
 In order to build up histograms for comparison the $Pb$ algorithm uses the so called textons approach (or bag-of-textures approach) introduced by Malik et al. \cite{malik2001contour}. The basic idea is to cluster the filter response vectors over a large diverse collection of training images using k-means. Each cluster defines a Voronoi cell in the space of joint filter responses and the cluster centers, textons, represent texture primitives. Figure $\ref{fig:textons}$ illustrates example textons for k = 64 computed over the 200 images in the training set. Once the dictionary of textons has been computed each pixel is assigned to the nearest texton. Figure $\ref{fig:texture_map}$ shows an image and the associated texton map, where each pixel has been labeled with the nearest texton. Finally, the histograms of activated textons in the two disc halves can be computed and compared using the $\chi^2$ distance operator.
 
 
+\subsubsection{Globalized Probability of Boundary Detector}
+
+The gPb contour detector \cite{maire2008using} is an extension of the Pb contour detector into which global information is integrated via spectral graph theory. Particularly, the gPb algorithm follows the idea of the normalized cut algorithm, which defines an affinity matrix $W$, whose entries encode the similarity between pixels. The generalized eigenvectors of the following linear system provide global segmentation information:
+\begin{equation}
+(D-W)v = \lambda D v
+\label{eq:ncut}
+\end{equation}
+where $D$ is diagonal matrix with $D_{ii} = \sum_j W_{ij}$.
+Section $\ref{sec:normalized_cut}$ will explain the normalized cut algorithm in more detail.
+
+We start by extracting the brightness, color and texture gradients in 3 different scales: $[\sigma/2, \sigma, 2\sigma]$, where $\sigma$ is the default scale of the Pb detector. This gives 9 different responses ${G_i}$. These local cues are then linearly combined into a single multiscale oriented signal:
+
+\begin{equation}
+mPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\alpha_i G_i(x, y, \theta)
+\end{equation}
+
+In order to integrate global information the affinity matrix $W$ is constructed by using the intervening contour cue \cite{leung1998contour}, that is, its entries are the maximal values of $mPb$ along a line connecting two pixels as shown in Figure $\ref{fig:intervening_contour}$. The first $k + 1$ generalized eigenvectors $v_j$ of the system $\ref{eq:ncut}$ are chosen and reshaped in the size of the original image. Contours are extracted from each eigenvector $v_j$ by applying Gaussian directional derivatives at multiple orientations $\theta$, resulting in an oriented signal $sPb_{v_j}(x, y, \theta)$. The information from different eigenvectors is then combined to provide the spectral boundary detector:
+
+\begin{equation}
+sPb(x, y, \theta) = \sum\limits_{j=1}^{k}\dfrac{1}{\sqrt{\lambda_j}}sPb_{v_j}(x, y, \theta)
+\end{equation}
+
+where $0 = \lambda_0 \leq ... \leq \lambda_k$ are the corresponding eigenvalues. Figure $\ref{fig:sPb}$ illustrates an example of the spectral boundary detector $sPb$.
+
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.15\textwidth]{Bilder/SMBV13_EMuster_fig7}
+        \label{fig:intervening_contour}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.8\textwidth]{Bilder/SMBV13_EMuster_fig8}
+        \label{fig:sPb}
+    }
+    \caption{(a) Example of an intervening contour. Above is an image patch in which the intensity values at pixels $p_1, p_2$ and $p_3$ are similar. However, there is an edge in the middle suggesting that $p_1$ and $p_2$ belong to the same group while $p_3$ belongs to a different group. Below is the image computed by using the orientation energy \cite{leung1998contour}. The orientation energy somewhere on $l_2$ is strong which correctly proposes that $p_1$ and $p_3$ belong to two different partitions. (b) Examples from the spectral boundary detector \cite{maire2008using}. Top: Original image and first four generalized eigenvectors. Bottom: Maximum response over orientations $\theta$ of $sPb(x, y, \theta)$ and of $sPb_{v_j}(x, y, \theta)$ for each eigenvector $v_j$.}
+\end{figure}
+
+Finally, the globalized probability of boundary , i.e. gPb, is then defined as:
+
+\begin{equation}
+gPb(x, y, \theta) = \sum\limits_{i = 1}^{9}\beta_i G_i(x, y, \theta) + \gamma sPb(x, y, \theta)
+\end{equation}
+
+where the weights are learned by gradient ascent on the F-measure cost function
+
+\begin{equation}
+\mathrm{F} \operatorname{-} \mathrm{measure} = 2\cdot \dfrac{\mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision + Recall}}.
+\end{equation} 
+
+
+\subsubsection{Shape Descriptor}
+\label{sec:shape_descriptor}
+
+The contours detected in the previous section define over-segmented regions of the image. Gu et al. \cite{gu2009recognition} proposed a way to describe a region by evenly subdividing its bounding box into an $n \times n$ grid. The grid size n = 4 has been reported as effective. Each cell encodes information only inside the region. Different cues are extracted from each cell and each type of cue is encoded by concatenating cell signals into a histogram. The following region cues are included:
+
+\begin{itemize}
+\item Contour shape, given by the histogram of oriented responses of the contour detector gPb.
+\item Edge shape, computed by convolution with a [-1 0 1] filter along x and y axes. This captures high frequency information while it has been smoothed by gPb.
+\item Color, represented by the L*, a and b histograms in the CIELAB color space.
+\item Texture, described by texton histograms.
+\end{itemize}
+
+There are some advantages of this representation, which were pointed out by Gu et al. Firstly, the scale invariant nature of region descriptors enables us to compare regions regardless of their relative sizes. Secondly, background clutter interferes with region representations only mildly compared to interest point descriptors.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Discussion}
+
+So far, we have seen two ways to extract features from an image, each has its own primary purpose. SURF features were originally developed for the problem of image matching but they are also suitable for compact representation of local isotropic image patches. The advantage of using SURF for object detection is its local nature, thereby being invariant to great viewpoint changes having the capability of detecting deformable objects \cite{VijayGrauman2011}. gPb, however, was developed to detect contours, hence being suitable for segmentation tasks \cite{arbelaez2009contours} \cite{gu2009recognition}. It can also be used for part-based object detection \cite{VijayGrauman2011} \cite{gu2009recognition}.
+
+\section{Segmentation with Supervised Training}
+\label{sec:supervised_learning}
+In image processing, it is very important that algorithms can get some knowledge from the tasks they are going to perform. The knowledge often comes from the training process using pre-defined datasets so that the algorithms can learn from our experiences. This section introduces some supervised learning techniques, that are often used in computer vision tasks.
+
+
+\subsection{Support Vector Machine}
+\label{sec:svm}
+
+The support vector machine (SVM) invented by Cortes and Vapnik \cite{cortes1995support} is a non-probabilistic binary linear classifier, which predicts for each input data point which of the two possible classes the input belongs to. SVM maximizes the margin between positive and negative data points (as shown in Figure $\ref{fig:svm}$), thereby achieving very good generalization performance.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.60\textwidth]{Bilder/SMBV13_EMuster_fig9}
+    \caption{Linear separating hyperplanes for the separable case. The support vectors are circled. Image source: \cite{burges1998tutorial}.}
+    \label{fig:svm}
+\end{figure}
+
+In this paper we only consider the case of linearly separable data. Suppose we have a dataset of $S$ elements $\left\lbrace (x_i, t_i)\right\rbrace _{i=1}^S$, where $x_i \in R^d$ are training data points with the corresponding target values $t_i \in \left\lbrace -1, 1\right\rbrace $. Our goal is to find a hyperplane of the form $w^T x + b = 0$, which separates the data with maximal margin. The margin is formulated by defining $d_+$ and $d_-$ to be the distances to the nearest positive and negative training examples respectively. We can always scale $w$ and $b$ such that $d_- = d_+ = \dfrac{1}{\|w\|}$. Since the data is linearly separable the separating hyperplane must stay within the following region:
+\begin{equation}
+t_i(w^T x_i + b) \geq 1\ \forall i
+\label{eq:margin}
+\end{equation}
+
+The equality in Equation $\ref{eq:margin}$ will hold exactly for the points on the margin. In order to maximize the margin $M = d_- + d_+ = \dfrac{2}{\|w\|}$ we need to minimize $\|w\|$. This can be formally stated as the following optimization problem: find the hyperplane satisfying
+
+\begin{equation}
+\operatorname*{arg\,min}_{w, b} \dfrac{1}{2}\|w\|^2
+\end{equation}
+
+subject to the constraint in Equation $\ref{eq:margin}$. This quadratic programming problem with linear constraints can be solved efficiently using Lagrange multipliers. The solution for $w$ is obtained as a linear combination of training examples:
+
+\begin{equation}
+w = \sum\limits_{i = 1}^{S} a_i t_i x_i = \sum\limits_{i = 1}^{S} \alpha_ix_i,
+\end{equation}
+
+where $a_i \geq 0$ is the Lagrange multiplier associate with the training data point $x_i$ and $\alpha_i = a_it_i$. Note that $a_i > 0$ only for training data points on the margin called support vectors. We get the solution for $b$ by observing that any support vector $x_j$ satisfies the equality condition in Equation $\ref{eq:margin}$:
+
+\begin{equation}
+\begin{array}{lcl}
+t_j \left( \sum\limits_{i = 1}^{S} a_i t_i x_i^t x_j + b \right) = 1\\
+b = t_j - \sum\limits_{i = 1}^{S} a_i t_i x_i^t x_j
+\end{array}
+\end{equation}
+
+In practice, it is more robust to average the solution for $b$ over all support vectors. More detail on extensions to the case of non-separable data as well as non-linear support vector machines can be found in \cite{burges1998tutorial}.
+
+
+\subsubsection{SVM for Region Ranking}
+
+In this section we will formulate a SVM classifier in a way that it can reliably score a region of arbitrary shape according to how strongly it belongs to a particular object category. It is desirable that features extracted from local image regions can be combined additively to obtain the classifier response for a larger region. It has been proven \cite{lampert2008beyond} that a linear kernel SVM applied to a bag-of-features representation (recall the concept of bag-of-textures from Section $\ref{fig:textons}$) has this additive property. Similar to the textons approach we obtain a vocabulary of K visual words by clustering a sample of local features (e.g. SURF) from the training images. We represent a region by its set of local features $R = \left\lbrace (x_i, v_i) \right\rbrace _{i=1} ^ N$, where $x_i$ is the feature position and $v_i$ the local descriptor. A histogram can be built from this bag-of-features, denoted $h(R)$, by mapping each feature $v_i$ to its closest visual word $d_i$ and recording the frequency of words in a K-dimensional vector.
+
+A linear SVM classifier is learned from the segmented training examples according to the principle described in Section $\ref{sec:svm}$. The region ranking score is then given as follows:
+\begin{equation}
+\label{eq:svm_classifier}
+\begin{array}{lcl}
+f(R) & = & b + w \cdot h(R)\\
+	 & = & b + (\sum\limits_{i = 1}^{S}\alpha_ih(R_i)) \cdot h(R)\\
+     & = & b + \sum\limits_{i = 1}^{K}\sum\limits_{j = 1}^{S} \alpha_ih_j(R_i)h_j(R)\\
+     & = & b + \sum\limits_{j = 1}^{K} w_jh_j(R) = b + \sum\limits_{i = 1}^{N} w_{d_i},
+\end{array}
+\end{equation}
+where $d_i \in [1, K]$ is the index of the visual word that feature $v_i$ maps to. Note that we associate each $j$-word in the vocabulary with a weight $w_j = \sum_i \alpha_i h_j(R_i)$ to express $f(R)$ as a sum over per-feature contributions. This means the score of a region is the sum of its N features' word weights. Since we are only interested in maximizing the classifier response $f(R)$ the bias term $b$ is irrelevant and can be ignored.
+
+\subsection{Logistic Regression}
+\label{sec:logistic_regression}
+In the problem of two-class classification, the logistic regression method models the posterior probability of class $C_1$ by applying a logistic sigmoid function $\sigma$ on a linear discriminant function of the feature vector $\phi$ so that
+\begin{equation}
+\label{eq:logistic}
+\begin{array}{lcl}
+	p(C_1|\phi) & = & \sigma(w^T\phi) \\
+	p(C_2|\phi) & = & 1 - p(C_1|\phi) 
+\end{array}
+\end{equation}
+where $w$ is the weight vector of the linear discriminant function. The logistic sigmoid function $\sigma$ is given as follows:
+\begin{equation}
+\label{eq:Bayes}
+\sigma(a) = \dfrac{1}{1 + e^{-a}} 
+\end{equation}
+Suppose we have a training data set $\left\lbrace \phi_n, t_n \right\rbrace_{n = 1}^N$, where $t_n \in \left\lbrace 0, 1 \right\rbrace$, $t = (t_1, ..., t_n)^T$. With $y_n = p(C_1|\phi_n)$ we can write the likelihood as:
+
+\begin{equation}
+p(t|w) = \prod\limits_{n = 1}^{N}y_n^{t_n} (1 - y_n)^{1 - t_n}
+\end{equation}
+
+The error function is then defined as the negative log-likelihood, which gives the cross-entropy error function in the form
+
+\begin{equation}
+E(w) = - \ln p(t|w) = - \sum\limits_{n = 1}^{N} \left( t_n \ln y_n + (1 - t_n) \ln(1 - y_n) \right)
+\end{equation}
+
+Our goal is to learn the weight $w$ such that it minimizes the cross-entropy error function. Due to the nonlinearity of the logistic sigmoid function there is no closed-form solution to this optimization problem. Fortunately, this error function is concave, and hence has a unique minimum. Moreover, this error function can be minimized by using the Newton-Raphson iterative optimization scheme, which uses a local quadratic approximation to the log likelihood function. The Newton-Raphson update, for minimizing a function $E(w)$, is given as follows:
+\begin{equation}
+w^{new} = w^{old} - H^{-1} \nabla E(w)
+\label{eq:logistic_update}
+\end{equation}
+where $H$ is the Hessian matrix, whose entries are the second derivatives of $E(w)$ with respect to the components of $w$. The gradient and Hessian of this error function are given by
+\begin{equation}
+\nabla E(w) = \sum\limits_{n = 1}^{N}(y_n - t_n) \phi_n %= \Phi^T(y - t)
+\end{equation}
+\begin{equation}
+H = \nabla \nabla E(w) = \sum\limits_{n = 1}^{N} y_n(1 - y_n) \phi_n \phi_n^T %= \Phi^T R \Phi
+\end{equation}
+Since the Hessian depends on $w$ through $y_n$ we need to apply Equation $\ref{eq:logistic_update}$ iteratively, each time using the new weight vector $w$. Therefore, this algorithm is known as iterative reweighted least squares or IRLS.
+
+\subsection{Statistical Shape Model}
+\label{sec:SSM}
+To incorporate shape information into the process of segmenting an object in an image Leventon et al. \cite{leventon2000statistical} introduced a statistical shape model in which a prior on shape variation can be computed based on a set of training instances. Specifically, we need $N^d$ samples in a $d$-dimensional image of size $N$ to represent a shape. If we consider each voxel as one dimension, then a shape $u$ is a point in a high dimensional shape space $u \in R^{N^d}$.
+
+Given the training set $T = \left\lbrace u_1, ..., u_n \right\rbrace$, Our goal is to build a shape model over this distribution of surfaces. Since the shapes live in a high dimensional space with a lot of redundant dimension we can reduce the number of dimensions by using Principal Component Analysis (PCA), which only keeps the most relevant shape variances. Under the PCA transformation, a novel shape $u$ can be written as a linear combination of $k$ principal components:
+\begin{equation}
+u = \sum\limits_{i = 1}^{k} \alpha_k\hat{u}_k,
+\end{equation}
+where $\alpha_k$ is a weighting coefficient corresponding to the $k$-th principal component $\hat{u}_k$. This means the shape $u$ has been transformed into a $k$-dimensional vector through PCA. Finally, the Gaussian distribution of shapes living in the $k$-dimensional eigen-subspace is estimated resulting in a so-called Statistical Shape Model.
+
+Figure $\ref{fig:shape_training}$ illustrates some training curves used to estimate the shape models of the corpus callosum. The original segmentations are shown as white curves overlaid on the signed-distance map. Figure $\ref{fig:shape_variance}$ shows the means and three primary modes of variance of the shape distribution of the corpus callosum.
+
+\begin{figure}[htbp]
+    \centering
+    \subfigure[]
+    {
+    	\includegraphics[width=0.45\textwidth]{Bilder/SMBV13_EMuster_fig10}
+        \label{fig:shape_training}
+    }
+    \subfigure[]
+    {
+    	\includegraphics[width=0.45\textwidth]{Bilder/SMBV13_EMuster_fig11}
+        \label{fig:shape_variance}
+    }
+    \caption{(a) some training signed distance maps of Corpus callosum overlaid by the original segmentations. (b) The three primary modes of variance of the corpus callosum training dataset.}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
