@@ -5,9 +5,9 @@
 \setcounter{tocdepth}{5} %to make it appears in TOC
 \setcounter{secnumdepth}{5} %to make it numbered
 
-\usepackage{textcomp}
-\usepackage{amsmath}
-\usepackage{amsthm}
+%\usepackage{textcomp}
+%\usepackage{amsmath}
+%\usepackage{amsthm}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}[section]
 %\usepackage{algorithm}
@@ -387,7 +387,7 @@ Note that in the PCST problem both vertex profits and edge costs must be positiv
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{Bilder/SMBV13_EMuster_fig12}
-    \caption{Region graph pipeline. (a) We oversegment the test image and construct a region-graph. (b) A region\textquotesingle s node weight is its contribution to the classifier response. The optimal contiguous set of regions is equivalent to the maximum-weight connected subgraph problem (MWCS) on the vertex weighted region-graph. (c) We incorporate class-specific inter-region contour cues by adding edge costs leading to the PCST problem. (d) The best scoring region is obtained by efficiently solving the PCST instance with a branch-and-cut algorithm. Image source \cite{VijayGrauman2011}.}
+    \caption{Region graph pipeline. (a) We oversegment the test image and construct a region-graph. (b) A region's node weight is its contribution to the classifier response. The optimal contiguous set of regions is equivalent to the maximum-weight connected subgraph problem (MWCS) on the vertex weighted region-graph. (c) We incorporate class-specific inter-region contour cues by adding edge costs leading to the PCST problem. (d) The best scoring region is obtained by efficiently solving the PCST instance with a branch-and-cut algorithm. Image source \cite{VijayGrauman2011}.}
     \label{fig:region_graph}
 \end{figure}
 
